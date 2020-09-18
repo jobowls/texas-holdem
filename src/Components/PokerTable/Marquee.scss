@@ -1,0 +1,19 @@
+@import '../../sass/styles.scss';
+
+.Marquee-master {
+    height: 40%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    // background-color: $CHARCOAL;
+    color: silver;
+    font-size: small;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    margin-top: 50px;
+    // background-color: rgba(10, 10, 10, 0.75);
+    // border: 5px dotted rgb(45, 45, 45);
+    border-radius: 20px;
+}

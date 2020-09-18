@@ -1,0 +1,80 @@
+@import '../../sass/styles.scss';
+
+.card-face {
+    width: 85%;   
+    // height: 50%;
+}
+
+.card-back {
+    width: 40%;   
+    border-radius: 5px;
+    // animation: deal 2.5s;
+}
+
+.pocket-container {
+    width: 65%;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.Ai1-show {
+    color: $ROYALFLUSH;
+    line-height: 0em;
+    text-align: center;
+}
+.Ai2-show {
+    color: $ROYALFLUSH;
+    line-height: 0em;
+    text-align: center;
+}
+.Ai3-show {
+    color: $ROYALFLUSH;
+    line-height: 0em;
+    text-align: center;
+}
+
+#Ai-name {
+    // color: rgb(146, 46, 52);
+    color: silver;
+}
+
+.pocket-hand {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.Community-master {
+    width: 100%;
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // position: absolute;
+}
+
+.house-cards {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    animation: ease-in 2s;
+}
+
+.house-container {
+    width: 12%;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.house-faces {
+    width: 100%;
+}
+
+@keyframes deal {
+    100% {transform: rotate(180deg);}
+}

@@ -1,0 +1,124 @@
+@import '../../../sass/styles.scss';
+
+.action-modal-master {
+    width: 100%;
+    height: 85%;
+    // background-color: rgba(10, 10, 10, 0.75);
+    border: 5px dotted rgb(45, 45, 45);
+    border-radius: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    line-height: 1em;
+    // background-image: linear-gradient(to right, $CHARCOAL, rgba(10, 10, 10, 0.75));
+    // box-shadow: 1px 3px 7px 1px rgb(149, 149, 149);
+}
+
+.room-title-container {
+    width: 40%;
+    color: silver;
+    text-align: center;
+}
+
+.the-slot {
+    width: 10%;
+    // height: 150%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: silver;
+
+    // font-weight: bold;
+    // border: dotted 1px silver;
+    // border-radius: 30px;
+    // background-color: rgba(0, 0, 0, 0.844);
+}
+
+#kicker {
+    color: silver;
+    font-weight: 100;
+}
+
+#poker-room-title {
+    color: $LIGHTHOUSE;
+}
+
+// #poker-room-title1 {
+//     color: white;
+// }
+
+.profile-menu {
+    width: 25%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: silver;
+    line-height: 0em;
+    font-size: 12px;
+}
+
+.btn-menu {
+    width: 10%;
+    margin-right: 5px;
+}
+
+#action-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    // background-color: white;
+    padding: 1%;
+    position: relative;
+}
+
+#action-pic:hover {
+    cursor: pointer;
+}
+
+#marquee {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    // flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    // line-height: 1em;
+    text-align: center;
+}
+
+#marquee-pocket {
+    color: $ROYALFLUSH;
+    height: 15%;
+}
+
+#marquee-name {
+    height: 10%;
+    color: rgb(146, 46, 52);
+    // color: silver;
+    text-align: center;
+    font-weight: bold;
+    // margin-bottom: 5px;
+}
+
+.action-btns {
+    font-size: 10px;
+    width: 85%;
+    background-color: rgba(0, 0, 0, 0.0);
+    color: silver;
+    font-weight: bold;
+    border: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+}
+
+.action-btns:hover {
+    cursor: pointer;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.75);
+}

@@ -1,0 +1,11 @@
+@import '../../../sass/styles.scss';
+
+.Feed-Master {
+    width: 100%;
+    display: flex;
+    // background-color: rgba(10, 10, 10, 0.75);
+    // box-shadow: 1px 1px 1px 5px black;
+    border-radius: 20px;
+    justify-content: space-evenly;
+    align-items: center;
+}
