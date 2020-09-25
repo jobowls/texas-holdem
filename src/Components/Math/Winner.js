@@ -35,9 +35,6 @@ const Winner = (props) => {
         [...props.score.botC.kickerArr]
     ])
         let copyArr = [...best5]
-    //     let copyOrigin = [...best5]
-    // const [origin] = useState([copyOrigin[joker]])
-
 
     useEffect(() => {
         console.log(best5)
@@ -55,48 +52,14 @@ const Winner = (props) => {
 
     useEffect(() => {
         let comparisonsArr = eliminate(changeCurrent, round - 1)
+
         if (round !== 0) {
-                console.log(round, 'round =>> STATE')
-                console.log(current, 'current =>> STATE')
-                console.log(comparisonsArr, 'comparisonsArr =>> LOCAL')
-            if (!comparisonsArr[0]) {
-                evenSplit()
-            } else {
-                tieBreaker(comparisonsArr)
-            }
+            !comparisonsArr[0] 
+            ? evenSplit() 
+            : tieBreaker(comparisonsArr)
         }
     }, [round])
 
-
-        let ace = 0 ;
-        let king = 0 ;
-        let queen = 0 ;
-        let jack = 0 ;
-        let ten = 0 ;
-        let nine = 0 ;
-        let eight = 0 ;
-        let seven = 0 ;
-        let six = 0 ;
-        let five = 0 ;
-        let four = 0 ;
-        let three = 0 ;
-        let two = 0;
-
-        let ranksArr = [
-            ace,
-            king,
-            queen,
-            jack,
-            ten,
-            nine,
-            eight,
-            seven,
-            six,
-            five,
-            four,
-            three,
-            two
-        ]
 
     const findHighest = (arr) => {
         return Math.max(...arr)
@@ -104,25 +67,17 @@ const Winner = (props) => {
 
     const findWinner = () => {
         let allScores = [props.score.myHand.score, props.score.botA.score, props.score.botB.score, props.score.botC.score]
+        let tScores = []
+        let remainingPlayers = []
+        let indexedArr = []
 
         let highScore = findHighest(allScores)
-            console.log(allScores, 'SCORES-ARR')
-            console.log(highScore, 'HIGH-SCORE')
-
         let tiedArr = allScores.filter(e => e === highScore)
-            console.log(tiedArr.length, 'TIED-COUNT =>>')
-
-            let tScores = []
-            let remainingPlayers = []
-            let indexedArr = []
-
         let champIndex = allScores.indexOf(highScore)
-            console.log(champIndex, 'CHAMP-INDEX')
 
             for (let i = 0; i < allScores.length; i++) {
 
                 if (allScores[i] === highScore) {
-                        console.log(i, 'TIED-INDEX')
                     indexedArr.push(i)
                     tScores.push(allScores[i])
                     remainingPlayers.push(copyArr[i])
@@ -130,37 +85,19 @@ const Winner = (props) => {
             }
 
             if (tiedArr.length === 1) {
-                    console.log(remainingPlayers, 'evalPlayers =>>')
-                    console.log(players[champIndex])
-                    console.log(champIndex)
-                    // console.log(compareCards)
                 setJoker(champIndex)
                 setReady(true)
-            } else {
-                    console.log(tScores, 'tScores')
-                    console.log(remainingPlayers, 'evalPlayers =>>')
-                    // console.log(compareCards)
-                // tieBreaker([...remainingPlayers])
+            } else {                
                 setCurrent([...remainingPlayers])
                 setKey([...indexedArr])
                 setRound(1)
             }
-        console.log('...game over')
     }
 
-    const tieBreaker = (arr) => {
-                    console.log(arr, 'SUDDEN_DEATH')
-                let foundHighest = findHighest(arr)
-                    console.log(foundHighest, 'FOUND')
-            let filtered = arr.filter(e => e === foundHighest)
-                console.log(filtered, 'FILTERED')
-        let wIndex = arr.indexOf(foundHighest)
-            console.log(wIndex, 'W_INDEX')
-
-            console.log(copyArr, 'COPY_ARR')
-            // console.log(origin, 'ORIGIN')
-            console.log(current, 'CURRENT')
-            console.log(key, 'KEY_INDEXES')
+    const tieBreaker = (arr) => {                    
+                let foundHighest = findHighest(arr)                    
+            let filtered = arr.filter(e => e === foundHighest)                
+        let wIndex = arr.indexOf(foundHighest)                                                            
 
         if (filtered.length === 1) {
             setJoker(key[wIndex])
@@ -171,7 +108,18 @@ const Winner = (props) => {
     }
 
     const evenSplit = () => {
-        let payout = pot
+        let payout = (pot / key.length + pot)
+        let winnerCircle = []
+        
+        for (let i = 0; i < key.length; i++) {
+            winnerCircle.push(finalTable[key[i]])
+            props.banker(payout, key[i])
+        }
+
+        for (let i = 0; i < winnerCircle.length; i++) {
+            props.setWinner(
+                `${winnerCircle[i]} Split the Pot // ${payout}`)
+        }
     }
 
     return (

@@ -37,6 +37,14 @@ const ADD_CASH = 'ADD_CASH'
 const ASSIGN_SM = 'ASSIGN_SM'
 const ASSIGN_BG = 'ASSIGN_BG'
 const BANKER = 'BANKER'
+// const SPLIT = 'SPLIT'
+
+// export function split(money, indexesArr) {
+//     return {
+//         type: SPLIT,
+//         payload: money, indexesArr
+//     }
+// }
 
 export function banker(money, index) {
     console.log(money, index, 'PAYLOAD-BANKER')
@@ -203,7 +211,12 @@ export default function flowReducer(state = initialState, action) {
         case BANKER:
             let players = [...state.poker.players]
             players[payload.index].cash = payload.money
-            return {...state, poker: {...state.poker, players}}
+            return {...state, poker: {...state.poker, players}};
+
+        // case SPLIT:
+        //     let players = [...state.poker.players]
+        //     players[payload.indexes[].cash] = payload.money
+        //     return {...state, poker: {...state.poker, players}};
 
         default:
             return state;
