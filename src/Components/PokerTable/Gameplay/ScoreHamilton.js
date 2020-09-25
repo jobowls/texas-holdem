@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
-import {setKickerArrA, setHighestA, setKickerA, setHamilton, setHandTypeA, setSubTypeA, resetBest5A, countRoyalFlushA, countStraightFlushA, count4KindA, countFullHouseA, countFlushA, countStraightA, count3KindA, count2PairA, countPairA, countHighCardA} from '../../../ducks/scoringReducer'
+import {setScoreA, setKickerArrA, setHighestA, setKickerA, setHamilton, setHandTypeA, setSubTypeA, resetBest5A, countRoyalFlushA, countStraightFlushA, count4KindA, countFullHouseA, countFlushA, countStraightA, count3KindA, count2PairA, countPairA, countHighCardA} from '../../../ducks/scoringReducer'
 import '../../CardFlow/Community.scss'
 import {cipher, cipherSuits} from '../../Math/CountingCards'
 
 const ScoreHamilton = (props) => {
     const {finalHand} = props.score.botA
+    const {listOfHands} = props.rules
 
     const [finalSuitsArr] = useState(['Clubs', 'Diamonds', 'Spades', 'Hearts'])
     const [finalArr] = useState(['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'])
@@ -28,6 +29,11 @@ const ScoreHamilton = (props) => {
     useEffect(() => {
         runScore()
     }, [props.score.botA.finalHand])
+
+    useEffect(() => {
+        console.log(props.score.botA.score, 'HIT-SCORE-HAMILTON')
+        
+    }, [props.score.botA.score])
 
     const colorLog = (message, color) => {
         color = color || "Black";
@@ -88,48 +94,59 @@ const ScoreHamilton = (props) => {
         ])
 
 
-        const checkTypes = (hamilton) => {        
+        const checkTypes = (hamilton) => {
+            let list = listOfHands.filter(el => el['badge_name'] === `${hamilton}`)
             switch(hamilton) {
                 case 'Royal Flush':
                     props.setKickerA('')
                     props.setHandTypeA(`${hamilton}`)
+                    props.setScoreA(+list[0].badge_score)
                     break;
                 case 'Straight Flush':
                     props.setKickerA('')
                     props.setHandTypeA(`${hamilton}`)
+                    props.setScoreA(+list[0].badge_score)
                     break;
                 case '4 of a Kind':
                     quadSquad()
                     props.setHandTypeA(`${hamilton}`)
+                    props.setScoreA(+list[0].badge_score)
                     break;
                 case 'Full House':
                     fullerHouse()
                     props.setHandTypeA(`${hamilton}`)
+                    props.setScoreA(+list[0].badge_score)
                     props.setKickerA('')
                     break;
                 case 'Straight':
                     props.setKickerA('')
                     props.setHandTypeA(`${hamilton}`)
+                    props.setScoreA(+list[0].badge_score)
                     count5()
                     break;
                 case 'Flush':
                     flusher()
                     props.setHandTypeA(`${hamilton}`)
+                    props.setScoreA(+list[0].badge_score)
                     break;
                 case '3 of a Kind':
                     tripoly()
                     props.setHandTypeA(`${hamilton}`)
+                    props.setScoreA(+list[0].badge_score)
                     break;
                 case '2 Pair':
                     doubleUp()
                     props.setHandTypeA(`${hamilton}`)
+                    props.setScoreA(+list[0].badge_score)
                     break;
                 case 'Pair':
                     snakeEyes()
                     props.setHandTypeA(`${hamilton}`)
+                    props.setScoreA(+list[0].badge_score)
                     break;
                 case 'High Card':
                     props.setHandTypeA(`${hamilton}`)
+                    props.setScoreA(+list[0].badge_score)
                     mileHigh()
                     break;
                 default:
@@ -308,6 +325,7 @@ const ScoreHamilton = (props) => {
 
         if (mapper.includes('Ace') && mapper.includes('2') && mapper.includes('3') && mapper.includes('4') && mapper.includes('5')) {
             props.setSubTypeA('Ace to Five')
+            props.setKickerArrA([3])
         } else if (checkedArr.length > 4) {
                             let card1 = checkedArr[0];
                             let index1 = finalArr[card1];
@@ -327,6 +345,10 @@ const ScoreHamilton = (props) => {
             let charlie = indexedArr[2];
             let delta = indexedArr[3];
             let echo = indexedArr[4];
+
+            let foundAlpha = orderedArr.indexOf(alpha)
+                console.log(foundAlpha)
+            props.setKickerArrA([foundAlpha])
             
             let alphaRomeo = cipherSuits(finalHand, alpha);
             let betaRomeo = cipherSuits(finalHand, beta);
@@ -357,6 +379,7 @@ const ScoreHamilton = (props) => {
                 // props.setSubTypeA(`${index5} to ${index1} Suited`)
             } else {
                 props.setSubTypeA(`${index5} to ${index1}`)    
+                // props.setKickerArrA([index1])
             }
         }
     }
@@ -370,6 +393,10 @@ const ScoreHamilton = (props) => {
         let smaller = finalArr[fullOf - 2];
 
         props.setSubTypeA(`${bigger}s full of ${smaller}s`)
+
+        let alpha = orderedArr.indexOf(bigger)
+            let beta = orderedArr.indexOf(smaller)
+        props.setKickerArrA([alpha, beta])
     }
     
     const flusher = () => {
@@ -422,7 +449,7 @@ const ScoreHamilton = (props) => {
             let sortedArr = [card1, card2, card3].filter(e => e !== -1).sort((a, b) => a - b).reverse()
 
             let kicker = orderedArr[sortedArr[0]]
-            let dux = [sortedArr[0]]
+            let dux = [orderedArr.indexOf(rank1), sortedArr[0]]
 
             props.setKickerA(`${kicker} Kicker`)
             props.setKickerArrA(dux)
@@ -449,7 +476,7 @@ const ScoreHamilton = (props) => {
         let sortedArr = [card1, card2, card3, card4].filter(el => el !== -1).sort((a, b) => a - b).reverse()
                 
         let kicker = orderedArr[sortedArr[0]]
-        let dux = [sortedArr[0], sortedArr[1]]
+        let dux = [orderedArr.indexOf(`${rank1}`), sortedArr[0], sortedArr[1]]
                 
         props.setKickerA(`${kicker} Kicker`)
         props.setKickerArrA(dux)
@@ -471,10 +498,10 @@ const ScoreHamilton = (props) => {
                     let pairC = orderedArr[cardC]
 
         props.setSubTypeA(`${pairA}s & ${pairB}s` )        
-        findingDoublesKicker(`${pairA}`, `${pairB}`)
+        findingDoublesKicker(`${pairA}`, `${pairB}`, cardA, cardB)
     }
 
-        const findingDoublesKicker = (rank1, rank2) => {
+        const findingDoublesKicker = (rank1, rank2, index1, index2) => {
             let filteredHand = finalHand.filter(el => el['card_rank'] !== rank1 && el['card_rank'] !== rank2)
             let mapper = filteredHand.map(e => e.card_rank)
 
@@ -488,15 +515,15 @@ const ScoreHamilton = (props) => {
             let sortedArr = [card1, card2, card3, card4, card5, card6].filter(el => el !== -1).sort((a, b) => a - b).reverse()
                 
             let kicker = orderedArr[sortedArr[0]]
-            let dux = [sortedArr[0]]
+            let dux = [index1, index2, sortedArr[0]]
                 
             props.setKickerA(`${kicker} Kicker`)
             props.setKickerArrA(dux)
         }
 
     const snakeEyes = () => {
-        let tester = cipher(ranksArr, 2)
-        let foundPair = tester + 2
+        let index = cipher(ranksArr, 2)
+        let foundPair = index + 2
                             
         if (foundPair === 14) {
             foundPair = 'Ace'
@@ -513,10 +540,10 @@ const ScoreHamilton = (props) => {
         } else {
             props.setSubTypeA(`${foundPair}'s`)
         }
-        findingKicker(`${foundPair}`)
+        findingKicker(`${foundPair}`, index)
     }
 
-        const findingKicker = (rank1) => {
+        const findingKicker = (rank1, index) => {
             let filteredHand = finalHand.filter(el => el['card_rank'] !== rank1)
             let mapper = filteredHand.map(e => e.card_rank)
 
@@ -530,7 +557,7 @@ const ScoreHamilton = (props) => {
             let sortedArr = [card1, card2, card3, card4, card5, card6].filter(el => el !== -1).sort((a, b) => a - b).reverse()
     
             let kicker = orderedArr[sortedArr[0]]
-            let dux = [sortedArr[0], sortedArr[1], sortedArr[2]]
+            let dux = [index, sortedArr[0], sortedArr[1], sortedArr[2]]
                 
             props.setKickerA(`${kicker} Kicker`)
             props.setKickerArrA(dux)
@@ -606,5 +633,6 @@ export default connect(mapStateToProps, {
     countHighCardA,
     setKickerA,
     setHighestA,
-    setKickerArrA
+    setKickerArrA,
+    setScoreA
 })(ScoreHamilton)

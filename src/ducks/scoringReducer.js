@@ -206,6 +206,7 @@ const SET_HIGHEST = 'SET_HIGHEST'
 const SET_SCORE = 'SET_SCORE'
 
 export function setKickerArr(rankIndexes) {
+    console.log('KIKER-ARR-HIT-P1P1', rankIndexes)
     // console.log(rankIndexes, 'ARR_DINGER')
     return {
         type: SET_KICKER_ARR,
@@ -386,6 +387,7 @@ const SET_SCORE_A = 'SET_SCORE_A'
 const SET_KICKER_ARR_A = 'SET_KICKER_ARR_A'
 
 export function setKickerArrA(rankIndexes) {
+    console.log('KIKER-ARR-HIT-AAA', rankIndexes)
     return {
         type: SET_KICKER_ARR_A,
         payload: rankIndexes
@@ -532,6 +534,7 @@ const SET_SCORE_B = 'SET_SCORE_B'
 const SET_KICKER_ARR_B = 'SET_KICKER_ARR_B'
 
 export function setKickerArrB(rankIndexes) {
+    console.log('KIKER-ARR-HIT-BBB', rankIndexes)
     return {
         type: SET_KICKER_ARR_B,
         payload: rankIndexes
@@ -679,6 +682,7 @@ const SET_SCORE_C = 'SET_SCORE_C'
 const SET_KICKER_ARR_C = 'SET_KICKER_ARR_C'
 
 export function setKickerArrC(rankIndexes) {
+    console.log('KIKER-ARR-HIT-CCC', rankIndexes)
     return {
         type: SET_KICKER_ARR_C,
         payload: rankIndexes
@@ -818,8 +822,10 @@ export default function scoringReducer(state = initialState, action) {
             return {...state, myHand: {...state.myHand, subType: payload}};
         case SET_KICKER:
             return {...state, myHand: {...state.myHand, kicker: payload}};
+            
         case SET_KICKER_ARR:
             return {...state, myHand: {...state.myHand, kickerArr: payload}};
+
         case SET_HIGHEST:
             return {...state, myHand: {...state.myHand, highestCard: payload}};
         case SET_SCORE:

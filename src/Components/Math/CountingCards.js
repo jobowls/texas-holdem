@@ -11,3 +11,10 @@ export function cipherSuits(arr, rank) {
 export function cipherRanks(arr, suit) {
     return arr.filter(obj => obj['card_suit'] === suit)
 }
+
+export function eliminate(arr, i) {
+    let newArr = []
+    arr.forEach(e => newArr.push(e[i]))
+
+    return newArr;
+}

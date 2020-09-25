@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
-import {setKickerArrC, setHighestC, setKickerC, setJefferson, setHandTypeC, setSubTypeC, resetBest5C, countRoyalFlushC, countStraightFlushC, count4KindC, countFullHouseC, countFlushC, countStraightC, count3KindC, count2PairC, countPairC, countHighCardC} from '../../../ducks/scoringReducer'
+import {setScoreC, setKickerArrC, setHighestC, setKickerC, setJefferson, setHandTypeC, setSubTypeC, resetBest5C, countRoyalFlushC, countStraightFlushC, count4KindC, countFullHouseC, countFlushC, countStraightC, count3KindC, count2PairC, countPairC, countHighCardC} from '../../../ducks/scoringReducer'
 import '../../CardFlow/Community.scss'
 import {cipher, cipherSuits} from '../../Math/CountingCards'
 
 const ScoreJefferson = (props) => {
     const {finalHand} = props.score.botC
+    const {listOfHands} = props.rules
 
     const [finalSuitsArr] = useState(['Clubs', 'Diamonds', 'Spades', 'Hearts'])
     const [finalArr] = useState(['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'])
@@ -28,6 +29,11 @@ const ScoreJefferson = (props) => {
     useEffect(() => {
         runScore()
     }, [props.score.botC.finalHand])
+
+    useEffect(() => {
+        console.log(props.score.botC.score, 'HIT-SCORE-JEFFERSON')
+        
+    }, [props.score.botC.score])
 
     const colorLog = (message, color) => {
         color = color || "Black";
@@ -89,47 +95,59 @@ const ScoreJefferson = (props) => {
 
 
      const checkTypes = (jefferson) => {        
+        let list = listOfHands.filter(el => el['badge_name'] === `${jefferson}`)
+
         switch(jefferson) {
             case 'Royal Flush':
                 props.setKickerC('')
                 props.setHandTypeC(`${jefferson}`)
+                props.setScoreC(+list[0].badge_score)
                 break;
             case 'Straight Flush':
                 props.setKickerC('')
                 props.setHandTypeC(`${jefferson}`)
+                props.setScoreC(+list[0].badge_score)
                 break;
             case '4 of a Kind':
                 quadSquad()
                 props.setHandTypeC(`${jefferson}`)
+                props.setScoreC(+list[0].badge_score)
                 break;
             case 'Full House':
                 fullerHouse()
                 props.setHandTypeC(`${jefferson}`)
+                props.setScoreC(+list[0].badge_score)
                 props.setKickerC('')
                 break;
             case 'Straight':
                 props.setKickerC('')
                 props.setHandTypeC(`${jefferson}`)
+                props.setScoreC(+list[0].badge_score)
                 count5()
                 break;
             case 'Flush':
                 flusher()
                 props.setHandTypeC(`${jefferson}`)
+                props.setScoreC(+list[0].badge_score)
                 break;
             case '3 of a Kind':
                 tripoly()
                 props.setHandTypeC(`${jefferson}`)
+                props.setScoreC(+list[0].badge_score)
                 break;
             case '2 Pair':
                 doubleUp()
                 props.setHandTypeC(`${jefferson}`)
+                props.setScoreC(+list[0].badge_score)
                 break;
             case 'Pair':
                 snakeEyes()
                 props.setHandTypeC(`${jefferson}`)
+                props.setScoreC(+list[0].badge_score)
                 break;
             case 'High Card':
                 props.setHandTypeC(`${jefferson}`)
+                props.setScoreC(+list[0].badge_score)
                 mileHigh()
                 break;
             default:
@@ -308,6 +326,7 @@ const ScoreJefferson = (props) => {
     
             if (mapper.includes('Ace') && mapper.includes('2') && mapper.includes('3') && mapper.includes('4') && mapper.includes('5')) {
                 props.setSubTypeC('Ace to Five')
+                props.setKickerArrC([3])
             } else if (checkedArr.length > 4) {
                                 let card1 = checkedArr[0];
                                 let index1 = finalArr[card1];
@@ -327,6 +346,10 @@ const ScoreJefferson = (props) => {
                 let charlie = indexedArr[2];
                 let delta = indexedArr[3];
                 let echo = indexedArr[4];
+
+                let foundAlpha = orderedArr.indexOf(alpha)
+                    console.log(foundAlpha)
+                props.setKickerArrC([foundAlpha])
                 
                 let alphaRomeo = cipherSuits(finalHand, alpha);
                 let betaRomeo = cipherSuits(finalHand, beta);
@@ -357,6 +380,7 @@ const ScoreJefferson = (props) => {
                     // props.setSubTypeC(`${index5} to ${index1} Suited`)
                 } else {
                     props.setSubTypeC(`${index5} to ${index1}`)    
+                    // props.setKickerArrC([index1])
                 }
             }
         }
@@ -370,6 +394,10 @@ const ScoreJefferson = (props) => {
             let smaller = finalArr[fullOf - 2];
     
             props.setSubTypeC(`${bigger}s full of ${smaller}s`)
+
+            let alpha = orderedArr.indexOf(bigger)
+            let beta = orderedArr.indexOf(smaller)
+        props.setKickerArrC([alpha, beta])
         }
         
         const flusher = () => {
@@ -422,7 +450,7 @@ const ScoreJefferson = (props) => {
                 let sortedArr = [card1, card2, card3].filter(e => e !== -1).sort((a, b) => a - b).reverse()
     
                 let kicker = orderedArr[sortedArr[0]]
-                let dux = [sortedArr[0]]
+                let dux = [orderedArr.indexOf(rank1), sortedArr[0]]
     
                 props.setKickerC(`${kicker} Kicker`)
                 props.setKickerArrC(dux)
@@ -449,7 +477,7 @@ const ScoreJefferson = (props) => {
             let sortedArr = [card1, card2, card3, card4].filter(el => el !== -1).sort((a, b) => a - b).reverse()
                     
             let kicker = orderedArr[sortedArr[0]]
-            let dux = [sortedArr[0], sortedArr[1]]
+            let dux = [orderedArr.indexOf(`${rank1}`), sortedArr[0], sortedArr[1]]
                     
             props.setKickerC(`${kicker} Kicker`)
             props.setKickerArrC(dux)
@@ -471,10 +499,10 @@ const ScoreJefferson = (props) => {
                         let pairC = orderedArr[cardC]
     
             props.setSubTypeC(`${pairA}s & ${pairB}s` )        
-            findingDoublesKicker(`${pairA}`, `${pairB}`)
+            findingDoublesKicker(`${pairA}`, `${pairB}`, cardA, cardB)
         }
     
-            const findingDoublesKicker = (rank1, rank2) => {
+            const findingDoublesKicker = (rank1, rank2, index1, index2) => {
                 let filteredHand = finalHand.filter(el => el['card_rank'] !== rank1 && el['card_rank'] !== rank2)
                 let mapper = filteredHand.map(e => e.card_rank)
     
@@ -488,15 +516,15 @@ const ScoreJefferson = (props) => {
                 let sortedArr = [card1, card2, card3, card4, card5, card6].filter(el => el !== -1).sort((a, b) => a - b).reverse()
                     
                 let kicker = orderedArr[sortedArr[0]]
-                let dux = [sortedArr[0]]
+                let dux = [index1, index2 ,sortedArr[0]]
                     
                 props.setKickerC(`${kicker} Kicker`)
                 props.setKickerArrC(dux)
             }
     
         const snakeEyes = () => {
-            let tester = cipher(ranksArr, 2)
-            let foundPair = tester + 2
+            let index = cipher(ranksArr, 2)
+            let foundPair = index + 2
                                 
             if (foundPair === 14) {
                 foundPair = 'Ace'
@@ -513,10 +541,10 @@ const ScoreJefferson = (props) => {
             } else {
                 props.setSubTypeC(`${foundPair}'s`)
             }
-            findingKicker(`${foundPair}`)
+            findingKicker(`${foundPair}`, index)
         }
     
-            const findingKicker = (rank1) => {
+            const findingKicker = (rank1, index) => {
                 let filteredHand = finalHand.filter(el => el['card_rank'] !== rank1)
                 let mapper = filteredHand.map(e => e.card_rank)
     
@@ -530,7 +558,7 @@ const ScoreJefferson = (props) => {
                 let sortedArr = [card1, card2, card3, card4, card5, card6].filter(el => el !== -1).sort((a, b) => a - b).reverse()
         
                 let kicker = orderedArr[sortedArr[0]]
-                let dux = [sortedArr[0], sortedArr[1], sortedArr[2]]
+                let dux = [index, sortedArr[0], sortedArr[1], sortedArr[2]]
                     
                 props.setKickerC(`${kicker} Kicker`)
                 props.setKickerArrC(dux)
@@ -606,5 +634,6 @@ export default connect(mapStateToProps, {
     countHighCardC,
     setKickerC,
     setHighestC,
-    setKickerArrC
+    setKickerArrC,
+    setScoreC
 })(ScoreJefferson)

@@ -25,7 +25,7 @@ import Biggy from './Biggy'
 //  DUX 
 import {setDeck, setPocket, setPocketAi1, setPocketAi2, setPocketAi3, setFlop, setTurn, setRiver, setBurned, setCommunity, setUsed, reset} from '../../../ducks/cardsReducer'
 import {banker, assignSm, assignBg, setWinner, handIsOver, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse, isSuited} from '../../../ducks/pokerReducer'
-import {setScore, setScoreA, setScoreB, setScoreC, setHighestA, setHighestB, setHighestC, setHighest, setKicker, setKickerA, setKickerB, setKickerC, resetBest5A, resetBest5B, resetBest5C, setSubTypeA, setSubTypeB, setSubTypeC, setHandTypeA, setHandTypeB, setHandTypeC, setSubType, setHamilton, setBurr, setJefferson, chickenDinner, setMyHand, setHandType, tallyOne, tallySuits, resetBest5} from '../../../ducks/scoringReducer'
+import {setKickerArr, setKickerArrA, setKickerArrB, setKickerArrC, setScore, setScoreA, setScoreB, setScoreC, setHighestA, setHighestB, setHighestC, setHighest, setKicker, setKickerA, setKickerB, setKickerC, resetBest5A, resetBest5B, resetBest5C, setSubTypeA, setSubTypeB, setSubTypeC, setHandTypeA, setHandTypeB, setHandTypeC, setSubType, setHamilton, setBurr, setJefferson, chickenDinner, setMyHand, setHandType, tallyOne, tallySuits, resetBest5} from '../../../ducks/scoringReducer'
 import {showAllHands} from '../../../ducks/cashReducer'
 import {setNextMove} from '../../../ducks/dealerReducer'
 
@@ -49,9 +49,23 @@ const Game = (props) => {
         console.log(props.game.poker, 'POKER-INDEXES')
     }, [props.game.poker.buttonIndex])
 
-    // useEffect(() => {
 
-    // }, [props.game.poker.buttonIndex])
+    useEffect(() => {
+        console.log(props.score.myHand.kickerArr, 'PLAYER1')
+    }, [props.score.myHand.kickerArr])
+    useEffect(() => {
+
+        console.log(props.score.botA.kickerArr, 'HAMILTON')
+    }, [props.score.botA.kickerArr])
+
+    useEffect(() => {
+        console.log(props.score.botB.kickerArr, 'BURR')
+    }, [props.score.botB.kickerArr])
+
+    useEffect(() => {
+        console.log(props.score.botC.kickerArr, 'JEFFERSON')
+    }, [props.score.botC.kickerArr])
+
 
     const rulesToggler = () => {
         setToggleRules(!toggleRules)
@@ -311,8 +325,10 @@ const Game = (props) => {
 
     
     const checkXP = () => {
+        // console.log(props.score.myHand.kickerArr, 'PLAYER1')
         props.showAllHands(true)
-        
+        console.log(props.score.myHand.kickerArr, 'PLAYER1')
+        // props.handIsOver(true)
         
         // const flipCard = document.querySelector('.pocket-container')
         // flipCard.addEventListener('click', function() {
@@ -331,6 +347,7 @@ const Game = (props) => {
         props.setMyHand([])
         props.setHandType('')
         props.setKicker('')
+        props.setKickerArr([])
         props.setHighest('')
         props.setHighestA('')
         props.setHighestB('')
@@ -345,16 +362,19 @@ const Game = (props) => {
         props.setHandTypeA('')
         props.setSubTypeA('')
         props.setKickerA('')
+        props.setKickerArrA([])
         
         props.setBurr([])
         props.setHandTypeB('')
         props.setSubTypeB('')
         props.setKickerB('')
+        props.setKickerArrB([])
         
         props.setJefferson([])
         props.setHandTypeC('')
         props.setSubTypeC('')
         props.setKickerC('')
+        props.setKickerArrC([])
         
         props.resetBest5(false)
         props.resetBest5A(false)
@@ -412,7 +432,7 @@ const Game = (props) => {
                     <div className='player-box'>
                         <div className='player-status' >
                             <h3 id='player-box-name' > {props.game.poker.players[0].username} </h3>
-                            <p style={{color: poker.players[0].cash > 100 ? 'rgb(0, 255, 153)' : 'red'}} > ${props.game.poker.players[0].cash} </p>
+                            <p style={{color: poker.players[0].cash > 250 ? 'rgb(0, 255, 153)' : poker.players[0].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[0].cash} </p>
                         </div>
                         <div className='pocket-divider' >
                             <Pocket />
@@ -441,7 +461,7 @@ const Game = (props) => {
                     <div className='player-box'>
                         <div className='player-status' >
                             <h3 id='player-box-name' > {props.game.poker.players[1].username} </h3>
-                            <p style={{color: poker.players[1].cash > 100 ? 'rgb(0, 255, 153)' : 'red'}} > ${props.game.poker.players[1].cash} </p>
+                            <p style={{color: poker.players[1].cash > 250 ? 'rgb(0, 255, 153)' : poker.players[1].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[1].cash} </p>
                         </div>
                         <div className='pocket-divider' >
                             {
@@ -477,7 +497,7 @@ const Game = (props) => {
                     <div className='player-box'>
                         <div className='player-status' >
                             <h3 id='player-box-name' > {props.game.poker.players[2].username} </h3>
-                            <p style={{color: poker.players[2].cash > 100 ? 'rgb(0, 255, 153)' : 'red'}} > ${props.game.poker.players[2].cash} </p>
+                            <p style={{color: poker.players[2].cash > 250 ? 'rgb(0, 255, 153)' : poker.players[2].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[2].cash} </p>
                         </div>
                         
                         <div className='pocket-divider' >
@@ -514,7 +534,7 @@ const Game = (props) => {
                     <div className='player-box'>
                         <div className='player-status' >
                             <h3 id='player-box-name' > {props.game.poker.players[3].username} </h3>
-                            <p style={{color: poker.players[3].cash > 100 ? 'rgb(0, 255, 153)' : 'red'}} > ${props.game.poker.players[3].cash} </p>
+                            <p style={{color: poker.players[3].cash > 250 ? 'rgb(0, 255, 153)' : poker.players[3].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[3].cash} </p>
                         </div>
                         <div className='pocket-divider' >
                             {
@@ -638,5 +658,9 @@ export default connect(
         setNextMove,
         assignSm,
         assignBg,
-        banker
+        banker,
+        setKickerArr,
+        setKickerArrA,
+        setKickerArrB,
+        setKickerArrC
     })(withRouter(Game))

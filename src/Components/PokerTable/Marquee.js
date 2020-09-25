@@ -23,6 +23,7 @@ const Marquee = ( props) => {
     return (
         <div className='Marquee-master'>
             {pokerStatus}
+            {/* {props.score.myHand.score} */}
         </div>
     )
 }

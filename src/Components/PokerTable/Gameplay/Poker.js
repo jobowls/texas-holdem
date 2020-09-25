@@ -42,9 +42,9 @@ const Poker = (props) => {
     const {cash} = props.user.player
     const [buyIn, setBuyIn] = useState(500)
 
-    useEffect(() => {
-        console.log(props.game.poker.players)
-    }, [props.game.poker.players])
+    // useEffect(() => {
+    //     console.log(props.game.poker.players)
+    // }, [props.game.poker.players])
 
             //  REDUX
     const launchGame = () => {

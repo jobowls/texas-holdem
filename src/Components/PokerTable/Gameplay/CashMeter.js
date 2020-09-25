@@ -13,7 +13,7 @@ const CashMeter = (props) => {
     useEffect(() => {
         // if (props.game.poker.players.length) {
             setSeats(props.game.poker.players)
-            console.log(seats, 'cash-meter')
+            // console.log(seats, 'cash-meter')
         // }
     }, [props.game.poker.players, setSeats])
 

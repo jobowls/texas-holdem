@@ -30,18 +30,18 @@ const ActionModal = (props) => {
     }
 
     useEffect(() => {
-        if (props.game.status.handIsOver === true) {
-          setPokerStatus('WINNER')
+        if (props.game.status.winner !== '') {
+            setPokerStatus('WINNER')
         } 
-    }, [props.game.status.handIsOver])
+    }, [props.game.status.winner])
 
-    useEffect(() => {
-        console.log(props.score.myHand.kickerArr, 'TIE-BREAK')
-    }, [props.score.myHand.kickerArr])
+    // useEffect(() => {
+    //     console.log(props.score.myHand.kickerArr, 'TIE-BREAK')
+    // }, [props.score.myHand.kickerArr])
 
-    useEffect(() => {
-        console.log(props.game.status.isSuited, 'FIRED_SUITED')
-    }, [props.game.status.isSuited])
+    // useEffect(() => {
+    //     console.log(props.game.status.isSuited, 'FIRED_SUITED')
+    // }, [props.game.status.isSuited])
 
     useEffect(() => {
         if (props.game.status.isShuffling === true) {

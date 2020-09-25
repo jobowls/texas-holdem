@@ -9,6 +9,8 @@ import {cipher, cipherSuits} from '../Math/CountingCards'
 
 const MyScore = (props) => {
     const {finalHand} = props.score.myHand
+    const {handType} = props.score.myHand
+    const {listOfHands} = props.rules
 
     const [finalArr, setFinalArr] = useState([])    
     const [finalSuitsArr, setFinalSuitsArr] = useState([])
@@ -31,8 +33,14 @@ const MyScore = (props) => {
     useEffect(() => {
         setFinalArr(props.score.finalArr)
         setFinalSuitsArr(props.score.finalSuitsArr)
+        console.log(props.score.myHand)
         runScore()
     }, [props.score.myHand.finalHand])
+
+    // useEffect(() => {
+    //     console.log(props.score.myHand.score, 'HIT-SCORE')
+        
+    // }, [props.score.myHand.score])
 
     const colorLog = (message, color) => {
         color = color || "Black";
@@ -91,48 +99,60 @@ const MyScore = (props) => {
 
 
     const checkTypes = (player1) => {        
+        let list = listOfHands.filter(el => el['badge_name'] === `${player1}`)
+
         switch(player1) {
             case 'Royal Flush':
                 props.setKicker('')
                 props.setHandType(`${player1}`)
+                props.setScore(+list[0].badge_score)
                 break;
             case 'Straight Flush':
                 props.setKicker('')
                 props.setHandType(`${player1}`)
+                props.setScore(+list[0].badge_score)
                 break;
             case '4 of a Kind':
                 quadSquad()
                 props.setHandType(`${player1}`)
+                props.setScore(+list[0].badge_score)
                 break;
             case 'Full House':
+                props.setKicker('')
                 fullerHouse()
                 props.setHandType(`${player1}`)
-                props.setKicker('')
+                props.setScore(+list[0].badge_score)
                 break;
             case 'Straight':
                 props.setKicker('')
-                props.setHandType(`${player1}`)
                 count5()
+                props.setHandType(`${player1}`)
+                props.setScore(+list[0].badge_score)
                 break;
             case 'Flush':
                 flusher()
                 props.setHandType(`${player1}`)
+                props.setScore(+list[0].badge_score)
                 break;
             case '3 of a Kind':
                 tripoly()
                 props.setHandType(`${player1}`)
+                props.setScore(+list[0].badge_score)
                 break;
             case '2 Pair':
                 doubleUp()
                 props.setHandType(`${player1}`)
+                props.setScore(+list[0].badge_score)
                 break;
             case 'Pair':
                 snakeEyes()
                 props.setHandType(`${player1}`)
+                props.setScore(+list[0].badge_score)
                 break;
             case 'High Card':
-                props.setHandType(`${player1}`)
                 mileHigh()
+                props.setHandType(`${player1}`)
+                props.setScore(+list[0].badge_score)
                 break;
             default:
                 return null;
@@ -287,37 +307,21 @@ const MyScore = (props) => {
 
     const runScore = () => {        
         if (ranksArr.includes(4)) {
-            props.count4Kind(true)
-            // checkTypes('4 of a Kind')
-            // colorLog(`QUADS true =>` ,'white')
+            props.count4Kind(true)                        
         } else if (ranksArr.includes(3) && ranksArr.includes(2)) {
-            props.countFullHouse(true)
-            // checkTypes('Full House')
-            // colorLog(`FULL-HOUSE true =>` ,'white')
+            props.countFullHouse(true)                        
         } else if (suitsArr.includes(5)) {                        
-            props.countFlush(true)
-            // checkTypes('Flush')
-            // colorLog('FLUSH true =>', 'white')
+            props.countFlush(true)                        
         } else if (ranksArr.includes(3)) {
-            props.count3Kind(true)
-            // checkTypes('3 of a Kind')
-            // colorLog(`TRIPS true =>` ,'white')
+            props.count3Kind(true)                        
         } else if (doubles.length === 3) {
-            props.count2Pair(true)
-            // checkTypes('2 Pair')
-            // colorLog(`!!! 3_SETS_OF_2 !!!` ,'red')
+            props.count2Pair(true)                        
         } else if (doubles.length >= 2) {
-            props.count2Pair(true)
-            // checkTypes('2 Pair')
-            // colorLog(`2-PAIR true =>` ,'white')
+            props.count2Pair(true)                        
         } else if (ranksArr.includes(2)) {
-            props.countPair(true)
-            // checkTypes('Pair')
-            // colorLog(`PAIR true =>` ,'white')
+            props.countPair(true)                        
         } else if (props.cards.pocket.length) {
-            props.countHighCard(true)
-            // checkTypes('High Card')
-            // colorLog('HIGH-CARD true =>', 'white')
+            props.countHighCard(true)                        
         }
 
         for (let i = ranksArr.length - 1; i >= startingPosition; i--) {
@@ -340,7 +344,8 @@ const MyScore = (props) => {
         let mapper = finalHand.map(el => el.card_rank)
 
         if (mapper.includes('Ace') && mapper.includes('2') && mapper.includes('3') && mapper.includes('4') && mapper.includes('5')) {            
-            props.setSubType('Ace to Five')            
+            props.setSubType('Ace to Five')
+            props.setKickerArr(3) 
         } else if (checkedArr.length > 4) {
                             let card1 = checkedArr[0];
                             let index1 = finalArr[card1];
@@ -360,6 +365,10 @@ const MyScore = (props) => {
             let charlie = indexedArr[2];
             let delta = indexedArr[3];
             let echo = indexedArr[4];
+
+            let foundAlpha = orderedArr.indexOf(alpha)
+                console.log(foundAlpha)
+            props.setKickerArr([foundAlpha])
             
             let alphaRomeo = cipherSuits(finalHand, alpha);
             let betaRomeo = cipherSuits(finalHand, beta);
@@ -387,22 +396,24 @@ const MyScore = (props) => {
                     props.countStraightFlush(true)
                     checkTypes('Straight Flush')
                     props.setSubType(faceCountArr[0] >= 5 ? `${index1} High // Hearts` : faceCountArr[1] >= 5 ? `${index1} High // Clubs` : faceCountArr[2] >= 5 ? `${index1} High // Spades` : faceCountArr[3] >= 5 ? `${index1} High // Diamonds` : null)
-                    // props.setSubType(`${index5} to ${index1} Suited`)
                 } else {
-                    props.setSubType(`${index5} to ${index1}`)    
+                    props.setSubType(`${index5} to ${index1}`)
                 }
         }
     }
 
     const fullerHouse = () => {
-                let doubled = cipher(ranksArr, 2);
-                let tripled = cipher(ranksArr, 3);
-            let fullOf = doubled + 2;
-            let house = tripled + 2;
-        let bigger = finalArr[house - 2];
-        let smaller = finalArr[fullOf - 2];
-
+                    let doubled = cipher(ranksArr, 2);
+                    let tripled = cipher(ranksArr, 3);
+                let fullOf = doubled + 2;
+                let house = tripled + 2;
+            let bigger = finalArr[house - 2];
+            let smaller = finalArr[fullOf - 2];
         props.setSubType(`${bigger}s full of ${smaller}s`)
+
+            let alpha = orderedArr.indexOf(bigger)
+            let beta = orderedArr.indexOf(smaller)
+        props.setKickerArr([alpha, beta])
     }
     
     const flusher = () => {
@@ -455,7 +466,7 @@ const MyScore = (props) => {
             let sortedArr = [card1, card2, card3].filter(e => e !== -1).sort((a, b) => a - b).reverse()
 
             let kicker = orderedArr[sortedArr[0]]
-            let dux = [sortedArr[0]]
+            let dux = [orderedArr.indexOf(rank1), sortedArr[0]]
 
             props.setKicker(`${kicker} Kicker`)
             props.setKickerArr(dux)
@@ -482,7 +493,7 @@ const MyScore = (props) => {
             let sortedArr = [card1, card2, card3, card4].filter(el => el !== -1).sort((a, b) => a - b).reverse()
                     
             let kicker = orderedArr[sortedArr[0]]
-            let dux = [sortedArr[0], sortedArr[1]]
+            let dux = [orderedArr.indexOf(`${rank1}`), sortedArr[0], sortedArr[1]]
                     
             props.setKicker(`${kicker} Kicker`)
             props.setKickerArr(dux)
@@ -504,10 +515,10 @@ const MyScore = (props) => {
                     let pairC = orderedArr[cardC]
 
         props.setSubType(`${pairA}s & ${pairB}s` )        
-        findingDoublesKicker(`${pairA}`, `${pairB}`)
+        findingDoublesKicker(`${pairA}`, `${pairB}`, cardA, cardB)
     }
 
-        const findingDoublesKicker = (rank1, rank2) => {
+        const findingDoublesKicker = (rank1, rank2, index1, index2) => {
             let filteredHand = finalHand.filter(el => el['card_rank'] !== rank1 && el['card_rank'] !== rank2)
             let mapper = filteredHand.map(e => e.card_rank)
 
@@ -521,15 +532,15 @@ const MyScore = (props) => {
             let sortedArr = [card1, card2, card3, card4, card5, card6].filter(el => el !== -1).sort((a, b) => a - b).reverse()
                 
             let kicker = orderedArr[sortedArr[0]]
-            let dux = [sortedArr[0]]
+            let dux = [index1, index2, sortedArr[0]]
                 
             props.setKicker(`${kicker} Kicker`)
             props.setKickerArr(dux)
         }
 
     const snakeEyes = () => {
-        let tester = cipher(ranksArr, 2)
-        let foundPair = tester + 2
+        let index = cipher(ranksArr, 2)
+        let foundPair = index + 2
         
             if (foundPair === 14) {
                 foundPair = 'Ace'
@@ -546,10 +557,10 @@ const MyScore = (props) => {
             } else {
                 props.setSubType(`${foundPair}'s`)
             }
-        findingKicker(`${foundPair}`)
+        findingKicker(`${foundPair}`, index)
     }
 
-        const findingKicker = (rank1) => {
+        const findingKicker = (rank1, index) => {
             let filteredHand = finalHand.filter(el => el['card_rank'] !== rank1)
             let mapper = filteredHand.map(e => e.card_rank)
 
@@ -563,7 +574,7 @@ const MyScore = (props) => {
             let sortedArr = [card1, card2, card3, card4, card5, card6].filter(el => el !== -1).sort((a, b) => a - b).reverse()
     
             let kicker = orderedArr[sortedArr[0]]
-            let dux = [sortedArr[0], sortedArr[1], sortedArr[2]]
+            let dux = [index, sortedArr[0], sortedArr[1], sortedArr[2]]
                 
             props.setKicker(`${kicker} Kicker`)
             props.setKickerArr(dux)
@@ -601,8 +612,8 @@ const MyScore = (props) => {
         props.setKickerArr(dux)
     }
 
-        const {handType} = props.score.myHand
-        const show = props.rules.listOfHands.filter(element => element.badge_name === handType).map((rules => (
+        
+        const show = listOfHands.filter(element => element.badge_name === handType).map((rules => (
         <div 
             key={rules.badge_id} 
             className='rules-container' 
