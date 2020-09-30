@@ -28,7 +28,7 @@ const Cash = (props) => {
     return (
         <div className='Cash-master' >
             {/* <p > Pot </p> */}
-            <p id='money-pool'> ${moneyPool.toFixed(2)} </p>
+            <p id='money-pool'> ${moneyPool} </p>
         </div>
     )
 }

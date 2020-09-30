@@ -17,24 +17,52 @@ import {setRules} from '../../../ducks/rulesReducer'
 const player1 = {
     username: 'Player1',
     cash: 500,
-    isDealer: false
+    isDealer: false,
+    balance: 0,
+    isBetting: false,
+    isChecking: false,
+    isRaising: false,
+    isCalling: false,
+    isFolding: false,
+    isAllIn: false
 }
 
 const bots = [
     {
         username: "Hamilton",
         cash: 500,
-        isDealer: false
+        isDealer: false,
+        balance: 0,
+        isBetting: false,
+        isChecking: false,
+        isRaising: false,
+        isCalling: false,
+        isFolding: false,
+        isAllIn: false
     },
     {
         username: "Burr",
         cash: 500,
-        isDealer: false
+        isDealer: false,
+        balance: 0,
+        isBetting: false,
+        isChecking: false,
+        isRaising: false,
+        isCalling: false,
+        isFolding: false,
+        isAllIn: false
     },
     {
         username: "Jefferson",
         cash: 500,
-        isDealer: false
+        isDealer: false,
+        balance: 0,
+        isBetting: false,
+        isChecking: false,
+        isRaising: false,
+        isCalling: false,
+        isFolding: false,
+        isAllIn: false
     }
 ]
 

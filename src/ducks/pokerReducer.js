@@ -21,6 +21,7 @@ const initialState = {
     }
 }
 
+// const HAND_IS_OVER = 'HAND_IS_OVER'
 const HAND_IS_OVER = 'HAND_IS_OVER'
 const PAY_ENTRY = 'PAY_ENTRY'
 const SET_WINNER = 'SET_WINNER'
@@ -37,14 +38,24 @@ const ADD_CASH = 'ADD_CASH'
 const ASSIGN_SM = 'ASSIGN_SM'
 const ASSIGN_BG = 'ASSIGN_BG'
 const BANKER = 'BANKER'
-// const SPLIT = 'SPLIT'
+const SET_STATUS = 'SET_STATUS'
+const CLEAR_ALL = 'CLEAR_ALL'
 
-// export function split(money, indexesArr) {
-//     return {
-//         type: SPLIT,
-//         payload: money, indexesArr
-//     }
-// }
+export function setStatus(index, condition, boolean) {
+console.log(`${index} = i, ${condition} = cond, ${boolean} = bool`, 'PAYLOAD-STATUS')
+    return {
+        type: SET_STATUS,
+        payload: {index, condition, boolean}
+    }
+}
+
+export function clearAll(boolean) {
+    // console.log(money, index, 'PAYLOAD-BANKER')
+    return {
+        type: SET_STATUS,
+        payload: {boolean}
+    }
+}
 
 export function banker(money, index) {
     console.log(money, index, 'PAYLOAD-BANKER')
@@ -159,7 +170,7 @@ export function isShuffling(boolean) {
     }
 }
 
-export default function flowReducer(state = initialState, action) {
+export default function pokerReducer(state = initialState, action) {
     const {type, payload} = action
 
     switch(type) {
@@ -209,14 +220,15 @@ export default function flowReducer(state = initialState, action) {
             return {...state, poker: {...state.poker, bigPosition: payload + 1}};
 
         case BANKER:
-            let players = [...state.poker.players]
-            players[payload.index].cash = payload.money
+                let players = [...state.poker.players]
+                players[payload.index].cash = payload.money
             return {...state, poker: {...state.poker, players}};
 
-        // case SPLIT:
-        //     let players = [...state.poker.players]
-        //     players[payload.indexes[].cash] = payload.money
-        //     return {...state, poker: {...state.poker, players}};
+        case SET_STATUS:
+                let actives = [...state.poker.players]
+                actives[payload.index][`${payload.condition}`] = payload.boolean
+                console.log(actives)
+            return {...state, poker: {...state.poker, actives}};
 
         default:
             return state;

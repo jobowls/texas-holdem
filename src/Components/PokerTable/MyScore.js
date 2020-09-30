@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {GiPokerHand} from 'react-icons/gi'
 import {setScore, setHighest, setKickerArr, setBestHand, setSubType, setKicker, countRoyalFlush, countStraightFlush, count4Kind, countFullHouse, countFlush, countStraight, count3Kind, count2Pair, countPair, countHighCard, resetBest5, setHandType, tallyOne, tallySuits} from '../../ducks/scoringReducer'
 import {setRules} from '../../ducks/rulesReducer'
-import {cipher, cipherSuits} from '../Math/CountingCards'
+import {cipher, cipherFlush, cipherSuits} from '../Math/CountingCards'
 
 const MyScore = (props) => {
     const {finalHand} = props.score.myHand
@@ -73,12 +73,11 @@ const MyScore = (props) => {
     }
 
     useEffect(() => {
-    //    if (props.score.best5.hasRoyalFlush === true) {
-    //        checkTypes('Royal Flush')
-    //    } else if (props.score.best5.hasStraightFlush === true) {
-    //        checkTypes('Straight Flush')
-    //    } else 
-       if (props.score.best5.has4Kind === true) {
+       if (props.score.best5.hasRoyalFlush === true) {
+           checkTypes('Royal Flush')
+       } else if (props.score.best5.hasStraightFlush === true) {
+           checkTypes('Straight Flush')
+       } else if (props.score.best5.has4Kind === true) {
            checkTypes('4 of a Kind')
        } else if (props.score.best5.hasFullHouse === true) {
            checkTypes('Full House')
@@ -390,11 +389,11 @@ const MyScore = (props) => {
 
                 if (faceCountArr.includes(5) && `${index1}` === 'Ace') {
                     props.countRoyalFlush(true)
-                    checkTypes('Royal Flush')
+                    // checkTypes('Royal Flush')
                     props.setSubType(faceCountArr[0] >= 5 ? 'Hearts' : faceCountArr[1] >= 5 ? 'Clubs' : faceCountArr[2] >= 5 ? 'Spades' : faceCountArr[3] >= 5 ? 'Diamonds' : null)
                 } else if (faceCountArr.includes(5)) {
                     props.countStraightFlush(true)
-                    checkTypes('Straight Flush')
+                    // checkTypes('Straight Flush')
                     props.setSubType(faceCountArr[0] >= 5 ? `${index1} High // Hearts` : faceCountArr[1] >= 5 ? `${index1} High // Clubs` : faceCountArr[2] >= 5 ? `${index1} High // Spades` : faceCountArr[3] >= 5 ? `${index1} High // Diamonds` : null)
                 } else {
                     props.setSubType(`${index5} to ${index1}`)
@@ -417,10 +416,11 @@ const MyScore = (props) => {
     }
     
     const flusher = () => {
-            let foundSuitIndex = cipher(suitsArr, 5);
-            let foundSuit = finalSuitsArr[foundSuitIndex];
-
-        findingFlush(`${foundSuit}`)
+        for (let i = 0; i < suitsArr.length; i++) {
+            if (suitsArr[i] >= 5) {
+                findingFlush(`${finalSuitsArr[i]}`)
+            }
+        }
     }
 
         const findingFlush = (suit) => {
@@ -612,51 +612,11 @@ const MyScore = (props) => {
         props.setKickerArr(dux)
     }
 
-        
-        const show = listOfHands.filter(element => element.badge_name === handType).map((rules => (
-        <div 
-            key={rules.badge_id} 
-            className='rules-container' 
-            style={
-                    handType === 'High Card'
-                ? { 
-                    border: '7px dotted rgba(25, 33, 37, 1)',
-                    color: 'silver',
-                    marginTop: '10px',
-                    borderRadius: '20px', 
-                    paddingRight: '10px' 
-                }
-                : 
-                  { 
-                    boxShadow: '0px 0px 15px 3px silver',
-                    border: '7px dotted rgb(25, 33, 37)',
-                    color: 'silver',
-                    marginTop: '10px',
-                    borderRadius: '20px', 
-                    paddingRight: '10px' 
-                }
-            } > 
-            <GiPokerHand 
-                id='modal-icons'
-                style={
-                    handType === 'High Card' 
-                    ? {
-                        color: 'silver'
-                    } 
-                    : {
-                        color: 'silver'
-                    }
-            } />
-            <p> {rules.badge_name} </p>
-            <p id='xp'> {rules.badge_score} XP </p>
-        </div>
-    )))
-
     return (
         <div className='rules-master' >
-            <div className='show-stopper' >
+            {/* <div className='show-stopper' >
                 {show}
-            </div>
+            </div> */}
         </div>
 )}
 const mapStateToProps = (reduxState) => reduxState

@@ -4,14 +4,18 @@ import {connect} from 'react-redux'
 import cardBack from '../../assets/card-back.jpg'
 
 const Hamilton = (props) => {
-    
-    // useEffect(() => {
-
-    // }, [props.cards.pocketHamilton])
 
     return (
         <div className='pocket-container' >
             {
+                props.game.poker.players[1].isFolding ?
+                <div 
+                    className='pocket-hand' 
+                    style={{opacity: '20%'}} >
+                    <img src={cardBack} alt='' className='card-back' />
+                    <img src={cardBack} alt='' className='card-back' />
+                </div>
+                :
                 props.cash.status.showAllHands === true ?
                 props.cards.pocketAi1.map((element, i) => (
                 <div className='pocket-hand' key={i} >

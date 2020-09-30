@@ -21,10 +21,11 @@ import SmStakes from './SmStakes'
 import Marquee from '../Marquee'
 import Smally from './Smally'
 import Biggy from './Biggy'
+import Winner from '../../Math/Winner'
 
 //  DUX 
 import {setDeck, setPocket, setPocketAi1, setPocketAi2, setPocketAi3, setFlop, setTurn, setRiver, setBurned, setCommunity, setUsed, reset} from '../../../ducks/cardsReducer'
-import {banker, assignSm, assignBg, setWinner, handIsOver, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse, isSuited} from '../../../ducks/pokerReducer'
+import {banker, setStatus, assignSm, assignBg, setWinner, handIsOver, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse, isSuited} from '../../../ducks/pokerReducer'
 import {setKickerArr, setKickerArrA, setKickerArrB, setKickerArrC, setScore, setScoreA, setScoreB, setScoreC, setHighestA, setHighestB, setHighestC, setHighest, setKicker, setKickerA, setKickerB, setKickerC, resetBest5A, resetBest5B, resetBest5C, setSubTypeA, setSubTypeB, setSubTypeC, setHandTypeA, setHandTypeB, setHandTypeC, setSubType, setHamilton, setBurr, setJefferson, chickenDinner, setMyHand, setHandType, tallyOne, tallySuits, resetBest5} from '../../../ducks/scoringReducer'
 import {showAllHands} from '../../../ducks/cashReducer'
 import {setNextMove} from '../../../ducks/dealerReducer'
@@ -41,6 +42,27 @@ const Game = (props) => {
     const [toggleSmallBlind, setToggleSmallBlind] = useState(1)
     const [toggleBigBlind, setToggleBigBlind] = useState(2)
     const [toggleRules, setToggleRules] = useState(false)
+    const [pokerStatus, setPokerStatus] = useState('')
+    // const [potIsEven] = useState([
+    //     props.game.poker.players[0].balance,
+    //     props.game.poker.players[1].balance,
+    //     props.game.poker.players[2].balance,
+    //     props.game.poker.players[3].balance
+    // ])
+
+    useEffect(() => {
+        if (props.game.status.winner !== '') {
+            setPokerStatus('WINNER')
+        } 
+    }, [props.game.status.winner])
+
+    useEffect(() => {
+        if (props.game.status.isShuffling === true) {
+            setPokerStatus('...shuffling deck')
+        } else {
+            setPokerStatus('')
+        }
+    }, [props.game.status.isShuffling])
 
     useEffect(() => {
         setToggleButton(props.game.poker.buttonIndex)
@@ -328,7 +350,6 @@ const Game = (props) => {
         // console.log(props.score.myHand.kickerArr, 'PLAYER1')
         props.showAllHands(true)
         console.log(props.score.myHand.kickerArr, 'PLAYER1')
-        // props.handIsOver(true)
         
         // const flipCard = document.querySelector('.pocket-container')
         // flipCard.addEventListener('click', function() {
@@ -357,6 +378,15 @@ const Game = (props) => {
         props.setScoreB(0)
         props.setScoreC(0)
         props.setWinner('')
+
+        props.setStatus(0, 'isFolding', false)
+        props.setStatus(0, 'isChecking', false)
+        props.setStatus(1, 'isFolding', false)
+        props.setStatus(1, 'isChecking', false)
+        props.setStatus(2, 'isFolding', false)
+        props.setStatus(2, 'isChecking', false)
+        props.setStatus(3, 'isFolding', false)
+        props.setStatus(3, 'isChecking', false)
         
         props.setHamilton([])
         props.setHandTypeA('')
@@ -430,9 +460,9 @@ const Game = (props) => {
             <section id='game-divider' >
                 <div id='player-list' >
                     <div className='player-box'>
-                        <div className='player-status' >
+                        <div className={props.cash.status.whosTurn === 0 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {props.game.poker.players[0].username} </h3>
-                            <p style={{color: poker.players[0].cash > 250 ? 'rgb(0, 255, 153)' : poker.players[0].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[0].cash} </p>
+                            <p style={{color: poker.players[0].cash > 250 ? 'silver' : poker.players[0].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[0].cash} </p>
                         </div>
                         <div className='pocket-divider' >
                             <Pocket />
@@ -459,9 +489,9 @@ const Game = (props) => {
                         </div>
                     </div>
                     <div className='player-box'>
-                        <div className='player-status' >
+                        <div className={props.cash.status.whosTurn === 1 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {props.game.poker.players[1].username} </h3>
-                            <p style={{color: poker.players[1].cash > 250 ? 'rgb(0, 255, 153)' : poker.players[1].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[1].cash} </p>
+                            <p style={{color: poker.players[1].cash > 250 ? 'silver' : poker.players[1].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[1].cash} </p>
                         </div>
                         <div className='pocket-divider' >
                             {
@@ -495,9 +525,9 @@ const Game = (props) => {
                         </div>
                     </div>
                     <div className='player-box'>
-                        <div className='player-status' >
+                        <div className={props.cash.status.whosTurn === 2 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {props.game.poker.players[2].username} </h3>
-                            <p style={{color: poker.players[2].cash > 250 ? 'rgb(0, 255, 153)' : poker.players[2].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[2].cash} </p>
+                            <p style={{color: poker.players[2].cash > 250 ? 'silver' : poker.players[2].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[2].cash} </p>
                         </div>
                         
                         <div className='pocket-divider' >
@@ -532,9 +562,9 @@ const Game = (props) => {
                         </div>
                     </div>
                     <div className='player-box'>
-                        <div className='player-status' >
+                        <div className={props.cash.status.whosTurn === 3 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {props.game.poker.players[3].username} </h3>
-                            <p style={{color: poker.players[3].cash > 250 ? 'rgb(0, 255, 153)' : poker.players[3].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[3].cash} </p>
+                            <p style={{color: poker.players[3].cash > 250 ? 'silver' : poker.players[3].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[3].cash} </p>
                         </div>
                         <div className='pocket-divider' >
                             {
@@ -571,6 +601,15 @@ const Game = (props) => {
                 <div className='slider-table' >
                     <div className='meter-box' >
                         {
+                            props.game.status.isShuffling === true ?
+                            <p style={{fontSize: '16px', color: 'silver'}} > {pokerStatus} </p>
+                            :                            
+                            props.game.status.handIsOver === true ?
+                            <div>
+                                <p style={{fontSize: '16px', color: 'silver', fontWeight: 'bold'}} > {pokerStatus} </p>
+                                <Winner  />
+                            </div>
+                        :
                             props.cash.status.showAllHands === true ?
                             <ActionFeed />
                         :
@@ -662,5 +701,6 @@ export default connect(
         setKickerArr,
         setKickerArrA,
         setKickerArrB,
-        setKickerArrC
+        setKickerArrC,
+        setStatus
     })(withRouter(Game))

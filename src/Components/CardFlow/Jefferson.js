@@ -12,6 +12,14 @@ const Jefferson = (props) => {
     return (
         <div className='pocket-container' >
             {
+                props.game.poker.players[3].isFolding ?
+                <div 
+                    className='pocket-hand' 
+                    style={{opacity: '20%'}} >
+                    <img src={cardBack} alt='' className='card-back' />
+                    <img src={cardBack} alt='' className='card-back' />
+                </div>
+                :
                 props.cash.status.showAllHands === true ?
                 props.cards.pocketAi3.map((element, i) => (
                 <div className='pocket-hand' key={i} >

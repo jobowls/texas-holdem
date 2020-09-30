@@ -4,25 +4,28 @@
     width: 100%;
     height: 85%;
     // background-color: rgba(10, 10, 10, 0.75);
-    border: 5px dotted rgb(45, 45, 45);
+    // background-color: $HAZE;
+    // border: 5px dotted rgb(45, 45, 45);
     border-radius: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 20px;
     line-height: 1em;
-    // background-image: linear-gradient(to right, $CHARCOAL, rgba(10, 10, 10, 0.75));
-    // box-shadow: 1px 3px 7px 1px rgb(149, 149, 149);
+    background-image: linear-gradient(to right, $CHARCOAL, rgba(10, 10, 10, 0.75));
+    box-shadow: 0px 0px 15px 1px rgba(10, 10, 10, 1);
+    // box-shadow: inset 0px 0px 20px 5px rgba(10, 10, 10, 1);
 }
 
 .room-title-container {
     width: 40%;
     color: silver;
     text-align: center;
+    // line-height: 0em;
 }
 
 .the-slot {
-    width: 10%;
+    width: 40%;
     // height: 150%;
     display: flex;
     flex-direction: column;
@@ -30,6 +33,7 @@
     align-items: center;
     text-align: center;
     color: silver;
+    line-height: 0em;
 
     // font-weight: bold;
     // border: dotted 1px silver;
@@ -44,6 +48,7 @@
 
 #poker-room-title {
     color: $LIGHTHOUSE;
+    line-height: 0em;
 }
 
 // #poker-room-title1 {
@@ -64,7 +69,7 @@
 
 .btn-menu {
     width: 10%;
-    margin-right: 5px;
+    margin-left: 10px;
 }
 
 #action-pic {
@@ -83,17 +88,17 @@
 #marquee {
     width: 100%;
     height: 100%;
-    display: flex;
     // flex-direction: column;
-    justify-content: center;
-    align-items: center;
     // line-height: 1em;
     text-align: center;
 }
 
 #marquee-pocket {
-    color: $ROYALFLUSH;
-    height: 15%;
+    width: max-content;
+    color: $LIGHTHOUSE;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 #marquee-name {
@@ -108,17 +113,57 @@
 .action-btns {
     font-size: 10px;
     width: 85%;
-    background-color: rgba(0, 0, 0, 0.0);
-    color: silver;
+    background-color: rgba(10, 10, 10, 0);
+    color: rgb(75, 75, 75);
     font-weight: bold;
     border: none;
+    // border: 1px solid rgb(75, 75, 75);
+    // border-radius: 20px;
     padding-top: 5px;
     padding-bottom: 5px;
-    border-radius: 5px;
 }
 
 .action-btns:hover {
     cursor: pointer;
     color: white;
     background-color: rgba(0, 0, 0, 0.75);
+}
+
+.rules-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 5px 5px 5px;
+    line-height: 0em;
+    border: 5px dashed silver;
+    border: 5px dotted $HAZE;
+    border-radius: 50px;
+    box-shadow: 0px 0px 15px 1px $HAZE;
+    flex-wrap: wrap;
+}
+
+.show-stopper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // margin-bottom: 20px;
+    // margin-top: 5px;
+    // background-color: transparent;
+}
+
+.theatre {
+    width: max-content;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 20px;
+}
+
+#xp {
+    margin-left: 20px;
+    padding-right: 10px;
 }

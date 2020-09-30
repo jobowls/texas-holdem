@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom'
 import {setBigBlind, setSmallBlind} from '../../../ducks/pokerReducer'
 import {setHandType, setSubType} from '../../../ducks/scoringReducer'
 import {handIsOver, isShuffling, isSuited,} from '../../../ducks/pokerReducer'
-import {GiPerpendicularRings, GiSpades, GiHearts, GiClubs, GiDiamonds, GiHolosphere, GiPaperLantern, GiRingedPlanet, GiPerspectiveDiceThree, GiPlanetCore, Gi3DStairs, GiBottomRight3DArrow, GiAbstract019, GiConvergenceTarget, GiBanana, GiBandit} from 'react-icons/gi'
+import {GiPokerHand, GiPerpendicularRings, GiSpades, GiHearts, GiClubs, GiDiamonds, GiHolosphere, GiPaperLantern, GiRingedPlanet, GiPerspectiveDiceThree, GiPlanetCore, Gi3DStairs, GiBottomRight3DArrow, GiAbstract019, GiConvergenceTarget, GiBanana, GiBandit} from 'react-icons/gi'
 import './ActionModal.scss'
 import TheSlot from '../../Math/TheSlot'
 import Winner from '../../Math/Winner'
@@ -14,9 +14,10 @@ import ScoreJefferson from './ScoreJefferson'
 
 const ActionModal = (props) => {
     const {push} = props.history
+    const {handType, kicker, finalHand, subType, highestCard} = props.score.myHand
+    const {myHand} = props.score
     
     const [setUrl] = useState('')
-    const [toggleWinner, setToggleWinner] = useState(false)
     const [pokerStatus, setPokerStatus] = useState('')
     const [pocketStatus, setPocketStatus] = useState('')
 
@@ -35,13 +36,11 @@ const ActionModal = (props) => {
         } 
     }, [props.game.status.winner])
 
-    // useEffect(() => {
-    //     console.log(props.score.myHand.kickerArr, 'TIE-BREAK')
-    // }, [props.score.myHand.kickerArr])
 
-    // useEffect(() => {
-    //     console.log(props.game.status.isSuited, 'FIRED_SUITED')
-    // }, [props.game.status.isSuited])
+    useEffect(() => {
+        console.log(props.score.myHand)
+    }, [props.score.myHand])
+
 
     useEffect(() => {
         if (props.game.status.isShuffling === true) {
@@ -76,21 +75,7 @@ const ActionModal = (props) => {
 
     const findWinner = () => {
         props.handIsOver(true)
-        console.log(props.game.status.winner)
-        console.log(props.cash.status.showAllHands)
-        console.log(props.game.status.handIsOver)
-        // setToggleWinner(true)
     }
-
-    // useEffect(() => {
-    //     if (props.game.status.handIsOver === true) {
-    //         setToggleWinner(true)
-    //         console.log(props.cash.status.winner)
-    //         console.log(props.game.status.handIsOver)
-    //     } else {
-    //         setToggleWinner(false)
-    //     }
-    // }, [props.game.status.handIsOver])
 
     const pocketMapper = () => {
         props.cards.pocket.map((card, i) => (
@@ -122,6 +107,45 @@ const ActionModal = (props) => {
     const {buttonIndex} = props.game.poker
     const {game, user} = props
     const {pocket} = props.cards
+
+    const show = props.rules.listOfHands
+        .filter(element => element.badge_name === handType)
+        .map((rules => (
+            <div 
+                key={rules.badge_id} 
+                className='rules-container' 
+                 style={handType !== 'High Card' ? {boxShadow: '0px 0px 15px 0px silver'} : null} > 
+                <div className='theatre' >
+                    <GiPokerHand 
+                        id='modal-icons'
+                        style={
+                            handType === 'High Card' 
+                            ? {
+                                color: 'silver',
+                                marginRight: '10px'
+                            } 
+                            : {
+                                color: 'silver',
+                                marginRight: '10px'
+                            }
+                    } />
+                    <p style={{color: 'rgb(0, 122, 175)'}} > {rules.badge_name} </p>
+                </div>
+                {
+                    finalHand.length === 2 && handType === 'Pair' ?
+                    <p> Pocket {subType} </p>
+                    :
+                    handType === 'High Card' ? 
+                    <p> {highestCard} </p>
+                    :
+                    !kicker ?
+                    <p> {subType} </p>
+                    :
+                    <p> {subType} | {kicker} </p>
+                }   
+                <p id='xp'> {rules.badge_score} XP </p>                     
+            </div>
+    )))
     return (
         <div className='action-modal-master' >
 
@@ -133,63 +157,31 @@ const ActionModal = (props) => {
                     onClick={toDash}  >
                 </img>
                 <h2> {user.player.username} </h2>
-                <p> Stack: ${props.cash.cashFlow.chipCount.toFixed(2)} </p>
-                <p> {game.poker.XP.toFixed(1)} XP </p>
+                <p> Stack: ${props.cash.cashFlow.chipCount} </p>
+                <p> {game.poker.XP} XP </p>
             </div>
             
             <div className='room-title-container' >
                 <h2 id='poker-room-title' > THE LIGHTHOUSE </h2>
                 <h3 id='poker-room-title1' > TEXAS HOLD'EM </h3>
-                <p> Blinds: ${game.poker.smallBlind.toFixed(2)} / ${game.poker.bigBlind.toFixed(2)} </p>
-                <p> Purse: ${game.poker.prizeMoney.toFixed(2)} </p>
-                {/* <p> Round: {game.poker.round} </p>  */}
+                <p> Purse: ${game.poker.prizeMoney} </p>
+                <p> Blinds: ${game.poker.smallBlind} / ${game.poker.bigBlind} </p>
             </div>
-            {/* <div 
-                className='spinner'
-                style={
-                    buttonIndex === 1 ? {color: 'teal'}
-                    : buttonIndex === 2 ? {color: 'dodgerBlue'}
-                    : buttonIndex === 3 ? {color: 'orange'}
-                    : buttonIndex === 4 ? {color: 'red'}
-                    : null 
-                } >
-                <GiPerpendicularRings id='magic-orb' />
-            </div> */}
 
             <div className='the-slot' >
-                {/* <Winner  /> */}
-                {
-                    props.game.status.isShuffling === true ?
-                    <p> {pokerStatus} </p>
-                    :
-                    props.game.status.handIsOver === true ?
-                    <div>
-                        <p> {pokerStatus} </p>
-                        <Winner  />
-                    </div>
-                    :
-                    props.score.myHand.finalHand.length === 2 && props.score.myHand.handType === 'Pair' ?
+                <div className='show-stopper' > {show} </div>
+                {                   
+                    handType === 'High Card' && pocket[0].card_suit === pocket[1].card_suit ?
                     <div id='marquee-pocket' >
-                        <p> pocket </p>                 
-                        <p> {props.score.myHand.subType} </p>                 
-                    </div>
+                        <p style={{color: 'silver', marginRight: '10px'}} > Pocket: </p>
+                        <p> {props.cards.pocket[0].card_rank} | {props.cards.pocket[1].card_rank} </p>
+                        <p style={{color: 'silver', marginLeft: '10px'}} > Suited </p>
+                    </div>                    
                     :
-                    props.score.myHand.handType === 'High Card' && props.cards.pocket[0].card_suit === props.cards.pocket[1].card_suit ?
-                    <div id='marquee-pocket' >
-                        <p> Pocket </p>
-                        <p> {props.cards.pocket[0].card_rank} | {props.cards.pocket[1].card_rank} </p>                                                 
-                        <p style={{color: 'silver'}} > Suited </p>
-                    </div>
-                    :
-                    props.score.myHand.handType === 'High Card' ?
-                    <div id-marquee-pocket >
-                        <p> {props.score.myHand.highestCard} </p>
-                    </div>
-                    :
-                    <div id='marquee-pocket' >
-                        <p> {props.score.myHand.subType} </p>
-                        <p style={{color: 'silver'}} > {props.score.myHand.kicker} </p>
-                    </div>
+                    null
+                    // <div id='marquee-pocket' >
+                    //     <p style={{color: 'silver'}} > {kicker} </p>
+                    // </div>
                 }
             </div>
 
@@ -222,10 +214,10 @@ const ActionModal = (props) => {
                     onClick={props.clear}
                     className='action-btns'
                     > Reset </button>
-                <button
+                {/* <button
                     onClick={props.toggler}
                     className='action-btns'
-                    > Menu </button>
+                    > Menu </button> */}
             </div>
         </div>
     )

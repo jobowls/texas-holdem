@@ -2,42 +2,100 @@
 
 .slide-rule {
     width: 50%;
-    height: 75%;
-    background-color: rgba(10, 10, 10, 0.75);
+    height: 100%;
+    // background-color: rgba(10, 10, 10, 0.75);
     border-radius: 25px;
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    text-align: center;
     // opacity: 10%;
 }
 
 .modal-counter {
     width: 100%;
-    height: 100%;
+    // height: 50%;
     color: white;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    // background-color: $HAZE;
+    // border-radius: 50px;
+    line-height: 0em;
+    padding-top: 5px;
+    padding-bottom: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 #ticker-btn-increment {
-    position: relative;
-    background-color: white;
-    color: $CHARCOAL;
-    border: 1px solid $CHARCOAL;
-    border-radius: 5px;
-}
-#ticker-btn-reset {
-    position: relative;
-    background-color: white;
-    color: $CHARCOAL;
-    border: 1px solid $CHARCOAL;
-    border-radius: 5px;
+    background-color: transparent;
+    border: none;
+    border-radius: 50px;
 }
 
-#ticker-btn-increment:hover {
+#ticker {
+    // padding: 10px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    background-color: $HAZE;
+    // font-weight: bold;
+    color: $ROYALFLUSH;
+    box-shadow: 1px 1px 15px 0px rgba(30, 30, 30, 0.75);
+    // border: none;
+}
+
+#ticker:hover {
     cursor: pointer;
 }
-#ticker-btn-reset:hover {
+
+#ticker-btn {
+    line-height: 1em;
+    position: relative;
+    background-color: $HAZE;
+    box-shadow: 1px 1px 15px 0px rgba(30, 30, 30, 0.75);
+    // border: none;
+    color: silver;
+    border-radius: 50px;
+    width: 20%;
+    height: 30px;
+    padding: 3px;
+}
+
+#ticker-btn:hover {
     cursor: pointer;
+    background-color: rgb(50, 50, 50);
+    background-color: $CARPET;
+    color: whitesmoke;
+}
+
+.counter-parent {
+    width: 100%;
+    line-height: 1em;
+    background-color: $CHARCOAL;
+    border-radius: 20px;
+    box-shadow: inset 0px 0px 5px 1px rgba(10, 10, 10, 1);
+    // background-color: rgba(0, 0, 0, 0.75);
+    // border-radius: 10px;
+    // box-shadow: 0px 0px 20px 2px rgba(75, 75, 75, 0.75);
+    padding: 10px;
+}
+
+.meter-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    // margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top: 10px;
+    // border-top: 2px solid silver;
+}
+
+#whos-turn {
+    background-color: $HAZE;
+    border-radius: 50px;
+    line-height: 2em;
 }

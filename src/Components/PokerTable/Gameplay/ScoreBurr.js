@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {setScoreB, setKickerArrB, setHighestB, setKickerB, setBurr, setHandTypeB, setSubTypeB, resetBest5B, countRoyalFlushB, countStraightFlushB, count4KindB, countFullHouseB, countFlushB, countStraightB, count3KindB, count2PairB, countPairB, countHighCardB} from '../../../ducks/scoringReducer'
 import '../../CardFlow/Community.scss'
-import {cipher, cipherSuits} from '../../Math/CountingCards'
+import {cipher, cipherFlush, cipherSuits} from '../../Math/CountingCards'
 
 const ScoreBurr = (props) => {
     const {finalHand} = props.score.botB
@@ -66,7 +66,11 @@ const ScoreBurr = (props) => {
     }
 
     useEffect(() => {
-        if (props.score.botB.has4Kind === true) {
+        if (props.score.botB.hasRoyalFlush === true) {
+            checkTypes('Royal Flush')
+        } else if (props.score.botB.hasStraightFlush === true) {
+            checkTypes('Straight Flush')
+        } else  if (props.score.botB.has4Kind === true) {
             checkTypes('4 of a Kind')
         } else if (props.score.botB.hasFullHouse === true) {
             checkTypes('Full House')
@@ -370,11 +374,11 @@ const ScoreBurr = (props) => {
 
             if (faceCountArr.includes(5) && `${index1} === 'Ace`) {
                 props.countRoyalFlushB(true)
-                checkTypes('Royal Flush')
+                // checkTypes('Royal Flush')
                 props.setSubTypeB(faceCountArr[0] >= 5 ? 'Hearts' : faceCountArr[1] >= 5 ? 'Clubs' : faceCountArr[2] >= 5 ? 'Spades' : faceCountArr[3] >= 5 ? 'Diamonds' : null)
             } else if (faceCountArr.includes(5)) {
                 props.countStraightFlushB(true)
-                checkTypes('Straight Flush')
+                // checkTypes('Straight Flush')
                 props.setSubTypeB(faceCountArr[0] >= 5 ? `${index1} High // Hearts` : faceCountArr[1] >= 5 ? `${index1} High // Clubs` : faceCountArr[2] >= 5 ? `${index1} High // Spades` : faceCountArr[3] >= 5 ? `${index1} High // Diamonds` : null)
                 // props.setSubTypeB(`${index5} to ${index1} Suited`)
             } else {
@@ -400,10 +404,11 @@ const ScoreBurr = (props) => {
     }
     
     const flusher = () => {
-        let foundSuitIndex = cipher(suitsArr, 5);
-        let foundSuit = finalSuitsArr[foundSuitIndex];
-        
-        findingFlush(`${foundSuit}`)
+        for (let i = 0; i < suitsArr.length; i++) {
+            if (suitsArr[i] >= 5) {
+                findingFlush(`${finalSuitsArr[i]}`)
+            }
+        }
     }
 
         const findingFlush = (suit) => {

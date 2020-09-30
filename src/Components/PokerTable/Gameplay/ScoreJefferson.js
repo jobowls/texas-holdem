@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {setScoreC, setKickerArrC, setHighestC, setKickerC, setJefferson, setHandTypeC, setSubTypeC, resetBest5C, countRoyalFlushC, countStraightFlushC, count4KindC, countFullHouseC, countFlushC, countStraightC, count3KindC, count2PairC, countPairC, countHighCardC} from '../../../ducks/scoringReducer'
 import '../../CardFlow/Community.scss'
-import {cipher, cipherSuits} from '../../Math/CountingCards'
+import {cipher, cipherFlush, cipherSuits} from '../../Math/CountingCards'
 
 const ScoreJefferson = (props) => {
     const {finalHand} = props.score.botC
@@ -66,7 +66,11 @@ const ScoreJefferson = (props) => {
     }
 
     useEffect(() => {
-        if (props.score.botC.has4Kind === true) {
+        if (props.score.botC.hasRoyalFlush === true) {
+            checkTypes('Royal Flush')
+        } else if (props.score.botC.hasStraightFlush === true) {
+            checkTypes('Straight Flush')
+        } else if (props.score.botC.has4Kind === true) {
             checkTypes('4 of a Kind')
         } else if (props.score.botC.hasFullHouse === true) {
             checkTypes('Full House')
@@ -371,11 +375,11 @@ const ScoreJefferson = (props) => {
         
                 if (faceCountArr.includes(5) && `${index1} === 'Ace`) {
                     props.countRoyalFlushC(true)
-                    checkTypes('Royal Flush')
+                    // checkTypes('Royal Flush')
                     props.setSubTypeC(faceCountArr[0] >= 5 ? 'Hearts' : faceCountArr[1] >= 5 ? 'Clubs' : faceCountArr[2] >= 5 ? 'Spades' : faceCountArr[3] >= 5 ? 'Diamonds' : null)
                 } else if (faceCountArr.includes(5)) {
                     props.countStraightFlushC(true)
-                    checkTypes('Straight Flush')
+                    // checkTypes('Straight Flush')
                     props.setSubTypeC(faceCountArr[0] >= 5 ? `${index1} High // Hearts` : faceCountArr[1] >= 5 ? `${index1} High // Clubs` : faceCountArr[2] >= 5 ? `${index1} High // Spades` : faceCountArr[3] >= 5 ? `${index1} High // Diamonds` : null)
                     // props.setSubTypeC(`${index5} to ${index1} Suited`)
                 } else {
@@ -399,12 +403,13 @@ const ScoreJefferson = (props) => {
             let beta = orderedArr.indexOf(smaller)
         props.setKickerArrC([alpha, beta])
         }
-        
+
         const flusher = () => {
-            let foundSuitIndex = cipher(suitsArr, 5);
-            let foundSuit = finalSuitsArr[foundSuitIndex];
-            
-            findingFlush(`${foundSuit}`)
+            for (let i = 0; i < suitsArr.length; i++) {
+                if (suitsArr[i] >= 5) {
+                    findingFlush(`${finalSuitsArr[i]}`)
+                }
+            }
         }
     
             const findingFlush = (suit) => {

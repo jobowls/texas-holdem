@@ -7,29 +7,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;    
-    background-image: linear-gradient(to right, $CHARCOAL, rgb(10, 10, 10));
     // background-image: radial-gradient(rgb(99, 99, 99), rgb(40, 40, 40), rgb(10, 10, 10));
+    background-image: linear-gradient(to right, $CHARCOAL, rgb(10, 15, 15));
+    // background-image: url('../../../assets/black-paisely.jpg');
+    background-color: $CHARCOAL;
     background-repeat: no-repeat;
     background-position: center;
-    // background-image: url('../../../assets/black-paisely.jpg');
 }
 
-.game-controller {
-    width: 90%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    background-color: $CHARCOAL;
-    color: silver;
-    border-radius: 10px;
-}
 
 .felt-table {
     width: 85%;
     height: 65%;
     display: flex;
-    // flex-direction: column;
     justify-content: center;
     align-items: center;
     color: silver;
@@ -37,9 +27,9 @@
     font-size: xx-large;
     background-color: $CARPET;
     border-radius: 50%;
-    box-shadow: -2px 5px 2px 10px $CHARCOAL;
-    // border: 5px dotted rgba(25, 33, 37, 1);
-    // border: 5px dotted silver;
+    // box-shadow: inset 4px -4px 20px 5px $CHARCOAL;
+    box-shadow: -2px 5px 5px 10px $HAZE;
+    border: 5px dotted $HAZE;
 }
 
 .pocket {
@@ -77,17 +67,14 @@
     justify-content: center;
     margin-top: 0;
     align-items: flex-start;
-    // background-color: $CHARCOAL;
 }
 
 .hierarchy-tree {
-    // margin-top: 50px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     width: 15%;
     height: 75%;
-    // position: fixed;
 }
 
 #player-list {
@@ -97,10 +84,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-evenly;
-    // background-color: rgba(10, 10, 10, 0.75);
-    // border: 5px dotted rgb(45, 45, 45);
     border-radius: 20px;
-    // text-align: center;
 }
 
 .player-box {
@@ -124,23 +108,17 @@
 
 .button-container {
     width: 30%;
-    // height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    // position: relative;
 }
 
 .meter-box {
     width: 85%;
     height: 5%;
-    // position: relative;
     display: flex;
-    // flex-direction: row;
     align-items: center;
     justify-content: center;
-    // margin-top: 20px;
-    // margin-bottom: 10px;
 }
 
 .slider-table {
@@ -150,7 +128,6 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    // position: relative;
 }
 
 #player-box-name {
@@ -172,10 +149,38 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-right: 5px;
+    padding-left: 5px;
 }
 
-#chip-stack {
-    // width: 20%;
-    // padding-left: 20px;
-    // color: $ROYALFLUSH;
+.player-status-active {
+    width: 65%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 10px;
+    padding-left: 10px;
+    // border-top: 1px solid silver;
+    // border-radius: 50px;
+    animation: pulse 2.5s ease-out infinite;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+        box-shadow: 0 0 2px 1px rgba(100, 100, 100, 0.7);
+        // border
+	}
+
+	70% {
+		transform: scale(.95);
+        box-shadow: 0 0 10px 5px rgba(100, 100, 100, 0);
+        // border
+	}
+
+	100% {
+		transform: scale(0.95);
+        box-shadow: 0 0 2px 1px rgba(100, 100, 100, 0);
+        // border
+	}
 }
