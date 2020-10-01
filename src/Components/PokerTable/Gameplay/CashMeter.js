@@ -98,7 +98,6 @@ const CashMeter = (props) => {
         let money = players[active].cash - (currBet - runningTotal[active])
         let placing = currBet - runningTotal[active]
             console.log(placing, 'PLACING $')
-            // console.log(money, 'SHOULD BE THE CORRECT FUCKING DOLLAR AMOUNT!!!')
         props.setStatus(active, 'isCalling', true)
         props.setPot(placing + pot)
         props.banker(money, active)
