@@ -25,9 +25,9 @@ import Winner from '../../Math/Winner'
 
 //  DUX 
 import {setDeck, setPocket, setPocketAi1, setPocketAi2, setPocketAi3, setFlop, setTurn, setRiver, setBurned, setCommunity, setUsed, reset} from '../../../ducks/cardsReducer'
-import {banker, setStatus, assignSm, assignBg, setWinner, handIsOver, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse, isSuited} from '../../../ducks/pokerReducer'
+import {banker, movePhase, setStatus, assignSm, assignBg, setWinner, handIsOver, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse, isSuited, setBalance} from '../../../ducks/pokerReducer'
 import {setKickerArr, setKickerArrA, setKickerArrB, setKickerArrC, setScore, setScoreA, setScoreB, setScoreC, setHighestA, setHighestB, setHighestC, setHighest, setKicker, setKickerA, setKickerB, setKickerC, resetBest5A, resetBest5B, resetBest5C, setSubTypeA, setSubTypeB, setSubTypeC, setHandTypeA, setHandTypeB, setHandTypeC, setSubType, setHamilton, setBurr, setJefferson, chickenDinner, setMyHand, setHandType, tallyOne, tallySuits, resetBest5} from '../../../ducks/scoringReducer'
-import {showAllHands} from '../../../ducks/cashReducer'
+import {checkPot, showAllHands, setPlayerTurn, setCurrentBet} from '../../../ducks/cashReducer'
 import {setNextMove} from '../../../ducks/dealerReducer'
 
 //  ESTILO
@@ -43,12 +43,6 @@ const Game = (props) => {
     const [toggleBigBlind, setToggleBigBlind] = useState(2)
     const [toggleRules, setToggleRules] = useState(false)
     const [pokerStatus, setPokerStatus] = useState('')
-    // const [potIsEven] = useState([
-    //     props.game.poker.players[0].balance,
-    //     props.game.poker.players[1].balance,
-    //     props.game.poker.players[2].balance,
-    //     props.game.poker.players[3].balance
-    // ])
 
     useEffect(() => {
         if (props.game.status.winner !== '') {
@@ -68,30 +62,38 @@ const Game = (props) => {
         setToggleButton(props.game.poker.buttonIndex)
         setToggleSmallBlind(props.game.poker.smallPosition)
         setToggleBigBlind(props.game.poker.bigPosition)
-        console.log(props.game.poker, 'POKER-INDEXES')
     }, [props.game.poker.buttonIndex])
 
+    // useEffect(() => {
+    //     console.log(props.score.myHand.kickerArr, 'PLAYER1')
+    // }, [props.score.myHand.kickerArr])
+    // useEffect(() => {
+
+    //     console.log(props.score.botA.kickerArr, 'HAMILTON')
+    // }, [props.score.botA.kickerArr])
+
+    // useEffect(() => {
+    //     console.log(props.score.botB.kickerArr, 'BURR')
+    // }, [props.score.botB.kickerArr])
+
+    // useEffect(() => {
+    //     console.log(props.score.botC.kickerArr, 'JEFFERSON')
+    // }, [props.score.botC.kickerArr])
 
     useEffect(() => {
-        console.log(props.score.myHand.kickerArr, 'PLAYER1')
-    }, [props.score.myHand.kickerArr])
-    useEffect(() => {
-
-        console.log(props.score.botA.kickerArr, 'HAMILTON')
-    }, [props.score.botA.kickerArr])
-
-    useEffect(() => {
-        console.log(props.score.botB.kickerArr, 'BURR')
-    }, [props.score.botB.kickerArr])
-
-    useEffect(() => {
-        console.log(props.score.botC.kickerArr, 'JEFFERSON')
-    }, [props.score.botC.kickerArr])
+        if (props.cash.status.potIsGood === true) {
+            poker.phase === 1 ? flop()
+            : poker.phase === 2 ? turn()
+            : poker.phase === 3 ? river()
+            : checkXP()
+        }
+        props.checkPot(false)
+    }, [props.cash.status.potIsGood])
 
 
     const rulesToggler = () => {
         setToggleRules(!toggleRules)
-        console.log(toggleRules, 'toggler')
+        // console.log(toggleRules, 'toggler')
     }
 
     const shuffle = () => {
@@ -105,8 +107,8 @@ const Game = (props) => {
             // .then((res) => props.setDeck(res.data))
             // .catch(err => console.log(err));
             // console.log('TEST-SHUFFLE => ACTIVE')
+            // await actionReady()
     }
-
 
     useEffect(() => {
         const {deck} = props.cards
@@ -114,6 +116,10 @@ const Game = (props) => {
             shuffle()
         }
     }, [props.cards, shuffle, props.game.status.isShuffling])
+
+    // const actionReady = () => {        
+    //     deal()
+    // }
 
     const colorLog = (message, color) => {
         color = color || "black";
@@ -208,14 +214,22 @@ const Game = (props) => {
         props.setNextMove(true)
 
         //  REDUX
-        let refreshSm = poker.smallPosition - 1;
-        let refreshBg = poker.bigPosition - 1;
-
+            let refreshSm = poker.smallPosition - 1;
+            let refreshBg = poker.bigPosition - 1;
         let smStakes =  poker.players[refreshSm].cash - poker.smallBlind;
         let bgStakes =  poker.players[refreshBg].cash - poker.bigBlind;
 
-        props.banker(smStakes, refreshSm)
-        props.banker(bgStakes, refreshBg)
+            if (poker.bigPosition === 4) {
+                props.setPlayerTurn(0)
+            } else {
+                props.setPlayerTurn(poker.bigPosition)
+            }
+
+            props.banker(smStakes, refreshSm)
+            props.banker(bgStakes, refreshBg)
+        props.setBalance(poker.smallBlind, refreshSm)
+        props.setBalance(poker.bigBlind, refreshBg)
+        props.setCurrentBet(poker.bigBlind)
     }
 
     const flop = () => {
@@ -349,7 +363,7 @@ const Game = (props) => {
     const checkXP = () => {
         // console.log(props.score.myHand.kickerArr, 'PLAYER1')
         props.showAllHands(true)
-        console.log(props.score.myHand.kickerArr, 'PLAYER1')
+        // console.log(props.score.myHand.kickerArr, 'PLAYER1')
         
         // const flipCard = document.querySelector('.pocket-container')
         // flipCard.addEventListener('click', function() {
@@ -378,15 +392,27 @@ const Game = (props) => {
         props.setScoreB(0)
         props.setScoreC(0)
         props.setWinner('')
+        props.movePhase(0)
 
-        props.setStatus(0, 'isFolding', false)
-        props.setStatus(0, 'isChecking', false)
-        props.setStatus(1, 'isFolding', false)
-        props.setStatus(1, 'isChecking', false)
-        props.setStatus(2, 'isFolding', false)
-        props.setStatus(2, 'isChecking', false)
-        props.setStatus(3, 'isFolding', false)
-        props.setStatus(3, 'isChecking', false)
+        // props.setStatus(0, 'isFolding', false)
+        // props.setStatus(0, 'isChecking', false)
+        // props.setStatus(1, 'isFolding', false)
+        // props.setStatus(1, 'isChecking', false)
+        // props.setStatus(2, 'isFolding', false)
+        // props.setStatus(2, 'isChecking', false)
+        // props.setStatus(3, 'isFolding', false)
+        // props.setStatus(3, 'isChecking', false)
+
+        for (let i = 0; i < poker.players.length; i++) {
+            props.setBalance(0, i)
+            props.setStatus(i, 'isFolding', false)
+            props.setStatus(i, 'isChecking', false)
+            props.setStatus(i, 'isRaising', false)
+            props.setStatus(i, 'isBetting', false)
+            props.setStatus(i, 'isCalling', false)
+        }
+
+        props.setCurrentBet(0)
         
         props.setHamilton([])
         props.setHandTypeA('')
@@ -414,13 +440,13 @@ const Game = (props) => {
         props.isSuited(false)
         props.handIsOver(false)
 
-        let smStakes = props.game.poker.smallBlind * 2;
-        let bgStakes = props.game.poker.bigBlind * 2;
+        let smStakes = poker.smallBlind * 2;
+        let bgStakes = poker.bigBlind * 2;
 
         //  REDUX
-        let refreshButton = props.game.poker.buttonIndex
-        let refreshSm = props.game.poker.smallPosition
-        let refreshBg = props.game.poker.bigPosition
+        let refreshButton = poker.buttonIndex
+        let refreshSm = poker.smallPosition
+        let refreshBg = poker.bigPosition
         
             if (round === 4) {
                 props.assignButton(0)
@@ -432,13 +458,13 @@ const Game = (props) => {
                 props.assignButton(refreshButton)
             }
 
-            if (props.game.poker.smallPosition === 4) {
+            if (poker.smallPosition === 4) {
                 props.assignSm(0)
             } else {
                 props.assignSm(refreshSm)
             }
 
-            if (props.game.poker.bigPosition === 4) {
+            if (poker.bigPosition === 4) {
                 props.assignBg(0)
             } else {
                 props.assignBg(refreshBg)
@@ -461,8 +487,8 @@ const Game = (props) => {
                 <div id='player-list' >
                     <div className='player-box'>
                         <div className={props.cash.status.whosTurn === 0 ? 'player-status-active' : 'player-status'} >
-                            <h3 id='player-box-name' > {props.game.poker.players[0].username} </h3>
-                            <p style={{color: poker.players[0].cash > 250 ? 'silver' : poker.players[0].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[0].cash} </p>
+                            <h3 id='player-box-name' > {poker.players[0].username} </h3>
+                            <p style={{color: poker.players[0].cash > 250 ? 'silver' : poker.players[0].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[0].cash} </p>
                         </div>
                         <div className='pocket-divider' >
                             <Pocket />
@@ -490,8 +516,8 @@ const Game = (props) => {
                     </div>
                     <div className='player-box'>
                         <div className={props.cash.status.whosTurn === 1 ? 'player-status-active' : 'player-status'} >
-                            <h3 id='player-box-name' > {props.game.poker.players[1].username} </h3>
-                            <p style={{color: poker.players[1].cash > 250 ? 'silver' : poker.players[1].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[1].cash} </p>
+                            <h3 id='player-box-name' > {poker.players[1].username} </h3>
+                            <p style={{color: poker.players[1].cash > 250 ? 'silver' : poker.players[1].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[1].cash} </p>
                         </div>
                         <div className='pocket-divider' >
                             {
@@ -526,8 +552,8 @@ const Game = (props) => {
                     </div>
                     <div className='player-box'>
                         <div className={props.cash.status.whosTurn === 2 ? 'player-status-active' : 'player-status'} >
-                            <h3 id='player-box-name' > {props.game.poker.players[2].username} </h3>
-                            <p style={{color: poker.players[2].cash > 250 ? 'silver' : poker.players[2].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[2].cash} </p>
+                            <h3 id='player-box-name' > {poker.players[2].username} </h3>
+                            <p style={{color: poker.players[2].cash > 250 ? 'silver' : poker.players[2].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[2].cash} </p>
                         </div>
                         
                         <div className='pocket-divider' >
@@ -563,8 +589,8 @@ const Game = (props) => {
                     </div>
                     <div className='player-box'>
                         <div className={props.cash.status.whosTurn === 3 ? 'player-status-active' : 'player-status'} >
-                            <h3 id='player-box-name' > {props.game.poker.players[3].username} </h3>
-                            <p style={{color: poker.players[3].cash > 250 ? 'silver' : poker.players[3].cash > 0 ? 'yellow' : 'red'}} > ${props.game.poker.players[3].cash} </p>
+                            <h3 id='player-box-name' > {poker.players[3].username} </h3>
+                            <p style={{color: poker.players[3].cash > 250 ? 'silver' : poker.players[3].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[3].cash} </p>
                         </div>
                         <div className='pocket-divider' >
                             {
@@ -702,5 +728,10 @@ export default connect(
         setKickerArrA,
         setKickerArrB,
         setKickerArrC,
-        setStatus
+        setStatus,
+        setPlayerTurn,
+        setCurrentBet,
+        setBalance,
+        checkPot,
+        movePhase
     })(withRouter(Game))

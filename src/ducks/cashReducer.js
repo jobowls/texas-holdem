@@ -7,7 +7,6 @@ const initialState = {
 
     cashFlow: {
         chipCount: 0,
-        minimum: 0,
         pot: 0,
         sidePot: 0,
         currentBet: 0,
@@ -20,6 +19,14 @@ const SET_POT = 'SET_POT'
 const SET_PLAYER_TURN = 'SET_PLAYER_TURN'
 const SET_CURRENT_BET = 'SET_CURRENT_BET'
 const SET_PLAYER_STATUS = 'SET_PLAYER_STATUS'
+const CHECK_POT = 'CHECK_POT'
+
+export function checkPot(boolean) {
+    return {
+        type: CHECK_POT,
+        payload: boolean
+    }
+}
 
 export function setPlayerStatus(boolean) {
     return {
@@ -81,6 +88,9 @@ export default function cashReducer(state = initialState, action) {
 
         case SET_CURRENT_BET:
             return {...state, cashFlow: {...state.cashFlow, currentBet: payload}};
+
+        case CHECK_POT:
+            return {...state, status: {...state.status, potIsGood: payload}};
         
         default:
             return state;

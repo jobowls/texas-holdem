@@ -14,7 +14,7 @@ export function setPlayer(playerObj) {
 }
 
 export function setImage(profilePic) {
-    console.log(profilePic, 'PAYLOAD')
+    // console.log(profilePic, 'PAYLOAD')
     return {
         type: SET_IMAGE,
         payload: profilePic

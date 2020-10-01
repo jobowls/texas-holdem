@@ -30,10 +30,10 @@ const ScoreJefferson = (props) => {
         runScore()
     }, [props.score.botC.finalHand])
 
-    useEffect(() => {
-        console.log(props.score.botC.score, 'HIT-SCORE-JEFFERSON')
+    // useEffect(() => {
+    //     console.log(props.score.botC.score, 'HIT-SCORE-JEFFERSON')
         
-    }, [props.score.botC.score])
+    // }, [props.score.botC.score])
 
     const colorLog = (message, color) => {
         color = color || "Black";
@@ -157,7 +157,7 @@ const ScoreJefferson = (props) => {
             default:
                 return null;
         }
-        console.log(jefferson, '=> SWITCH(handType)')
+        // console.log(jefferson, '=> SWITCH(handType)')
     }
 
         let aces = 0 ;
@@ -352,7 +352,7 @@ const ScoreJefferson = (props) => {
                 let echo = indexedArr[4];
 
                 let foundAlpha = orderedArr.indexOf(alpha)
-                    console.log(foundAlpha)
+                    // console.log(foundAlpha)
                 props.setKickerArrC([foundAlpha])
                 
                 let alphaRomeo = cipherSuits(finalHand, alpha);

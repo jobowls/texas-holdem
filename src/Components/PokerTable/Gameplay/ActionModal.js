@@ -37,9 +37,9 @@ const ActionModal = (props) => {
     }, [props.game.status.winner])
 
 
-    useEffect(() => {
-        console.log(props.score.myHand)
-    }, [props.score.myHand])
+    // useEffect(() => {
+    //     console.log(props.score.myHand)
+    // }, [props.score.myHand])
 
 
     useEffect(() => {
@@ -70,7 +70,7 @@ const ActionModal = (props) => {
             default: 
                  color = 'color';
         }
-        console.log("%c" + message, "color:" + color);
+        // console.log("%c" + message, "color:" + color);
     }
 
     const findWinner = () => {
@@ -82,7 +82,7 @@ const ActionModal = (props) => {
             <div key={i} >
                 <p> {card.card_rank} </p>
                 <p> {card.card_suit} </p>
-                {colorLog(`${card.card_rank}, ${card.card_suit}`, 'teal')}
+                {/* {colorLog(`${card.card_rank}, ${card.card_suit}`, 'teal')} */}
             </div>
         ))
     }
@@ -190,7 +190,7 @@ const ActionModal = (props) => {
                     onClick={props.deal}
                     className='action-btns'
                     > Deal </button>
-                <button
+                {/* <button
                     onClick={props.flop}
                     className='action-btns'
                     > Flop </button>
@@ -201,11 +201,11 @@ const ActionModal = (props) => {
                 <button
                     onClick={props.river}
                     className='action-btns'
-                    > River </button>
-                <button 
+                    > River </button> */}
+                {/* <button 
                     onClick={props.checkXP} 
                     className='action-btns' 
-                    > Show'em </button>
+                    > Show'em </button> */}
                 <button 
                     onClick={findWinner} 
                     className='action-btns' 

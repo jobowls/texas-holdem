@@ -30,10 +30,10 @@ const ScoreBurr = (props) => {
         runScore()
     }, [props.score.botB.finalHand])
 
-    useEffect(() => {
-        console.log(props.score.botB.score, 'HIT-SCORE-BURR')
+    // useEffect(() => {
+    //     console.log(props.score.botB.score, 'HIT-SCORE-BURR')
         
-    }, [props.score.botB.score])
+    // }, [props.score.botB.score])
 
     const colorLog = (message, color) => {
         color = color || "Black";
@@ -156,7 +156,7 @@ const ScoreBurr = (props) => {
             default:
                 return null;
         }
-        console.log(burr, '=> SWITCH(handType)')
+        // console.log(burr, '=> SWITCH(handType)')
     }
 
         let aces = 0 ;
@@ -351,7 +351,7 @@ const ScoreBurr = (props) => {
             let echo = indexedArr[4];
 
             let foundAlpha = orderedArr.indexOf(alpha)
-                console.log(foundAlpha)
+                // console.log(foundAlpha)
             props.setKickerArrB([foundAlpha])
             
             let alphaRomeo = cipherSuits(finalHand, alpha);

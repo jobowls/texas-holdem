@@ -206,7 +206,7 @@ const SET_HIGHEST = 'SET_HIGHEST'
 const SET_SCORE = 'SET_SCORE'
 
 export function setKickerArr(rankIndexes) {
-    console.log('KIKER-ARR-HIT-P1P1', rankIndexes)
+    // console.log('KIKER-ARR-HIT-P1P1', rankIndexes)
     // console.log(rankIndexes, 'ARR_DINGER')
     return {
         type: SET_KICKER_ARR,
@@ -359,7 +359,7 @@ export function setHandType(string) {
 }
 
 export function setMyHand(cards) {
-    console.log(cards, '_BEST_5_')
+    // console.log(cards, '_BEST_5_')
     return {
         type: SET_MY_HAND,
         payload: cards
@@ -387,7 +387,7 @@ const SET_SCORE_A = 'SET_SCORE_A'
 const SET_KICKER_ARR_A = 'SET_KICKER_ARR_A'
 
 export function setKickerArrA(rankIndexes) {
-    console.log('KIKER-ARR-HIT-AAA', rankIndexes)
+    // console.log('KIKER-ARR-HIT-AAA', rankIndexes)
     return {
         type: SET_KICKER_ARR_A,
         payload: rankIndexes
@@ -534,7 +534,7 @@ const SET_SCORE_B = 'SET_SCORE_B'
 const SET_KICKER_ARR_B = 'SET_KICKER_ARR_B'
 
 export function setKickerArrB(rankIndexes) {
-    console.log('KIKER-ARR-HIT-BBB', rankIndexes)
+    // console.log('KIKER-ARR-HIT-BBB', rankIndexes)
     return {
         type: SET_KICKER_ARR_B,
         payload: rankIndexes
@@ -682,7 +682,7 @@ const SET_SCORE_C = 'SET_SCORE_C'
 const SET_KICKER_ARR_C = 'SET_KICKER_ARR_C'
 
 export function setKickerArrC(rankIndexes) {
-    console.log('KIKER-ARR-HIT-CCC', rankIndexes)
+    // console.log('KIKER-ARR-HIT-CCC', rankIndexes)
     return {
         type: SET_KICKER_ARR_C,
         payload: rankIndexes

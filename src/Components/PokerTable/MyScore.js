@@ -33,7 +33,7 @@ const MyScore = (props) => {
     useEffect(() => {
         setFinalArr(props.score.finalArr)
         setFinalSuitsArr(props.score.finalSuitsArr)
-        console.log(props.score.myHand)
+        // console.log(props.score.myHand)
         runScore()
     }, [props.score.myHand.finalHand])
 
@@ -69,7 +69,7 @@ const MyScore = (props) => {
             default: 
                 color = 'color';
         }
-        console.log("%c" + message, "color:" + color);
+        // console.log("%c" + message, "color:" + color);
     }
 
     useEffect(() => {
@@ -156,7 +156,7 @@ const MyScore = (props) => {
             default:
                 return null;
         }
-        console.log(player1, '=> SWITCH(player1)')
+        // console.log(player1, '=> SWITCH(player1)')
     }
         let aces = 0 ;
         let kings = 0 ;
@@ -344,7 +344,7 @@ const MyScore = (props) => {
 
         if (mapper.includes('Ace') && mapper.includes('2') && mapper.includes('3') && mapper.includes('4') && mapper.includes('5')) {            
             props.setSubType('Ace to Five')
-            props.setKickerArr(3) 
+            props.setKickerArr([3]) 
         } else if (checkedArr.length > 4) {
                             let card1 = checkedArr[0];
                             let index1 = finalArr[card1];
@@ -366,7 +366,7 @@ const MyScore = (props) => {
             let echo = indexedArr[4];
 
             let foundAlpha = orderedArr.indexOf(alpha)
-                console.log(foundAlpha)
+                // console.log(foundAlpha)
             props.setKickerArr([foundAlpha])
             
             let alphaRomeo = cipherSuits(finalHand, alpha);

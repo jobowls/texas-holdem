@@ -30,10 +30,10 @@ const ScoreHamilton = (props) => {
         runScore()
     }, [props.score.botA.finalHand])
 
-    useEffect(() => {
-        console.log(props.score.botA.score, 'HIT-SCORE-HAMILTON')
+    // useEffect(() => {
+    //     console.log(props.score.botA.score, 'HIT-SCORE-HAMILTON')
         
-    }, [props.score.botA.score])
+    // }, [props.score.botA.score])
 
     const colorLog = (message, color) => {
         color = color || "Black";
@@ -156,7 +156,7 @@ const ScoreHamilton = (props) => {
                 default:
                     return null;
             }
-            console.log(hamilton, '=> SWITCH(handType)')
+            // console.log(hamilton, '=> SWITCH(handType)')
         }
 
         let aces = 0 ;
@@ -351,7 +351,7 @@ const ScoreHamilton = (props) => {
             let echo = indexedArr[4];
 
             let foundAlpha = orderedArr.indexOf(alpha)
-                console.log(foundAlpha)
+                // console.log(foundAlpha)
             props.setKickerArrA([foundAlpha])
             
             let alphaRomeo = cipherSuits(finalHand, alpha);

@@ -44,9 +44,9 @@ const Winner = (props) => {
         let copyArr = [...best5]
 
     useEffect(() => {
-        console.log(best5)
+        // console.log(best5)
         findWinner()        
-    }, [props.game.status.handIsOver, best5])    
+    }, [props.game.status.handIsOver])    
 
 
     useEffect(() => {

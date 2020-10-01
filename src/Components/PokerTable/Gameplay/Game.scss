@@ -100,7 +100,7 @@
 
 .pocket-divider {
     width: 90%;
-    height: 50%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;    
@@ -168,19 +168,19 @@
 @keyframes pulse {
 	0% {
 		transform: scale(0.95);
-        box-shadow: 0 0 2px 1px rgba(100, 100, 100, 0.7);
+        box-shadow: 0 0 2px 1px rgba(192, 192, 192, 0.7);
         // border
 	}
 
 	70% {
 		transform: scale(.95);
-        box-shadow: 0 0 10px 5px rgba(100, 100, 100, 0);
+        box-shadow: 0 0 10px 5px rgba(192, 192, 192, 0);
         // border
 	}
 
 	100% {
 		transform: scale(0.95);
-        box-shadow: 0 0 2px 1px rgba(100, 100, 100, 0);
+        box-shadow: 0 0 2px 1px rgba(192, 192, 192, 0);
         // border
 	}
 }

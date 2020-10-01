@@ -8,7 +8,8 @@ const initialState = {
         smallPosition: 0,
         bigBlind: 0,
         bigPosition: 0,
-        buttonIndex: 0
+        buttonIndex: 0,
+        phase: 0
     },
     
     status: {
@@ -40,6 +41,8 @@ const ASSIGN_BG = 'ASSIGN_BG'
 const BANKER = 'BANKER'
 const SET_STATUS = 'SET_STATUS'
 const CLEAR_ALL = 'CLEAR_ALL'
+const SET_BALANCE = 'SET_BALANCE'
+const MOVE_PHASE = 'MOVE_PHASE'
 
 export function setStatus(index, condition, boolean) {
 console.log(`${index} = i, ${condition} = cond, ${boolean} = bool`, 'PAYLOAD-STATUS')
@@ -49,11 +52,27 @@ console.log(`${index} = i, ${condition} = cond, ${boolean} = bool`, 'PAYLOAD-STA
     }
 }
 
+export function movePhase(num) {
+    // console.log(money, index, 'PAYLOAD-BANKER')
+    return {
+        type: MOVE_PHASE,
+        payload: num
+    }
+}
+
 export function clearAll(boolean) {
     // console.log(money, index, 'PAYLOAD-BANKER')
     return {
         type: SET_STATUS,
         payload: {boolean}
+    }
+}
+
+export function setBalance(money, index) {
+    console.log(money, index, 'PAYLOAD-BALANCE')
+    return {
+        type: SET_BALANCE,
+        payload: {money, index}
     }
 }
 
@@ -229,6 +248,14 @@ export default function pokerReducer(state = initialState, action) {
                 actives[payload.index][`${payload.condition}`] = payload.boolean
                 console.log(actives)
             return {...state, poker: {...state.poker, actives}};
+
+        case SET_BALANCE:
+                let auditor = [...state.poker.players]
+                auditor[payload.index].balance = payload.money
+            return {...state, poker: {...state.poker, auditor}};
+
+        case MOVE_PHASE:
+            return {...state, poker: {...state.poker, phase: payload}};
 
         default:
             return state;

@@ -1,33 +1,28 @@
 import React, {useState, useEffect, useReducer} from 'react'
 import {connect} from 'react-redux'
-import {setPlayerTurn, setCurrentBet, setPot} from '../../../ducks/cashReducer'
-import {banker, setStatus} from '../../../ducks/pokerReducer'
+import {setPlayerTurn, setCurrentBet, setPot, checkPot} from '../../../ducks/cashReducer'
+import {banker, movePhase, setBalance, setStatus} from '../../../ducks/pokerReducer'
 import './CashMeter.scss'
 import {AiOutlinePlusCircle} from 'react-icons/ai'
 import {FiPlusCircle} from 'react-icons/fi'
 
 
 const CashMeter = (props) => {
-    const {bigBlind} = props.game.poker
+    const {bigBlind, players} = props.game.poker
     const {whosTurn} = props.cash.status
-    const {pot, currentBet, minimum} = props.cash.cashFlow
+    const {pot, currentBet} = props.cash.cashFlow
 
     const [bet, setBet] = useState(0)
-    const [minBet, setMinBet] = useState(0)
     const [active, setActive] = useState(0)
+    const [toggleMeter, setToggleMeter] = useState(false)
+        let runningTotal = [players[0].balance, players[1].balance, players[2].balance, players[3].balance]
+            let sorted = [...runningTotal].sort((a, b) => a - b).reverse()
+            let currBet = sorted[0]
         let name = props.game.poker.players[active].username
         let transaction = props.game.poker.players[active].cash - bet
-        // let transactionAll = props.game.poker.players[active].cash - bet
-
-    const [tableBalances] = useState([
-        props.game.poker.players[0].balance,
-        props.game.poker.players[1].balance,
-        props.game.poker.players[2].balance,
-        props.game.poker.players[3].balance
-    ])
-        let activeBalances = [...tableBalances]
-
-    const [toggleMeter, setToggleMeter] = useState(false)
+        let raiseAmount = (currentBet - runningTotal[active]) + bet
+    
+    const [phase, setPhase] = useState(0)
 
     useEffect(() => {
         !props.cards.pocket.length 
@@ -37,37 +32,79 @@ const CashMeter = (props) => {
 
     useEffect(() => {
         setActive(whosTurn)
-        console.log(props.game.poker.bigPosition, 'b_blind')
-        console.log(props.cash.cashFlow.currentBet, 'current_bet')
+        console.log(`=>> running_total ${runningTotal}`)
+        // console.log(`=>> running_total ${tableBalances}`)
     }, [whosTurn])
 
     useEffect(() => {
-        setBet(bigBlind)
-    }, [props])
+        if (phase === 4) {
+            checkPotBalance()
+        }
+    }, [phase])
+
+    useEffect(() => {
+        console.log(props.cash.cashFlow.currentBet, 'AUDIT =>> REDUX')
+    }, [props.cash.cashFlow.currentBet])
+
+    // useEffect(() => {
+    //     setBet(bigBlind)
+    // }, [bigBlind])
+
+    useEffect(() => {
+        console.log(currBet, 'SHOULD BE HIGHEST BET THUS FAR')
+        if (currBet > currentBet) {
+            props.setCurrentBet((bet - currentBet) + currentBet)
+        }
+    }, [bet, currentBet, currBet])
 
     const isBetting = () => {
         setBet(bet + 10)
     }
 
     const placeBet = () => {
+        let money = bet + runningTotal[active]
         props.setPot(bet + pot)
         props.banker(transaction, active)
+        props.setCurrentBet(currentBet + bet)
+        props.setBalance(money, active)
+        setBet(bigBlind)
         turnCounter()
+        setPhase(phase + 1)
     }
 
     const checkRaise = () => {
+        let money = bet + runningTotal[active]
         props.setStatus(active, 'isRaising', true)
+        props.setPot(raiseAmount + pot)
+        props.banker(transaction, active)
+        props.setBalance(money, active)
         turnCounter()
+        setPhase(phase + 1)
     }
 
     const checkBet = () => {
         props.setStatus(active, 'isChecking', true)
         turnCounter()
+        setPhase(phase + 1)
     }
 
     const checkFold = () => {
         props.setStatus(active, 'isFolding', true)
         turnCounter()
+        setPhase(phase + 1)
+    }
+
+    const checkCall = () => {
+        let money = players[active].cash - (currBet - runningTotal[active])
+        let placing = currBet - runningTotal[active]
+            console.log(placing, 'PLACING $')
+            // console.log(money, 'SHOULD BE THE CORRECT FUCKING DOLLAR AMOUNT!!!')
+        props.setStatus(active, 'isCalling', true)
+        props.setPot(placing + pot)
+        props.banker(money, active)
+        props.setBalance(currentBet, active)
+        turnCounter()
+        setPhase(phase + 1)
     }
 
     const goAllIn = () => {
@@ -77,6 +114,18 @@ const CashMeter = (props) => {
         props.setPot(money + pot)
         props.banker(0, active)
         turnCounter()
+        setPhase(phase + 1)
+    }
+
+    const checkPotBalance = () => {
+        let amount = pot / players.length
+            console.log('amount', amount, 'currBet', currBet)
+
+        if (pot / players.length === currBet) {
+            props.movePhase(props.game.poker.phase + 1)
+            props.checkPot(true)
+            setPhase(0)
+        }
     }
 
     const reset = () => {
@@ -110,22 +159,42 @@ const CashMeter = (props) => {
                             > Reset </button>
                     </div>
                     <div className='meter-actions' >
-                        <button
-                            id="ticker-btn"
-                            onClick={checkBet} >
-                            Check </button>
-                        <button
-                            id="ticker-btn"
-                            onClick={placeBet} >
-                            Bet </button>                        
-                        <button
-                            id="ticker-btn"
-                            onClick={checkFold} >
-                            Fold </button>
-                        <button
-                            id="ticker-btn"
-                            onClick={goAllIn} >
-                            All-in </button>
+                        {
+                            runningTotal[active] < currBet ?
+                            <>
+                                <button
+                                    id="ticker-btn"
+                                    onClick={checkCall} >
+                                    {`Call ${currBet - runningTotal[active]}`} </button>
+                                <button
+                                    id="ticker-btn"
+                                    onClick={checkRaise} >
+                                    Raise </button>
+                                <button
+                                    id="ticker-btn"
+                                    onClick={checkFold} >
+                                    Fold </button>    
+                            </>
+                            :
+                            <>
+                                 <button
+                                    id="ticker-btn"
+                                    onClick={checkBet} >
+                                    Check </button>
+                                <button
+                                    id="ticker-btn"
+                                    onClick={placeBet} >
+                                    Bet </button>
+                                <button
+                                    id="ticker-btn"
+                                    onClick={checkFold} >
+                                    Fold </button>
+                                <button
+                                    id="ticker-btn"
+                                    onClick={goAllIn} >
+                                    All-in </button>
+                            </>
+                        }                       
                     </div>
                 </div>
                 :
@@ -141,5 +210,8 @@ export default connect(mapStateToProps, {
     setPot,
     banker,
     setCurrentBet,
-    setStatus
+    setStatus,
+    setBalance,
+    checkPot,
+    movePhase
 })(CashMeter)
