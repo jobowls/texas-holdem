@@ -1,29 +1,26 @@
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import './Marquee.scss'
+import Winner from '../Math/Winner'
+import ShowStopper from './ShowStopper'
 
-const Marquee = ( props) => {
-
-    const [pokerStatus, setPokerStatus] = useState([])
-
-    useEffect(() => {
-        actionFeed()
-    }, [])
-
-    const actionFeed = (player, type) => {
-        switch(player) {
-            case 'Player1':
-                console.log(type)
-                break;
-            default:
-                break;
-        }
-    }
+const Marquee = (props) => {
+    const {handIsOver} = props.game.status
 
     return (
         <div className='Marquee-master'>
-            {pokerStatus}
-            {/* {props.score.myHand.score} */}
+            <p> {props.user.player.username} </p>
+            <div className='marquee-header' >
+                <ShowStopper />
+            </div>
+            <div id='winner-bucket' >
+            {
+                handIsOver ?
+                <Winner />
+                :
+                null
+            }
+            </div>
         </div>
     )
 }

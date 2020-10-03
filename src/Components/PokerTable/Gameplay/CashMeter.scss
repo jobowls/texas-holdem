@@ -10,15 +10,15 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    // opacity: 10%;
+    position: relative;
 }
 
 .modal-counter {
-    width: 100%;
-    // height: 50%;
+    width: 50%;
+    // height: 100%;
     color: white;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
     // background-color: $HAZE;
     // border-radius: 50px;
@@ -51,6 +51,19 @@
     cursor: pointer;
 }
 
+#ticker-btn-reset {
+    line-height: 1em;
+    position: relative;
+    background-color: $HAZE;
+    box-shadow: 1px 1px 15px 0px rgba(30, 30, 30, 0.75);
+    // border: none;
+    color: silver;
+    border-radius: 50px;
+    width: max-content;
+    height: 30px;
+    padding: 3px 10px 3px 10px;
+}
+
 #ticker-btn {
     line-height: 1em;
     position: relative;
@@ -61,7 +74,14 @@
     border-radius: 50px;
     width: 20%;
     height: 30px;
-    padding: 3px;
+    padding: 3px 10px 3px 10px;
+}
+
+#ticker-btn-reset:hover {
+    cursor: pointer;
+    background-color: $CARPET;
+    background-color: rgb(100, 40, 40);
+    color: whitesmoke;
 }
 
 #ticker-btn:hover {
@@ -73,13 +93,16 @@
 
 .counter-parent {
     width: 100%;
-    line-height: 1em;
+    height: 150%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 0em;
     background-color: $CHARCOAL;
     border-radius: 20px;
     box-shadow: inset 0px 0px 5px 1px rgba(10, 10, 10, 1);
-    // background-color: rgba(0, 0, 0, 0.75);
-    // border-radius: 10px;
-    // box-shadow: 0px 0px 20px 2px rgba(75, 75, 75, 0.75);
+    margin-bottom: 20px;
     padding: 10px;
 }
 
@@ -95,7 +118,30 @@
 }
 
 #whos-turn {
-    background-color: $HAZE;
-    border-radius: 50px;
+    background-color: $LIGHTHOUSE;
+    border-radius: 5px;
     line-height: 2em;
+    width: 100%;
+    // animation: pulse 3s ease-out infinite;
+    // animation-iteration-count: 1;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(1);
+        box-shadow: 0 0 2px 1px silver;
+        // border
+	}
+
+	70% {
+		transform: scale(1);
+        box-shadow: 0 0 10px 2px silver;
+        // border
+	}
+
+	100% {
+		transform: scale(1);
+        box-shadow: 0 0 2px 1px silver;
+        // border
+	}
 }

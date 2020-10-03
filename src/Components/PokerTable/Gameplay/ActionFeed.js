@@ -6,12 +6,31 @@ import ScoreJefferson from './ScoreJefferson'
 import './ActionFeed.scss'
 
 const ActionFeed = (props) => {
+    const {players} = props.game.poker
     
     return (
         <div className='Feed-Master' >
-            <ScoreHamilton  />
-            <ScoreBurr  />
-            <ScoreJefferson  />
+            {
+                players[1].isFolding ?
+                <>
+                </>
+                :
+                <ScoreHamilton  />
+            }
+            {
+                players[2].isFolding ?
+                <>
+                </>
+                :
+                <ScoreBurr  />
+            }
+            {
+                players[3].isFolding ?
+                <>
+                </>
+                :
+                <ScoreJefferson  />
+            }
         </div>
     )
 }

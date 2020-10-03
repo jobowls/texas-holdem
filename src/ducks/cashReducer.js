@@ -2,7 +2,7 @@ const initialState = {
     status: {        
         showAllHands: false,
         whosTurn: 0,
-        potIsGood: false
+        potIsGood: false,
     },
 
     cashFlow: {
@@ -10,6 +10,7 @@ const initialState = {
         pot: 0,
         sidePot: 0,
         currentBet: 0,
+        runningTotal: []
     }
 }
 
@@ -20,6 +21,14 @@ const SET_PLAYER_TURN = 'SET_PLAYER_TURN'
 const SET_CURRENT_BET = 'SET_CURRENT_BET'
 const SET_PLAYER_STATUS = 'SET_PLAYER_STATUS'
 const CHECK_POT = 'CHECK_POT'
+const WATCH_TOTAL = 'WATCH_TOTAL'
+
+export function watchTotal(moneyArr) {
+    return {
+        type: WATCH_TOTAL,
+        payload: moneyArr
+    }
+}
 
 export function checkPot(boolean) {
     return {
@@ -36,6 +45,7 @@ export function setPlayerStatus(boolean) {
 }
 
 export function setCurrentBet(money) {
+    console.log(money, 'PAYLOAD => CURRENT_BET')
     return {
         type: SET_CURRENT_BET,
         payload: money
@@ -43,6 +53,7 @@ export function setCurrentBet(money) {
 }
 
 export function setPlayerTurn(index) {
+    console.log(index, 'PAYLOAD =>> WHOS_TURN')
     return {
         type: SET_PLAYER_TURN,
         payload: index
@@ -91,6 +102,9 @@ export default function cashReducer(state = initialState, action) {
 
         case CHECK_POT:
             return {...state, status: {...state.status, potIsGood: payload}};
+
+        case WATCH_TOTAL:
+            return {...state, cashFlow: {...state.cashFlow, runningTotal: payload}};
         
         default:
             return state;

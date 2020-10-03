@@ -3,9 +3,10 @@
 .Feed-Master {
     width: 100%;
     display: flex;
-    // background-color: rgba(10, 10, 10, 0.75);
-    // box-shadow: 1px 1px 1px 5px black;
+    background-color: $CHARCOAL;
+    box-shadow: inset 0px 0px 5px 1px rgba(10, 10, 10, 1);
     border-radius: 20px;
     justify-content: space-evenly;
-    align-items: center;
+    align-items: flex-start;
 }
+

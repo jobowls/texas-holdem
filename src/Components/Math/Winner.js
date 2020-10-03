@@ -13,13 +13,11 @@ const Winner = (props) => {
     const [joker, setJoker] = useState(0)
         let money = players[joker].cash + pot
 
+    const [key, setKey] = useState([])
     const [ready, setReady] = useState(false)
-    const [fire, setFire] = useState(false)
     const [round, setRound] = useState(0)
     const [current, setCurrent] = useState([])
         let changeCurrent = [...current]
-
-    const [key, setKey] = useState([])
 
     const [finalTable] = useState([
         props.game.poker.players[0].username,
@@ -158,7 +156,8 @@ const Winner = (props) => {
 
     return (
         <div className='chicken-dinner' >
-            <p> {props.game.status.winner} (${pot}) </p>
+            <p> Winner: {props.game.status.winner} </p>
+            <p> Pot: ${pot} </p>
         </div>
     )
 }

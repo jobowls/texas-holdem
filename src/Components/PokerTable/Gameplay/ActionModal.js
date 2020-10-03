@@ -108,44 +108,7 @@ const ActionModal = (props) => {
     const {game, user} = props
     const {pocket} = props.cards
 
-    const show = props.rules.listOfHands
-        .filter(element => element.badge_name === handType)
-        .map((rules => (
-            <div 
-                key={rules.badge_id} 
-                className='rules-container' 
-                 style={handType !== 'High Card' ? {boxShadow: '0px 0px 15px 0px silver'} : null} > 
-                <div className='theatre' >
-                    <GiPokerHand 
-                        id='modal-icons'
-                        style={
-                            handType === 'High Card' 
-                            ? {
-                                color: 'silver',
-                                marginRight: '10px'
-                            } 
-                            : {
-                                color: 'silver',
-                                marginRight: '10px'
-                            }
-                    } />
-                    <p style={{color: 'rgb(0, 122, 175)'}} > {rules.badge_name} </p>
-                </div>
-                {
-                    finalHand.length === 2 && handType === 'Pair' ?
-                    <p> Pocket {subType} </p>
-                    :
-                    handType === 'High Card' ? 
-                    <p> {highestCard} </p>
-                    :
-                    !kicker ?
-                    <p> {subType} </p>
-                    :
-                    <p> {subType} | {kicker} </p>
-                }   
-                <p id='xp'> {rules.badge_score} XP </p>                     
-            </div>
-    )))
+    
     return (
         <div className='action-modal-master' >
 
@@ -168,23 +131,6 @@ const ActionModal = (props) => {
                 <p> Blinds: ${game.poker.smallBlind} / ${game.poker.bigBlind} </p>
             </div>
 
-            <div className='the-slot' >
-                <div className='show-stopper' > {show} </div>
-                {                   
-                    handType === 'High Card' && pocket[0].card_suit === pocket[1].card_suit ?
-                    <div id='marquee-pocket' >
-                        <p style={{color: 'silver', marginRight: '10px'}} > Pocket: </p>
-                        <p> {props.cards.pocket[0].card_rank} | {props.cards.pocket[1].card_rank} </p>
-                        <p style={{color: 'silver', marginLeft: '10px'}} > Suited </p>
-                    </div>                    
-                    :
-                    null
-                    // <div id='marquee-pocket' >
-                    //     <p style={{color: 'silver'}} > {kicker} </p>
-                    // </div>
-                }
-            </div>
-
             <div className='btn-menu' >
                 <button
                     onClick={props.deal}
@@ -202,6 +148,7 @@ const ActionModal = (props) => {
                     onClick={props.river}
                     className='action-btns'
                     > River </button> */}
+                
                 {/* <button 
                     onClick={props.checkXP} 
                     className='action-btns' 
@@ -214,10 +161,14 @@ const ActionModal = (props) => {
                     onClick={props.clear}
                     className='action-btns'
                     > Reset </button>
-                {/* <button
+                {/* <button 
+                    onClick={() => console.log(props.game.poker.players)} 
+                    className='action-btns' 
+                    > Show'em </button> */}
+                <button
                     onClick={props.toggler}
                     className='action-btns'
-                    > Menu </button> */}
+                    > Menu </button>
             </div>
         </div>
     )

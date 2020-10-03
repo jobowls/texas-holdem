@@ -1,19 +1,34 @@
 @import '../../sass/styles.scss';
 
 .Marquee-master {
-    height: 40%;
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
-    overflow-y: scroll;
-    // background-color: $CHARCOAL;
     color: silver;
     font-size: small;
     justify-content: flex-start;
     align-items: center;
     text-align: center;
-    margin-top: 50px;
-    // background-color: rgba(10, 10, 10, 0.75);
-    // border: 5px dotted rgb(45, 45, 45);
+    background-color: $CHARCOAL;
+    box-shadow: inset 0px 0px 5px 1px rgba(10, 10, 10, 1);
     border-radius: 20px;
+    position: relative;
 }
+
+.marquee-header {
+    height: 25%;
+    width: 85%;
+    // border-radius: 10px;
+    border-bottom: 5px solid $CARPET;
+    // box-shadow: 1px 1px 5px 2px black;
+    color: silver;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#winner-bucket {
+    height: 10%;
+    text-align: left;
+}
+

@@ -64,9 +64,16 @@ const Game = (props) => {
         setToggleBigBlind(props.game.poker.bigPosition)
     }, [props.game.poker.buttonIndex])
 
+    useEffect(() => {
+        props.game.status.winner !== ''
+        ? console.log(props.game.status.winner, 'WINNER')
+        : console.log('none')
+    }, [props.game.status.winner])
+
     // useEffect(() => {
     //     console.log(props.score.myHand.kickerArr, 'PLAYER1')
     // }, [props.score.myHand.kickerArr])
+
     // useEffect(() => {
 
     //     console.log(props.score.botA.kickerArr, 'HAMILTON')
@@ -278,7 +285,32 @@ const Game = (props) => {
         props.setBurr([...botB])
         props.setJefferson([...botC])
         props.setMyHand([...mine])
+
+        props.setBalance(0, 0)
+        props.setBalance(0, 1)
+        props.setBalance(0, 2)
+        props.setBalance(0, 3)
     }
+
+    // const checkFlop = (index, cards) => {
+    //     switch(index) {
+    //         case 0:
+    //             props.setMyHand(cards)
+    //             break;
+    //         case 1:
+    //             console.log('na')
+    //             break;
+    //         case 2:
+    //             console.log('na')
+    //             break;
+    //         case 3:
+    //             console.log('na')
+    //             break;
+    //         default:
+    //             console.log('something broke...')
+    //     }
+    //     console.log(props.score)
+    // }
 
     const turn = () => {
         const {deck, pocketAi1, pocketAi2, pocketAi3, pocket, turn, river, flop, used, burned, community} = props.cards
@@ -317,6 +349,11 @@ const Game = (props) => {
         props.setHamilton([...botA])
         props.setBurr([...botB])
         props.setJefferson([...botC])
+
+        props.setBalance(0, 0)
+        props.setBalance(0, 1)
+        props.setBalance(0, 2)
+        props.setBalance(0, 3)
     }
 
     const river = () => {
@@ -356,6 +393,11 @@ const Game = (props) => {
         props.setHamilton([...botA])
         props.setBurr([...botB])
         props.setJefferson([...botC])
+
+        props.setBalance(0, 0)
+        props.setBalance(0, 1)
+        props.setBalance(0, 2)
+        props.setBalance(0, 3)
     }    
 
 
@@ -486,9 +528,10 @@ const Game = (props) => {
             <section id='game-divider' >
                 <div id='player-list' >
                     <div className='player-box'>
-                        <div className={props.cash.status.whosTurn === 0 ? 'player-status-active' : 'player-status'} >
+                        {/* <div className={props.cash.status.whosTurn === 0 ? 'player-status-active' : 'player-status'} > */}
+                        <div className={props.game.status.winner === 'Player1' ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 0 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[0].username} </h3>
-                            <p style={{color: poker.players[0].cash > 250 ? 'silver' : poker.players[0].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[0].cash} </p>
+                            <p style={{color: poker.players[0].cash > 250 ? 'silver' : poker.players[0].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[0].cash.toFixed(2)} </p>
                         </div>
                         <div className='pocket-divider' >
                             <Pocket />
@@ -515,9 +558,10 @@ const Game = (props) => {
                         </div>
                     </div>
                     <div className='player-box'>
-                        <div className={props.cash.status.whosTurn === 1 ? 'player-status-active' : 'player-status'} >
+                        {/* <div className={props.cash.status.whosTurn === 1 ? 'player-status-active' : 'player-status'} > */}
+                        <div className={props.game.status.winner === 'Hamilton' ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 1 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[1].username} </h3>
-                            <p style={{color: poker.players[1].cash > 250 ? 'silver' : poker.players[1].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[1].cash} </p>
+                            <p style={{color: poker.players[1].cash > 250 ? 'silver' : poker.players[1].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[1].cash.toFixed(2)} </p>
                         </div>
                         <div className='pocket-divider' >
                             {
@@ -551,9 +595,10 @@ const Game = (props) => {
                         </div>
                     </div>
                     <div className='player-box'>
-                        <div className={props.cash.status.whosTurn === 2 ? 'player-status-active' : 'player-status'} >
+                        {/* <div className={props.cash.status.whosTurn === 2 ? 'player-status-active' : 'player-status'} > */}
+                        <div className={props.game.status.winner === 'Burr' ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 2 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[2].username} </h3>
-                            <p style={{color: poker.players[2].cash > 250 ? 'silver' : poker.players[2].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[2].cash} </p>
+                            <p style={{color: poker.players[2].cash > 250 ? 'silver' : poker.players[2].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[2].cash.toFixed(2)} </p>
                         </div>
                         
                         <div className='pocket-divider' >
@@ -588,9 +633,10 @@ const Game = (props) => {
                         </div>
                     </div>
                     <div className='player-box'>
-                        <div className={props.cash.status.whosTurn === 3 ? 'player-status-active' : 'player-status'} >
+                        {/* <div className={props.cash.status.whosTurn === 3 ? 'player-status-active' : 'player-status'} > */}
+                        <div className={props.game.status.winner === 'Jefferson' ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 3 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[3].username} </h3>
-                            <p style={{color: poker.players[3].cash > 250 ? 'silver' : poker.players[3].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[3].cash} </p>
+                            <p style={{color: poker.players[3].cash > 250 ? 'silver' : poker.players[3].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[3].cash.toFixed(2)} </p>
                         </div>
                         <div className='pocket-divider' >
                             {
@@ -627,18 +673,18 @@ const Game = (props) => {
                 <div className='slider-table' >
                     <div className='meter-box' >
                         {
-                            props.game.status.isShuffling === true ?
+                            props.game.status.isShuffling ?
                             <p style={{fontSize: '16px', color: 'silver'}} > {pokerStatus} </p>
                             :                            
-                            props.game.status.handIsOver === true ?
-                            <div>
-                                <p style={{fontSize: '16px', color: 'silver', fontWeight: 'bold'}} > {pokerStatus} </p>
-                                <Winner  />
-                            </div>
-                        :
-                            props.cash.status.showAllHands === true ?
+                            // props.game.status.handIsOver ?
+                            // <div>
+                            //     <p style={{fontSize: '16px', color: 'silver', fontWeight: 'bold'}} > {pokerStatus} </p>
+                            //     <Winner  />
+                            // </div>
+                            // :
+                            props.cash.status.showAllHands ?
                             <ActionFeed />
-                        :
+                            :
                             <CashMeter />
                         }
                     </div>

@@ -8,9 +8,10 @@
     align-items: center;
     justify-content: space-evenly;    
     // background-image: radial-gradient(rgb(99, 99, 99), rgb(40, 40, 40), rgb(10, 10, 10));
-    background-image: linear-gradient(to right, $CHARCOAL, rgb(10, 15, 15));
+    // background-image: linear-gradient(to right, $CHARCOAL, rgb(10, 15, 15));
+    // background-image: linear-gradient(to right, $CHARCOAL, rgba(10, 10, 10, 0.75));
     // background-image: url('../../../assets/black-paisely.jpg');
-    background-color: $CHARCOAL;
+    background-color: rgba(5, 5, 5, 0.85);
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -73,17 +74,17 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    width: 15%;
-    height: 75%;
+    width: 20%;
+    height: 85%;
 }
 
 #player-list {
     width: 15%;
-    height: 85%;
+    height: 90%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: space-evenly;
+    justify-content: space-around;
     border-radius: 20px;
 }
 
@@ -95,15 +96,17 @@
     align-items: flex-start;
     justify-content: flex-end;
     color: silver;
-    padding-bottom: 5px;
+    // padding-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 .pocket-divider {
-    width: 90%;
+    width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;    
+    padding-left: 10px;
 }
 
 .button-container {
@@ -114,8 +117,8 @@
 }
 
 .meter-box {
-    width: 85%;
-    height: 5%;
+    width: 100%;
+    height: 20%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -151,6 +154,8 @@
     align-items: center;
     padding-right: 5px;
     padding-left: 5px;
+    border-left: 5px solid rgba(192, 192, 192, 0);
+    border-right: 5px solid rgba(192, 192, 192, 0);
 }
 
 .player-status-active {
@@ -158,29 +163,61 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-right: 10px;
-    padding-left: 10px;
-    // border-top: 1px solid silver;
-    // border-radius: 50px;
-    animation: pulse 2.5s ease-out infinite;
+    padding-right: 5px;
+    padding-left: 5px;
+    border-radius: 10px;
+    animation: pulseOne 3s ease-out infinite;
+    // animation-iteration-count: 1;
 }
 
-@keyframes pulse {
+.player-status-active-w {
+    width: 65%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 5px;
+    padding-left: 5px;
+    border-radius: 50px;
+    animation: pulseWin 1.5s ease-out infinite;
+    // animation-iteration-count: 1;
+}
+
+@keyframes pulseOne {
 	0% {
-		transform: scale(0.95);
-        box-shadow: 0 0 2px 1px rgba(192, 192, 192, 0.7);
-        // border
+		transform: scale(1);        
+        border-left: 5px solid $HAZE;
+        border-right: 5px solid $HAZE;
 	}
 
 	70% {
-		transform: scale(.95);
-        box-shadow: 0 0 10px 5px rgba(192, 192, 192, 0);
-        // border
+		transform: scale(1);        
+        border-left: 5px solid $LIGHTHOUSE;
+        border-right: 5px solid $LIGHTHOUSE;
 	}
 
 	100% {
-		transform: scale(0.95);
-        box-shadow: 0 0 2px 1px rgba(192, 192, 192, 0);
-        // border
+		transform: scale(1);        
+        border-left: 5px solid $HAZE;
+        border-right: 5px solid $HAZE;
+	}
+}
+
+@keyframes pulseWin {
+	0% {
+		transform: scale(1);
+        border-left: 3px dotted $HAZE;  
+        border-right: 3px dotted $HAZE;  
+	}
+
+	70% {
+		transform: scale(1);
+        border-left: 3px dotted gold;
+        border-right: 3px dotted gold;
+	}
+
+	100% {
+		transform: scale(1);
+        border-left: 3px dotted $HAZE;
+        border-right: 3px dotted $HAZE;
 	}
 }

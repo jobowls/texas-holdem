@@ -603,20 +603,16 @@ const ScoreJefferson = (props) => {
 
     return (
         <div className='Ai1-show' >
-            <h4 id='Ai-name'> Jefferson </h4>
-            <br/>
-            <p> {props.score.botC.handType} </p>
-            <br/>
-            <p> {props.score.botC.subType} </p>
-            <br/>
+            <h4 id='Ai-name'> Jefferson </h4>            
+            <p> {props.score.botC.handType} </p>            
+            <p> {props.score.botC.subType} </p>            
             {
                 props.score.botC.handType === 'High Card' ?
-                <p style={{color: 'silver'}} > {props.score.botC.highestCard} </p>
+                <p> {props.score.botC.highestCard} </p>
                 :
                 null
-            }
-            <br/>
-            <p style={{color: 'silver'}} > {props.score.botC.kicker} </p>
+            }            
+            <p style={{color: 'rgb(31, 41, 46)'}} > {props.score.botC.kicker} </p>
         </div>
     )
 }
