@@ -42,7 +42,6 @@ const Winner = (props) => {
         let copyArr = [...best5]
 
     useEffect(() => {
-        // console.log(best5)
         findWinner()        
     }, [props.game.status.handIsOver])    
 
@@ -57,12 +56,10 @@ const Winner = (props) => {
 
     useEffect(() => {
         let comparisonsArr = eliminate(changeCurrent, round - 1)
-        
+        console.log(copyArr, 'testEFFECT')
         if (round) {
             if (comparisonsArr === null) {
-                evenSplit()
-                console.log(comparisonsArr, 'what is this?')                
-                // tieBreaker(comparisonsArr)
+                evenSplit()                
             } else {
                 tieBreaker(comparisonsArr)
             }
@@ -74,11 +71,17 @@ const Winner = (props) => {
         return Math.max(...arr)
     }
 
-    const findWinner = async() => {
-        let allScores = [props.score.myHand.score, props.score.botA.score, props.score.botB.score, props.score.botC.score]
+    const findWinner = () => {
         let tScores = []
         let remainingPlayers = []
         let indexedArr = []
+        let allScores = [
+            props.score.myHand.score,
+            props.score.botA.score,
+            props.score.botB.score,
+            props.score.botC.score
+        ]
+        console.log(allScores, 'test()')
 
         let highScore = findHighest(allScores)
         let tiedArr = allScores.filter(e => e === highScore)
@@ -99,14 +102,13 @@ const Winner = (props) => {
             } else {                
                 setCurrent([...remainingPlayers])
                 setKey([...indexedArr])
-                console.log(remainingPlayers, 'SHOULD BE SPLICED =>>')
-                console.log(indexedArr, 'KEYS =>>')
-                await setRound(1)
+                    console.log(remainingPlayers, 'SHOULD BE SPLICED =>>')
+                    console.log(indexedArr, 'KEYS =>>')
+                setRound(1)
             }
-        // await setFire(true)
     }
 
-    const tieBreaker = async(arr) => {                    
+    const tieBreaker = (arr) => {                    
                 let foundHighest = findHighest(arr)                    
             let filtered = arr.filter(e => e === foundHighest)                
         let wIndex = arr.indexOf(foundHighest)
@@ -129,7 +131,7 @@ const Winner = (props) => {
                 setKey([...indexedArr])
                     console.log(remainingPlayers, 'UPDATED_COMPARISON =>> FIRED!')
                     console.log(indexedArr, 'UPDATED_KEYS =>> FIRED!')
-                await setRound(round + 1)
+                setRound(round + 1)
             }
     }
 
@@ -147,7 +149,7 @@ const Winner = (props) => {
         }
 
         for (let i = 0; i < winnerCircle.length; i++) {
-            props.setWinner(`${winnerCircle[i]} Split the Pot // $${amount}`)
+            props.setWinner(`Split Pot $${amount}`)
         }
         // winnerCircle.map((e, i) => (
         //     <p key={i}> {`${e} Split the Pot $${amount}`} </p>

@@ -18,12 +18,25 @@
 
 .marquee-header {
     height: 25%;
-    width: 85%;
-    // border-radius: 10px;
-    border-bottom: 5px solid $CARPET;
-    // box-shadow: 1px 1px 5px 2px black;
+    width: 100%;
+    border-radius: 10px;
+    border-top: 5px solid $CHARCOAL2;
+    border-bottom: 5px solid $CHARCOAL2;
+    background-color: rgba(0, 0, 0, 0.5);
     color: silver;
-    margin-top: 10px;
+    // margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.marquee-header-w {
+    height: 25%;
+    width: 100%;
+    border-radius: 10px;
+    border-top: 5px solid goldenrod;
+    border-bottom: 5px solid goldenrod;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: silver;
+    // margin-top: 10px;
     margin-bottom: 10px;
 }
 

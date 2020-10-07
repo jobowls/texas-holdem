@@ -11,7 +11,7 @@ import './Poker.scss'
 import {GiFireAce} from 'react-icons/gi'
 //  ACTIONS
 import {assignSm, assignBg, payEntry, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse} from '../../../ducks/pokerReducer'
-import {setChipCount} from '../../../ducks/cashReducer'
+import {setChipCount, setAlive} from '../../../ducks/cashReducer'
 import {setRules} from '../../../ducks/rulesReducer'
 
 const player1 = {
@@ -91,6 +91,7 @@ const Poker = (props) => {
         props.setPurse(tablePurse)
         props.payEntry(true)
         props.isShuffling(true)
+        props.setAlive([0, 1, 2, 3])
 
         axios.get('/api/rules')
         .then(list => props.setRules(list.data))
@@ -126,5 +127,6 @@ export default connect(
         payEntry,
         setRules,
         assignSm,
-        assignBg
+        assignBg,
+        setAlive
     })(withRouter(Poker))

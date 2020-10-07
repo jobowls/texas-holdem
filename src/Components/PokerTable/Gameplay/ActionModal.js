@@ -165,10 +165,10 @@ const ActionModal = (props) => {
                     onClick={() => console.log(props.game.poker.players)} 
                     className='action-btns' 
                     > Show'em </button> */}
-                <button
+                {/* <button
                     onClick={props.toggler}
                     className='action-btns'
-                    > Menu </button>
+                    > Menu </button> */}
             </div>
         </div>
     )

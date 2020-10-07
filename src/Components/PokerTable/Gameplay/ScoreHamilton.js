@@ -611,7 +611,7 @@ const ScoreHamilton = (props) => {
                 :
                 null
             }            
-            <p style={{color: 'rgb(31, 41, 46)'}} > {props.score.botA.kicker} </p>
+            <p> {props.score.botA.kicker} </p>
         </div>
     )
 }

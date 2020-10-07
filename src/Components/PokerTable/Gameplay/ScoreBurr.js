@@ -611,7 +611,7 @@ const ScoreBurr = (props) => {
                 :
                 null
             }        
-            <p style={{color: 'rgb(31, 41, 46)'}} > {props.score.botB.kicker} </p>
+            <p> {props.score.botB.kicker} </p>
         </div>
     )
 }

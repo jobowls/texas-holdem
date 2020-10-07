@@ -118,10 +118,11 @@
 }
 
 #whos-turn {
-    background-color: $LIGHTHOUSE;
+    background-color: $CHARCOAL2;
     border-radius: 5px;
     line-height: 2em;
-    width: 100%;
+    width: 75%;
+    box-shadow: 0px 0px 10px 1px $CHARCOAL;
     // animation: pulse 3s ease-out infinite;
     // animation-iteration-count: 1;
 }

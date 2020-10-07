@@ -11,7 +11,7 @@
     // background-image: linear-gradient(to right, $CHARCOAL, rgb(10, 15, 15));
     // background-image: linear-gradient(to right, $CHARCOAL, rgba(10, 10, 10, 0.75));
     // background-image: url('../../../assets/black-paisely.jpg');
-    background-color: rgba(5, 5, 5, 0.85);
+    background-color: rgba(5, 5, 5, 0.5);
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -177,9 +177,11 @@
     align-items: center;
     padding-right: 5px;
     padding-left: 5px;
-    border-radius: 50px;
-    animation: pulseWin 1.5s ease-out infinite;
-    // animation-iteration-count: 1;
+    border-radius: 10px;
+    border-left: 5px solid goldenrod;
+    border-right: 5px solid goldenrod;
+    animation: pulseWin 0.3s;
+    animation-iteration-count: 5;
 }
 
 @keyframes pulseOne {
@@ -191,8 +193,8 @@
 
 	70% {
 		transform: scale(1);        
-        border-left: 5px solid $LIGHTHOUSE;
-        border-right: 5px solid $LIGHTHOUSE;
+        border-left: 5px solid silver;
+        border-right: 5px solid silver;
 	}
 
 	100% {
@@ -205,19 +207,19 @@
 @keyframes pulseWin {
 	0% {
 		transform: scale(1);
-        border-left: 3px dotted $HAZE;  
-        border-right: 3px dotted $HAZE;  
+        border-left: 5px solid $HAZE;  
+        border-right: 5px solid $HAZE;  
 	}
 
 	70% {
 		transform: scale(1);
-        border-left: 3px dotted gold;
-        border-right: 3px dotted gold;
+        border-left: 5px solid goldenrod;
+        border-right: 5px solid goldenrod;
 	}
 
 	100% {
 		transform: scale(1);
-        border-left: 3px dotted $HAZE;
-        border-right: 3px dotted $HAZE;
+        border-left: 5px solid $HAZE;
+        border-right: 5px solid $HAZE;
 	}
 }

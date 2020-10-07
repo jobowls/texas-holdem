@@ -20,36 +20,42 @@
 }
 
 .Ai1-show {
-    height: 90%;
+    height: 85%;
+    width: max-content;
+    // border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    // background-color: blue;
-    color: $HAZE;
+    // background-color: $CHARCOAL;
+    color: silver;
     // font-weight: bold;
     // font-size: small;
     line-height: 0em;
     text-align: center;
 }
 .Ai2-show {
-    height: 90%;
+    height: 85%;
+    width: max-content;
+    // border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    // background-color: blue;
-    color: $HAZE;
+    // background-color: $CHARCOAL;
+    color: silver;
     // font-weight: bold;
     // font-size: small;
     line-height: 0em;
     text-align: center;
 }
 .Ai3-show {
-    height: 90%;
+    height: 85%;
+    width: max-content;
+    // border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    // background-color: blue;
-    color: $HAZE;
+    // background-color: $CHARCOAL;
+    color: silver;
     // font-weight: bold;
     // font-size: small;
     line-height: 0em;
@@ -57,8 +63,12 @@
 }
 
 #Ai-name {
-    // color: rgb(146, 46, 52);
+    // height: 30px;
+    // background-color: $CHARCOAL;
+    // border-radius: 20px;
+    // box-shadow: 0px 0px 10px 2px black;
     color: silver;
+    // border-bottom: 2px solid silver;
 }
 
 .pocket-hand {
@@ -75,6 +85,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
     // position: absolute;
 }
 
@@ -88,8 +99,8 @@
 
 .house-container {
     width: 12%;
-    padding-left: 2px;
-    padding-right: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
 .house-faces {

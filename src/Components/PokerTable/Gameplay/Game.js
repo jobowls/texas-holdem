@@ -27,7 +27,7 @@ import Winner from '../../Math/Winner'
 import {setDeck, setPocket, setPocketAi1, setPocketAi2, setPocketAi3, setFlop, setTurn, setRiver, setBurned, setCommunity, setUsed, reset} from '../../../ducks/cardsReducer'
 import {banker, movePhase, setStatus, assignSm, assignBg, setWinner, handIsOver, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse, isSuited, setBalance} from '../../../ducks/pokerReducer'
 import {setKickerArr, setKickerArrA, setKickerArrB, setKickerArrC, setScore, setScoreA, setScoreB, setScoreC, setHighestA, setHighestB, setHighestC, setHighest, setKicker, setKickerA, setKickerB, setKickerC, resetBest5A, resetBest5B, resetBest5C, setSubTypeA, setSubTypeB, setSubTypeC, setHandTypeA, setHandTypeB, setHandTypeC, setSubType, setHamilton, setBurr, setJefferson, chickenDinner, setMyHand, setHandType, tallyOne, tallySuits, resetBest5} from '../../../ducks/scoringReducer'
-import {checkPot, showAllHands, setPlayerTurn, setCurrentBet} from '../../../ducks/cashReducer'
+import {setAlive, startBetting, watchTotal, checkPot, showAllHands, setPlayerTurn, setCurrentBet, setPot} from '../../../ducks/cashReducer'
 import {setNextMove} from '../../../ducks/dealerReducer'
 
 //  ESTILO
@@ -35,7 +35,7 @@ import './Game.scss'
 import '../../CardFlow/Community.scss'
 
 const Game = (props) => {
-    const {round} = props.game.poker
+    const {round, players} = props.game.poker
     const {poker} = props.game
 
     const [toggleButton, setToggleButton] = useState(0)
@@ -43,6 +43,14 @@ const Game = (props) => {
     const [toggleBigBlind, setToggleBigBlind] = useState(2)
     const [toggleRules, setToggleRules] = useState(false)
     const [pokerStatus, setPokerStatus] = useState('')
+
+    let liveStatus = [
+        players[0].isFolding,
+        players[1].isFolding,
+        players[2].isFolding,
+        players[3].isFolding
+    ]
+        let currentStatus = [...liveStatus]
 
     useEffect(() => {
         if (props.game.status.winner !== '') {
@@ -53,8 +61,10 @@ const Game = (props) => {
     useEffect(() => {
         if (props.game.status.isShuffling === true) {
             setPokerStatus('...shuffling deck')
+            setToggleRules(true)
         } else {
             setPokerStatus('')
+            setToggleRules(false)
         }
     }, [props.game.status.isShuffling])
 
@@ -69,23 +79,6 @@ const Game = (props) => {
         ? console.log(props.game.status.winner, 'WINNER')
         : console.log('none')
     }, [props.game.status.winner])
-
-    // useEffect(() => {
-    //     console.log(props.score.myHand.kickerArr, 'PLAYER1')
-    // }, [props.score.myHand.kickerArr])
-
-    // useEffect(() => {
-
-    //     console.log(props.score.botA.kickerArr, 'HAMILTON')
-    // }, [props.score.botA.kickerArr])
-
-    // useEffect(() => {
-    //     console.log(props.score.botB.kickerArr, 'BURR')
-    // }, [props.score.botB.kickerArr])
-
-    // useEffect(() => {
-    //     console.log(props.score.botC.kickerArr, 'JEFFERSON')
-    // }, [props.score.botC.kickerArr])
 
     useEffect(() => {
         if (props.cash.status.potIsGood === true) {
@@ -225,6 +218,7 @@ const Game = (props) => {
             let refreshBg = poker.bigPosition - 1;
         let smStakes =  poker.players[refreshSm].cash - poker.smallBlind;
         let bgStakes =  poker.players[refreshBg].cash - poker.bigBlind;
+        let money = poker.smallBlind + poker.bigBlind
 
             if (poker.bigPosition === 4) {
                 props.setPlayerTurn(0)
@@ -237,7 +231,19 @@ const Game = (props) => {
         props.setBalance(poker.smallBlind, refreshSm)
         props.setBalance(poker.bigBlind, refreshBg)
         props.setCurrentBet(poker.bigBlind)
+        props.setPot(money)
+        // props.startBetting(true)        
+        setWatcher()
     }
+        const setWatcher = () => {
+            let balances = [
+                poker.players[0].balance,
+                poker.players[1].balance,
+                poker.players[2].balance,
+                poker.players[3].balance
+            ]
+            props.watchTotal([...balances])
+        }
 
     const flop = () => {
         const {deck, pocketAi1, pocketAi2, pocketAi3, pocket, turn, river, flop, used, burned, community} = props.cards
@@ -290,7 +296,22 @@ const Game = (props) => {
         props.setBalance(0, 1)
         props.setBalance(0, 2)
         props.setBalance(0, 3)
+        flopper()
     }
+        const flopper = () => {
+            let remainingBalance = []
+            let indexed = []
+        
+            for (let i = 0; i < currentStatus.length; i++) {
+                if (currentStatus[i] === false) {
+                    indexed.push(i)
+                    remainingBalance.push(0)
+                }
+            }
+            props.setAlive([...indexed])
+            props.watchTotal([...remainingBalance])
+            // props.startBetting(false)
+        }
 
     // const checkFlop = (index, cards) => {
     //     switch(index) {
@@ -354,6 +375,7 @@ const Game = (props) => {
         props.setBalance(0, 1)
         props.setBalance(0, 2)
         props.setBalance(0, 3)
+        setWatcher()
     }
 
     const river = () => {
@@ -398,9 +420,8 @@ const Game = (props) => {
         props.setBalance(0, 1)
         props.setBalance(0, 2)
         props.setBalance(0, 3)
+        setWatcher()
     }    
-
-
     
     const checkXP = () => {
         // console.log(props.score.myHand.kickerArr, 'PLAYER1')
@@ -490,7 +511,7 @@ const Game = (props) => {
         let refreshSm = poker.smallPosition
         let refreshBg = poker.bigPosition
         
-            if (round === 4) {
+            if (round === players.length) {
                 props.assignButton(0)
                 props.setSmallBlind(smStakes)
                 props.setBigBlind(bgStakes)
@@ -549,7 +570,7 @@ const Game = (props) => {
                                 toggleButton === 1 ? 
                                 <div className='button-container' >
                                     {/* <Button  /> */}
-                                    <p> D </p>
+                                    <p style={{fontweight: 'bold'}} > Dealer </p>
                                 </div>
                                 :
                                 <div className='button-container' >
@@ -586,7 +607,7 @@ const Game = (props) => {
                                 toggleButton === 2 ? 
                                 <div className='button-container' >
                                     {/* <Button  /> */}
-                                    <p> D </p>
+                                    <p style={{fontweight: 'bold'}} > Dealer </p>
                                 </div>
                                 :
                                 <div className='button-container' >
@@ -624,7 +645,7 @@ const Game = (props) => {
                                 toggleButton === 3 ? 
                                 <div className='button-container' >
                                     {/* <Button  /> */}
-                                    <p> D </p>
+                                    <p style={{fontweight: 'bold'}} > Dealer </p>
                                 </div>
                                 :
                                 <div className='button-container' >
@@ -661,7 +682,7 @@ const Game = (props) => {
                                 toggleButton === 4 ? 
                                 <div className='button-container' >
                                     {/* <Button  /> */}
-                                    <p> D </p>
+                                    <p style={{fontweight: 'bold'}} > Dealer </p>
                                 </div>
                                 :
                                 <div className='button-container' >
@@ -779,5 +800,9 @@ export default connect(
         setCurrentBet,
         setBalance,
         checkPot,
-        movePhase
+        movePhase,
+        setPot,
+        startBetting,
+        watchTotal,
+        setAlive
     })(withRouter(Game))

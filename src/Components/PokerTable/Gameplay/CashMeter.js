@@ -1,22 +1,22 @@
-import React, {useState, useEffect, useReducer} from 'react'
+import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
-import {setPlayerTurn, setCurrentBet, setPot, checkPot} from '../../../ducks/cashReducer'
+import {watchTotal, startBetting, setAlive, setPlayerTurn, setCurrentBet, setPot, checkPot} from '../../../ducks/cashReducer'
 import {banker, movePhase, setBalance, setStatus} from '../../../ducks/pokerReducer'
 import './CashMeter.scss'
 import {FiPlusCircle} from 'react-icons/fi'
 
-
 const CashMeter = (props) => {
-    const {players} = props.game.poker
-    const {whosTurn} = props.cash.status
-    const {pot, currentBet} = props.cash.cashFlow
+    const {players, bigPosition} = props.game.poker
+    const {whosTurn, tableReady} = props.cash.status
+    const {pot, currentBet, isActive, watcher} = props.cash.cashFlow
+        let copy = [...isActive]
+        let copyWatcher = [...watcher]
 
     const [bet, setBet] = useState(0)
     const [toggleMeter, setToggleMeter] = useState(false)
     const [phase, setPhase] = useState(0)
-    const [active, setActive] = useState(0)
-    const [minimum, setMinimum] = useState(0)
-        let name = players[active].username        
+    const [key, setKey] = useState([])
+        let name = players[whosTurn].username        
     
     let tableBalance = [
         players[0].balance,
@@ -25,7 +25,15 @@ const CashMeter = (props) => {
         players[3].balance
     ]
         let runningTotal = [...tableBalance]
-        let activeBalance = runningTotal[active]
+        let activeBalance = runningTotal[whosTurn]        
+
+    let liveStatus = [
+        players[0].isFolding,
+        players[1].isFolding,
+        players[2].isFolding,
+        players[3].isFolding
+    ]
+        let currentStatus = [...liveStatus]
 
     let liveMoney = [
         players[0].cash,
@@ -33,7 +41,39 @@ const CashMeter = (props) => {
         players[2].cash,
         players[3].cash
     ]
-        let activeMoney = liveMoney[active]
+        let activeMoney = liveMoney[whosTurn]
+
+    useEffect(() => {
+        // phase >= copy.length
+        // ? checkPotBalance(copyWatcher)
+        // : checkPulse()
+        checkPulse()
+    }, [phase])
+
+    useEffect(() => {
+        let newMin = findMinimum(watcher)
+        props.setCurrentBet(newMin)
+        // setActive(whosTurn)
+        console.log(`
+            POKER_PHASE:${props.game.poker.phase}, 
+            PHASE:${phase}, 
+            COPY_LENGTH:${copy.length}, 
+            POT:${pot}, 
+            MINIMUM:${currentBet},
+            BIGGY:${bigPosition},
+            ACTIVE:${whosTurn},
+            isACTIVE:${isActive},
+            KEY:${key},
+            LIVE_MONEY:${liveMoney},
+            LIVE_STATUS:${liveStatus},
+            WATCHER:${watcher},
+            TABLE_READY:${tableReady}
+        `)
+    }, [whosTurn])
+
+    useEffect(() => {
+        checkPulse()
+    }, [props.game.poker.phase])
 
     useEffect(() => {
         !props.cards.pocket.length 
@@ -41,39 +81,53 @@ const CashMeter = (props) => {
         : setToggleMeter(true)
     }, [props.cards.pocket])
 
-    useEffect(() => {
-        if (phase >= 4) {
-            checkPotBalance()
-        }
-    }, [phase])
 
-    useEffect(() => {
-        setMinimum(newMinimum)
-        setActive(whosTurn)
-            console.log(`POT:${pot}, AMOUNT:${newMinimum}, RUNNING_TOTAL:${runningTotal}, LIVE_MONEY:${liveMoney}`)
-    }, [whosTurn])
+    const checkPulse = () => {
+        let indexed = []
+        let remainingBalance = []
+        
+        for (let i = 0; i < currentStatus.length; i++) {
+            if (currentStatus[i] === false) {
+                indexed.push(i)
+                remainingBalance.push(runningTotal[i])
+            }
+        }
+
+        props.watchTotal([...remainingBalance])
+        console.log('YES')
+        setKey([...indexed])
+        props.setAlive([...indexed])
+
+        if (props.game.poker.phase === 0 && phase > bigPosition) {
+            console.log('FIRED')
+            checkPotBalance(remainingBalance)            
+        } else {
+            phase >= copy.length
+            ? checkPotBalance(remainingBalance)
+            : console.log('STOPPED')
+        }
+    }
 
     const findMinimum = (arr) => {
         return Math.max(...arr)
     }
-        let newMinimum = findMinimum(tableBalance)
 
     const setCall = () => {
-        let community = minimum - activeBalance
+        let community = currentBet - activeBalance
         let pay = activeMoney - community
         //  REDUX =>>
-        props.setStatus(active, 'isCalling', true)
-        props.setBalance(minimum, active)
+        props.setStatus(whosTurn, 'isCalling', true)
+        props.setBalance(currentBet, whosTurn)
         props.setPot(pot + community)
-        props.banker(pay, active)
+        props.banker(pay, whosTurn)
+        // props.
         //  STATE =>>
         setPhase(phase + 1)
         turnCounter()        
     }
 
     const setFold = () => {
-        props.setStatus(active, 'isFolding', true)
-        runningTotal.splice(active, 1)
+        props.setStatus(whosTurn, 'isFolding', true)
         setPhase(phase + 1)
         turnCounter()
     }
@@ -82,23 +136,24 @@ const CashMeter = (props) => {
         let updateBalance = bet
         let pay = activeMoney - updateBalance
         //  REDUX =>>
-        props.setStatus(active, 'isBetting', true)
-        props.setBalance(updateBalance, active)
+        props.setStatus(whosTurn, 'isBetting', true)
+        props.setBalance(updateBalance, whosTurn)
         props.setPot(bet + pot)
-        props.banker(pay, active)
+        props.banker(pay, whosTurn)
         //  STATE =>>
         setPhase(phase + 1)
         turnCounter()        
     }
 
     const setRaise = () => {
-        let updateBalance = bet + minimum
+        let updateBalance = bet + currentBet
         let pay = activeMoney - updateBalance
         //  REDUX =>>
-        props.setStatus(active, 'isRaising', true)
-        props.setBalance(updateBalance, active)
+        props.setCurrentBet(updateBalance)
+        props.setStatus(whosTurn, 'isRaising', true)
+        props.setBalance(updateBalance, whosTurn)
         props.setPot(updateBalance + pot)
-        props.banker(pay, active)
+        props.banker(pay, whosTurn)
         //  STATE =>>
         setPhase(phase + 1)
         turnCounter()        
@@ -107,10 +162,10 @@ const CashMeter = (props) => {
     const goAllIn = () => {
         let updateBalance = activeMoney
         //  REDUX =>>
-        props.setStatus(active, 'isAllIn', true)
-        props.setBalance(updateBalance, active)
+        props.setStatus(whosTurn, 'isAllIn', true)
+        props.setBalance(updateBalance, whosTurn)
         props.setPot(updateBalance + pot)
-        props.banker(0, active)
+        props.banker(0, whosTurn)
         //  STATE =>>
         setPhase(phase + 1)
         turnCounter()        
@@ -131,20 +186,33 @@ const CashMeter = (props) => {
 
     const turnCounter = () => {
         reset()
-        active === 3
-        ? props.setPlayerTurn(0)
-        : props.setPlayerTurn(active + 1)
+        // console.log(isActive.length - 1)
+        // console.log(isActive)
+            
+        let ordered = copy.reverse()
+        console.log(ordered)
+
+        whosTurn === ordered[0]
+        ? props.setPlayerTurn(key[0])
+        : props.setPlayerTurn(whosTurn + 1)
     }
 
-    const checkPotBalance = () => {        
-        let amount = (e => e === minimum)
+    const checkPotBalance = (arr) => {        
+        let amount = (e => e === currentBet)
+        // console.log(watcher, 'POT_BALANCE')
+        // console.log(bigPosition, 'BIGBLIND')
 
-        if (runningTotal.every(amount)) {
+        if (arr.every(amount)) {
             props.movePhase(props.game.poker.phase + 1)
             props.checkPot(true)
             setPhase(0)
+        } else {
+            // checkPulse()
+            turnCounter()
+            console.log('HIT_PULSE')
         }
     }
+    
 
     return (
         <div className='slide-rule' >
@@ -152,7 +220,7 @@ const CashMeter = (props) => {
                 toggleMeter ?
                 <div className='counter-parent' >
                     <p id='whos-turn' style={{color: 'silver', fontWeight: 'bold'}}> {`${name}'s Move`} </p>
-                    <p style={{color: 'silver', fontWeight: 'bold'}} > Pay to Play: ${minimum.toFixed(2)} </p>
+                    <p style={{color: 'silver', fontWeight: 'bold'}} > Pay to Play: ${currentBet.toFixed(2)} </p>
                     <div className='modal-counter' >
                         <button
                             id='ticker-btn-increment'
@@ -167,24 +235,12 @@ const CashMeter = (props) => {
                     </div>
                     <div className='meter-actions' >
                         {
-                            // activeMoney <= minimum ?
-                            // <>
-                            //     <button
-                            //         id="ticker-btn"
-                            //         onClick={setCall} >
-                            //         {`Call ${minimum - activeBalance}`} </button>
-                            //     <button
-                            //         id="ticker-btn"
-                            //         onClick={setFold} >
-                            //         Fold </button>    
-                            // </>
-                            // :
-                            activeBalance < minimum ?
+                            activeBalance < currentBet ?
                             <>
                                 <button
                                     id="ticker-btn"
                                     onClick={setCall} >
-                                    {`Call ${minimum - activeBalance}`} </button>
+                                    {`Call ${currentBet - activeBalance}`} </button>
                                 <button
                                     id="ticker-btn"
                                     onClick={setRaise} >
@@ -236,89 +292,9 @@ export default connect(mapStateToProps, {
     setStatus,
     setBalance,
     checkPot,
-    movePhase
+    movePhase,
+    setAlive,
+    startBetting,
+    watchTotal
 })(CashMeter)
 
- // useEffect(() => {
-    //     if (phase % 4 === 0) {
-    //         checkPotBalance()
-    //     }
-    // }, [phase])
-
-    // useEffect(() => {
-    //     console.log(props.cash.cashFlow.currentBet, 'AUDIT =>> REDUX')
-    // }, [props.cash.cashFlow.currentBet])
-
-    // // useEffect(() => {
-    // //     setBet(bigBlind)
-    // // }, [bigBlind])
-
-    // useEffect(() => {
-    //     console.log(currBet, 'SHOULD BE HIGHEST BET THUS FAR')
-    //     // if (currBet > currentBet) {
-    //     //     props.setCurrentBet((bet - currentBet) + currentBet)
-    //     // }
-    // }, [bet, currentBet, currBet])
-
-    // const isBetting = () => {
-    //     setBet(bet + 10)
-    // }
-
-    // const placeBet = () => {
-    //     let money = bet + useBalance[active]
-    //     let newBet = currentBet + bet
-    //     props.setPot(bet + pot)
-    //     props.banker(transaction, active)
-    //     props.setCurrentBet(newBet)
-    //     props.setBalance(money, active)
-    //     // setBet()
-    //     turnCounter()
-    //     setPhase(phase + 1)
-    // }
-
-    // const checkRaise = () => {
-    //     let money = bet + runningTotal[active]
-    //     let newBet = (currentBet - bet) + currentBet
-    //     props.setPot(bet + pot)
-    //     props.banker(transaction, active)
-    //     props.setCurrentBet(newBet)
-    //     props.setBalance(money, active)
-    //     turnCounter()
-    //     setPhase(phase + 1)
-    // }
-
-    // const checkBet = () => {
-    //     props.setStatus(active, 'isChecking', true)
-    //     turnCounter()
-    //     setPhase(phase + 1)
-    // }
-
-    // const checkFold = () => {
-    //     props.setStatus(active, 'isFolding', true)
-    //     turnCounter()
-    //     setPhase(phase + 1)
-    // }
-
-    // const checkCall = () => {
-    //     let money = players[active].cash - (currBet - runningTotal[active])
-    //     let placing = currBet - runningTotal[active]
-    //         console.log(placing, 'PLACING $')
-    //     props.setStatus(active, 'isCalling', true)
-    //     props.setPot(placing + pot)
-    //     props.banker(money, active)
-    //     props.setBalance(currentBet, active)
-    //     turnCounter()
-    //     setPhase(phase + 1)
-    // }
-
-    // const goAllIn = () => {
-    //     let money = props.game.poker.players[active].cash
-    //         console.log(money, '$$')
-    //     props.setStatus(active, 'isAllIn', true)
-    //     props.setPot(money + pot)
-    //     props.banker(0, active)
-    //     turnCounter()
-    //     setPhase(phase + 1)
-    // }
-
-    

@@ -612,7 +612,7 @@ const ScoreJefferson = (props) => {
                 :
                 null
             }            
-            <p style={{color: 'rgb(31, 41, 46)'}} > {props.score.botC.kicker} </p>
+            <p> {props.score.botC.kicker} </p>
         </div>
     )
 }

@@ -3,6 +3,7 @@ const initialState = {
         showAllHands: false,
         whosTurn: 0,
         potIsGood: false,
+        tableReady: false
     },
 
     cashFlow: {
@@ -10,10 +11,12 @@ const initialState = {
         pot: 0,
         sidePot: 0,
         currentBet: 0,
-        runningTotal: []
+        watcher: [],
+        isActive: []
     }
 }
 
+    //  ACTION-HANDLES
 const SET_CHIP_COUNT = 'SET_CHIP_COUNT'
 const SHOW_ALL_HANDS = 'SHOW_ALL_HANDS'
 const SET_POT = 'SET_POT'
@@ -22,6 +25,25 @@ const SET_CURRENT_BET = 'SET_CURRENT_BET'
 const SET_PLAYER_STATUS = 'SET_PLAYER_STATUS'
 const CHECK_POT = 'CHECK_POT'
 const WATCH_TOTAL = 'WATCH_TOTAL'
+const SET_ALIVE = 'SET_ALIVE'
+const START_BETTING = 'START_BETTING'
+
+    //  ACTIONS
+export function setAlive(players) {
+    console.log(players, 'PAYLOAD =>> isActive[...]')
+    return {
+        type: SET_ALIVE,
+        payload: players
+    }
+}
+
+export function startBetting(boolean) {
+    console.log(boolean, 'PAYLOAD =>> startBetting')
+    return {
+        type: START_BETTING,
+        payload: boolean
+    }
+}
 
 export function watchTotal(moneyArr) {
     return {
@@ -104,7 +126,13 @@ export default function cashReducer(state = initialState, action) {
             return {...state, status: {...state.status, potIsGood: payload}};
 
         case WATCH_TOTAL:
-            return {...state, cashFlow: {...state.cashFlow, runningTotal: payload}};
+            return {...state, cashFlow: {...state.cashFlow, watcher: payload}};
+
+        case SET_ALIVE:
+            return {...state, cashFlow: {...state.cashFlow, isActive: payload}};
+
+        case START_BETTING:
+            return {...state, status: {...state.status, tableReady: payload}};
         
         default:
             return state;
