@@ -1,8 +1,10 @@
+    // NPM
 import React from 'react'
-// import axios from 'axios'
-import './Header.scss'
 import {connect} from 'react-redux'
+
+    // LOCAL
 import {setPlayer} from '../../ducks/playerReducer'
+import './Header.scss'
 
 const Header = (props) => {
     return (

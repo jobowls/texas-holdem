@@ -1,5 +1,8 @@
+    // NODE
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
+
+    // LOCAL
 import {cipher, eliminate} from './CountingCards'
 import {setScore, setScoreA, setScoreB, setScoreC} from '../../ducks/scoringReducer'
 import {setWinner, banker} from '../../ducks/pokerReducer'
@@ -8,6 +11,7 @@ import './Winner.scss'
 
 const Winner = (props) => {
     const {players} = props.game.poker
+    const {lastManStanding} = props.game.status
     const {pot} = props.cash.cashFlow
 
     const [joker, setJoker] = useState(0)
@@ -26,13 +30,6 @@ const Winner = (props) => {
         props.game.poker.players[3].username
     ])
 
-    const [checkMoney] = useState([
-        props.game.poker.players[0].cash,
-        props.game.poker.players[1].cash,
-        props.game.poker.players[2].cash,
-        props.game.poker.players[3].cash
-    ])
-
     const [best5] = useState([
         [...props.score.myHand.kickerArr],
         [...props.score.botA.kickerArr],
@@ -45,6 +42,11 @@ const Winner = (props) => {
         findWinner()        
     }, [props.game.status.handIsOver])    
 
+    useEffect(() => {
+        props.setWinner(finalTable[lastManStanding])
+        props.banker(money, lastManStanding)
+    }, [lastManStanding])
+
 
     useEffect(() => {
         if (ready) {            
@@ -56,7 +58,7 @@ const Winner = (props) => {
 
     useEffect(() => {
         let comparisonsArr = eliminate(changeCurrent, round - 1)
-        console.log(copyArr, 'testEFFECT')
+        
         if (round) {
             if (comparisonsArr === null) {
                 evenSplit()                
@@ -81,79 +83,67 @@ const Winner = (props) => {
             props.score.botB.score,
             props.score.botC.score
         ]
-        console.log(allScores, 'test()')
-
-        let highScore = findHighest(allScores)
-        let tiedArr = allScores.filter(e => e === highScore)
+                let highScore = findHighest(allScores)
+            let tiedArr = allScores.filter(e => e === highScore)
         let champIndex = allScores.indexOf(highScore)
 
-            for (let i = 0; i < allScores.length; i++) {
-
-                if (allScores[i] === highScore) {
-                    indexedArr.push(i)
-                    tScores.push(allScores[i])
-                    remainingPlayers.push(copyArr[i])
-                }
+        for (let i = 0; i < allScores.length; i++) {
+            if (allScores[i] === highScore) {
+                indexedArr.push(i)
+                tScores.push(allScores[i])
+                remainingPlayers.push(copyArr[i])
             }
+        }
 
-            if (tiedArr.length === 1) {
-                setJoker(champIndex)
-                setReady(true)
-            } else {                
-                setCurrent([...remainingPlayers])
-                setKey([...indexedArr])
-                    console.log(remainingPlayers, 'SHOULD BE SPLICED =>>')
-                    console.log(indexedArr, 'KEYS =>>')
-                setRound(1)
-            }
+        if (tiedArr.length === 1) {
+            setJoker(champIndex)
+            setReady(true)
+        } else {                
+            setCurrent([...remainingPlayers])
+            setKey([...indexedArr])
+            setRound(1)
+        }
     }
 
     const tieBreaker = (arr) => {                    
-                let foundHighest = findHighest(arr)                    
-            let filtered = arr.filter(e => e === foundHighest)                
+                let foundHighest = findHighest(arr)
+            let filtered = arr.filter(e => e === foundHighest)
         let wIndex = arr.indexOf(foundHighest)
         let remainingPlayers = []
         let indexedArr = []
 
-            for (let i = 0; i < arr.length; i++) {
-                if (arr[i] === foundHighest) {
-                    remainingPlayers.push(changeCurrent[i])
-                    indexedArr.push(key[i])
-                }
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === foundHighest) {
+                remainingPlayers.push(changeCurrent[i])
+                indexedArr.push(key[i])
             }
+        }
 
-            if (filtered.length === 1) {
-                    console.log(key, 'KEYS =>>')
-                setJoker(key[wIndex])
-                setReady(true)
-            } else {
-                setCurrent([...remainingPlayers])
-                setKey([...indexedArr])
-                    console.log(remainingPlayers, 'UPDATED_COMPARISON =>> FIRED!')
-                    console.log(indexedArr, 'UPDATED_KEYS =>> FIRED!')
-                setRound(round + 1)
-            }
+        if (filtered.length === 1) {                    
+            setJoker(key[wIndex])
+            setReady(true)
+        } else {
+            setCurrent([...remainingPlayers])
+            setKey([...indexedArr])                    
+            setRound(round + 1)
+        }
     }
 
     const evenSplit = () => {
         let amount = (pot / key.length)
         let winnerCircle = []
-            console.log(checkMoney, 'PREV-PROPS')
         
-        for (let i = 0; i < key.length; i++) {
-                console.log(props.game.poker.players)
-            let payout = ((pot / key.length) + players[key[i]].cash)
+        for (let i = 0; i < key.length; i++) {                
+            let payout = (amount + players[key[i]].cash)
             winnerCircle.push(finalTable[key[i]])
             props.banker(payout, key[i])
-                console.log(props.score, '!!!')
         }
 
-        for (let i = 0; i < winnerCircle.length; i++) {
-            props.setWinner(`Split Pot $${amount}`)
-        }
-        // winnerCircle.map((e, i) => (
-        //     <p key={i}> {`${e} Split the Pot $${amount}`} </p>
-        // ))
+        winnerCircle.length === 2
+            ? props.setWinner(`${winnerCircle[0]} | ${winnerCircle[1]} ($${amount})`)
+            : winnerCircle.length === 3
+            ? props.setWinner(`${winnerCircle[0]} | ${winnerCircle[1]} | ${winnerCircle[2]} ($${amount})`)
+            : props.setWinner(`${winnerCircle[0]} | ${winnerCircle[1]} | ${winnerCircle[2]} | ${winnerCircle[3]} ($${amount})`)
     }
 
     return (

@@ -1,9 +1,12 @@
+  // NPM
 import React from 'react'
+import {connect} from 'react-redux'
+
+  // LOCAL
 import chips from '../../assets/badges/chips.png'
 import pair from '../../assets/badges/pair.png'
 import icon from '../../assets/badges/badge-icon.png'
 import './Badge.scss'
-import {connect} from 'react-redux'
 
 const Badge = (props) => {
   return (

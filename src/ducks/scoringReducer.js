@@ -180,6 +180,7 @@ const initialState = {
     }
 }
 
+
 const SET_SUBTYPE = 'SET_SUBTYPE'
 const SET_BEST_HAND = 'SET_BEST_HAND'
 const SET_KICKER = 'SET_KICKER'
@@ -190,7 +191,6 @@ const TALLY_SUITS = 'TALLY_SUITS'
 const CHICKEN_DINNER = 'CHICKEN_DINNER'
 const SET_MY_HAND = 'SET_MY_HAND'
 const SET_HAND_TYPE = 'SET_HAND_TYPE'
-// const SET_POCKET_SUITS = 'SET_POCKET_SUITS'
 const RESET_BEST_5 = 'RESET_BEST_5'
 const COUNT_ROYAL_FLUSH = 'COUNT_ROYAL_FLUSH'
 const COUNT_STRAIGHT_FLUSH = 'COUNT_STRAIGHT_FLUSH'
@@ -205,9 +205,8 @@ const COUNT_HIGH_CARD = 'COUNT_HIGH_CARD'
 const SET_HIGHEST = 'SET_HIGHEST'
 const SET_SCORE = 'SET_SCORE'
 
-export function setKickerArr(rankIndexes) {
-    // console.log('KIKER-ARR-HIT-P1P1', rankIndexes)
-    // console.log(rankIndexes, 'ARR_DINGER')
+
+export function setKickerArr(rankIndexes) {    
     return {
         type: SET_KICKER_ARR,
         payload: rankIndexes
@@ -236,7 +235,6 @@ export function setBestHand(ranks) {
 }
 
 export function setKicker(rank) {
-    // console.log(rank, 'KICKER_DINGER')
     return {
         type: SET_KICKER,
         payload: rank
@@ -251,7 +249,6 @@ export function checkingStraight(arr) {
 }
 
 export function setSubType(str) {
-    // console.log(str, 'SUB-TYPE')
     return {
         type: SET_SUBTYPE,
         payload: str
@@ -359,14 +356,13 @@ export function setHandType(string) {
 }
 
 export function setMyHand(cards) {
-    // console.log(cards, '_BEST_5_')
     return {
         type: SET_MY_HAND,
         payload: cards
     }
 }
 
-//  BOT-1 'HAMILTON'  //
+    //  BOT-1 'HAMILTON'  //
 const SET_HAMILTON = 'SET_HAMILTON'
 const SET_HAND_TYPE_A = 'SET_HAND_TYPE_A'
 const SET_SUB_TYPE_A = 'SET_SUB_TYPE_A'
@@ -386,8 +382,8 @@ const SET_HIGHEST_A = 'SET_HIGHEST_A'
 const SET_SCORE_A = 'SET_SCORE_A'
 const SET_KICKER_ARR_A = 'SET_KICKER_ARR_A'
 
+
 export function setKickerArrA(rankIndexes) {
-    // console.log('KIKER-ARR-HIT-AAA', rankIndexes)
     return {
         type: SET_KICKER_ARR_A,
         payload: rankIndexes
@@ -513,7 +509,8 @@ export function countRoyalFlushA(boolean) {
     }
 }
 
-//  BOT-2 'BURR'  //
+
+    //  BOT-2 'BURR'  //
 const SET_BURR = 'SET_BURR'
 const SET_HAND_TYPE_B = 'SET_HAND_TYPE_B'
 const SET_SUB_TYPE_B = 'SET_SUB_TYPE_B'
@@ -534,7 +531,6 @@ const SET_SCORE_B = 'SET_SCORE_B'
 const SET_KICKER_ARR_B = 'SET_KICKER_ARR_B'
 
 export function setKickerArrB(rankIndexes) {
-    // console.log('KIKER-ARR-HIT-BBB', rankIndexes)
     return {
         type: SET_KICKER_ARR_B,
         payload: rankIndexes
@@ -661,7 +657,7 @@ export function countRoyalFlushB(boolean) {
 }
 
 
-//  BOT-3 'JEFFERSON'  //
+    //  BOT-3 'JEFFERSON'  //
 const SET_JEFFERSON = 'SET_JEFFERSON'
 const SET_HAND_TYPE_C = 'SET_HAND_TYPE_C'
 const SET_SUB_TYPE_C = 'SET_SUB_TYPE_C'
@@ -681,8 +677,7 @@ const SET_HIGHEST_C = 'SET_HIGHEST_C'
 const SET_SCORE_C = 'SET_SCORE_C'
 const SET_KICKER_ARR_C = 'SET_KICKER_ARR_C'
 
-export function setKickerArrC(rankIndexes) {
-    // console.log('KIKER-ARR-HIT-CCC', rankIndexes)
+export function setKickerArrC(rankIndexes) {    
     return {
         type: SET_KICKER_ARR_C,
         payload: rankIndexes
@@ -808,51 +803,67 @@ export function countRoyalFlushC(boolean) {
     }
 }
 
+
 export default function scoringReducer(state = initialState, action) {
     const {type, payload} = action;
 
     switch(type) {
 
-        //  PLAYER - 1
+    //  PLAYER - 1
         case SET_MY_HAND:
-            return {...state, myHand: {...state.myHand, finalHand: payload}};
+            return {...state, myHand: {...state.myHand, finalHand: payload}}
+            
         case SET_HAND_TYPE:
-            return {...state, myHand: {...state.myHand, handType: payload}};
+            return {...state, myHand: {...state.myHand, handType: payload}}
+            
         case SET_SUBTYPE:
-            return {...state, myHand: {...state.myHand, subType: payload}};
+            return {...state, myHand: {...state.myHand, subType: payload}}
+            
         case SET_KICKER:
-            return {...state, myHand: {...state.myHand, kicker: payload}};
+            return {...state, myHand: {...state.myHand, kicker: payload}}
             
         case SET_KICKER_ARR:
-            return {...state, myHand: {...state.myHand, kickerArr: payload}};
-
+            return {...state, myHand: {...state.myHand, kickerArr: payload}}
+            
         case SET_HIGHEST:
-            return {...state, myHand: {...state.myHand, highestCard: payload}};
+            return {...state, myHand: {...state.myHand, highestCard: payload}}
+            
         case SET_SCORE:
-            return {...state, myHand: {...state.myHand, score: payload}};
+            return {...state, myHand: {...state.myHand, score: payload}}
+            
         case COUNT_ROYAL_FLUSH:
-            return {...state, best5: {...state.best5, hasRoyalFlush: payload}};
+            return {...state, best5: {...state.best5, hasRoyalFlush: payload}}
+            
         case COUNT_STRAIGHT_FLUSH:
-            return {...state, best5: {...state.best5, hasStraightFlush: payload}};
+            return {...state, best5: {...state.best5, hasStraightFlush: payload}}
+            
         case COUNT_4KIND:
-            return {...state, best5: {...state.best5, has4Kind: payload}};
+            return {...state, best5: {...state.best5, has4Kind: payload}}
+            
         case COUNT_FULL_HOUSE:
-            return {...state, best5: {...state.best5, hasFullHouse: payload}};
+            return {...state, best5: {...state.best5, hasFullHouse: payload}}
+            
         case COUNT_FLUSH:
-            return {...state, best5: {...state.best5, hasFlush: payload}};
+            return {...state, best5: {...state.best5, hasFlush: payload}}
+            
         case COUNT_STRAIGHT:
-            return {...state, best5: {...state.best5, hasStraight: payload}};
+            return {...state, best5: {...state.best5, hasStraight: payload}}
+            
         case COUNT_3KIND:
-            return {...state, best5: {...state.best5, has3Kind: payload}};
+            return {...state, best5: {...state.best5, has3Kind: payload}}
+            
         case COUNT_2PAIR:
-            return {...state, best5: {...state.best5, has2Pair: payload}};
+            return {...state, best5: {...state.best5, has2Pair: payload}}
+            
         case COUNT_PAIR:
-            return {...state, best5: {...state.best5, hasPair: payload}};
+            return {...state, best5: {...state.best5, hasPair: payload}}
+            
         case COUNT_HIGH_CARD:
-            return {...state, best5: {...state.best5, hasHighCard: payload}};
+            return {...state, best5: {...state.best5, hasHighCard: payload}}
+            
         case CHICKEN_DINNER:
             return {...state, myHand: {...state.myHand, winnerWinner: payload}}
-        
+            
         case RESET_BEST_5:
             return {
                 ...state,
@@ -869,48 +880,65 @@ export default function scoringReducer(state = initialState, action) {
                     hasPair: payload,
                     hasHighCard: payload
                 }
-            };
+            }
 
 
-        //  BOT-1 'HAMILTON'  //
+    //  BOT-1 'HAMILTON'
         case SET_HAMILTON:
-            return {...state, botA: {...state.botA, finalHand: payload}};
+            return {...state, botA: {...state.botA, finalHand: payload}}
+
         case SET_HAND_TYPE_A:
-            return {...state, botA: {...state.botA, handType: payload}};
+            return {...state, botA: {...state.botA, handType: payload}}
+
         case SET_SUB_TYPE_A:
-            return {...state, botA: {...state.botA, subType: payload}};
+            return {...state, botA: {...state.botA, subType: payload}}
+
         case COUNT_ROYAL_FLUSH_A:
-            return {...state, botA: {...state.botA, hasRoyalFlush: payload}};
+            return {...state, botA: {...state.botA, hasRoyalFlush: payload}}
+
         case COUNT_STRAIGHT_FLUSH_A:
-            return {...state, botA: {...state.botA, hasStraightFlush: payload}};
+            return {...state, botA: {...state.botA, hasStraightFlush: payload}}
+
         case COUNT_4KIND_A:
-            return {...state, botA: {...state.botA, has4Kind: payload}};
+            return {...state, botA: {...state.botA, has4Kind: payload}}
+
         case COUNT_FULL_HOUSE_A:
-            return {...state, botA: {...state.botA, hasFullHouse: payload}};
+            return {...state, botA: {...state.botA, hasFullHouse: payload}}
+
         case COUNT_FLUSH_A:
-            return {...state, botA: {...state.botA, hasFlush: payload}};
+            return {...state, botA: {...state.botA, hasFlush: payload}}
+
         case COUNT_STRAIGHT_A:
-            return {...state, botA: {...state.botA, hasStraight: payload}};
+            return {...state, botA: {...state.botA, hasStraight: payload}}
+
         case COUNT_3KIND_A:
-            return {...state, botA: {...state.botA, has3Kind: payload}};
+            return {...state, botA: {...state.botA, has3Kind: payload}}
+
         case COUNT_2PAIR_A:
-            return {...state, botA: {...state.botA, has2Pair: payload}};
+            return {...state, botA: {...state.botA, has2Pair: payload}}
+
         case COUNT_PAIR_A:
-            return {...state, botA: {...state.botA, hasPair: payload}};
+            return {...state, botA: {...state.botA, hasPair: payload}}
+
         case COUNT_HIGH_CARD_A:
-            return {...state, botA: {...state.botA, hasHighCard: payload}};
+            return {...state, botA: {...state.botA, hasHighCard: payload}}
+
         case SET_KICKER_A:
-            return {...state, botA: {...state.botA, kicker: payload}};
+            return {...state, botA: {...state.botA, kicker: payload}}
+
         case SET_KICKER_ARR_A:
-            return {...state, botA: {...state.botA, kickerArr: payload}};
+            return {...state, botA: {...state.botA, kickerArr: payload}}
+
         case SET_HIGHEST_A:
-            return {...state, botA: {...state.botA, highestCard: payload}};
+            return {...state, botA: {...state.botA, highestCard: payload}}
+
         case SET_SCORE_A:
-            return {...state, botA: {...state.botA, score: payload}};
+            return {...state, botA: {...state.botA, score: payload}}
 
         case RESET_BEST_5_A:
             return {
-                ...state, botA: {...state.botA, 
+                ...state, 
+                botA: {...state.botA,
                     hasRoyalFlush: payload,
                     hasStraightFlush: payload,
                     has4Kind: payload,
@@ -922,47 +950,64 @@ export default function scoringReducer(state = initialState, action) {
                     hasPair: payload,
                     hasHighCard: payload
                 }
-            };
+            }
        
-        //  BOT-2 'BURR'  //
+    //  BOT-2 'BURR'  //
         case SET_BURR:
-            return {...state, botB: {...state.botB, finalHand: payload}};
+            return {...state, botB: {...state.botB, finalHand: payload}}
+
         case SET_HAND_TYPE_B:
-            return {...state, botB: {...state.botB, handType: payload}};
+            return {...state, botB: {...state.botB, handType: payload}}
+
         case SET_SUB_TYPE_B:
-            return {...state, botB: {...state.botB, subType: payload}};
+            return {...state, botB: {...state.botB, subType: payload}}
+
         case COUNT_ROYAL_FLUSH_B:
-            return {...state, botB: {...state.botB, hasRoyalFlush: payload}};
+            return {...state, botB: {...state.botB, hasRoyalFlush: payload}}
+
         case COUNT_STRAIGHT_FLUSH_B:
-            return {...state, botB: {...state.botB, hasStraightFlush: payload}};
+            return {...state, botB: {...state.botB, hasStraightFlush: payload}}
+
         case COUNT_4KIND_B:
-            return {...state, botB: {...state.botB, has4Kind: payload}};
+            return {...state, botB: {...state.botB, has4Kind: payload}}
+
         case COUNT_FULL_HOUSE_B:
-            return {...state, botB: {...state.botB, hasFullHouse: payload}};
+            return {...state, botB: {...state.botB, hasFullHouse: payload}}
+
         case COUNT_FLUSH_B:
-            return {...state, botB: {...state.botB, hasFlush: payload}};
+            return {...state, botB: {...state.botB, hasFlush: payload}}
+
         case COUNT_STRAIGHT_B:
-            return {...state, botB: {...state.botB, hasStraight: payload}};
+            return {...state, botB: {...state.botB, hasStraight: payload}}
+
         case COUNT_3KIND_B:
-            return {...state, botB: {...state.botB, has3Kind: payload}};
+            return {...state, botB: {...state.botB, has3Kind: payload}}
+
         case COUNT_2PAIR_B:
-            return {...state, botB: {...state.botB, has2Pair: payload}};
+            return {...state, botB: {...state.botB, has2Pair: payload}}
+
         case COUNT_PAIR_B:
-            return {...state, botB: {...state.botB, hasPair: payload}};
+            return {...state, botB: {...state.botB, hasPair: payload}}
+
         case COUNT_HIGH_CARD_B:
-            return {...state, botB: {...state.botB, hasHighCard: payload}};
+            return {...state, botB: {...state.botB, hasHighCard: payload}}
+
         case SET_KICKER_B:
-            return {...state, botB: {...state.botB, kicker: payload}};
+            return {...state, botB: {...state.botB, kicker: payload}}
+
         case SET_KICKER_ARR_B:
-            return {...state, botB: {...state.botB, kickerArr: payload}};
+            return {...state, botB: {...state.botB, kickerArr: payload}}
+
         case SET_HIGHEST_B:
-            return {...state, botB: {...state.botB, highestCard: payload}};
+            return {...state, botB: {...state.botB, highestCard: payload}}
+
         case SET_SCORE_B:
-            return {...state, botB: {...state.botB, score: payload}};
+            return {...state, botB: {...state.botB, score: payload}}
 
         case RESET_BEST_5_B:
             return {
-                ...state, botB: {...state.botB, 
+                ...state, 
+                botB: {...state.botB,
                     hasRoyalFlush: payload,
                     hasStraightFlush: payload,
                     has4Kind: payload,
@@ -974,48 +1019,64 @@ export default function scoringReducer(state = initialState, action) {
                     hasPair: payload,
                     hasHighCard: payload
                 }
-            };
-        
-        
-        //  BOT-3 'JEFFERSON'  //
+            }
+                
+    //  BOT-3 'JEFFERSON'  //    
         case SET_JEFFERSON:
-            return {...state, botC: {...state.botC, finalHand: payload}};
+            return {...state, botC: {...state.botC, finalHand: payload}}
+
         case SET_HAND_TYPE_C:
-            return {...state, botC: {...state.botC, handType: payload}};
+            return {...state, botC: {...state.botC, handType: payload}}
+
         case SET_SUB_TYPE_C:
-            return {...state, botC: {...state.botC, subType: payload}};
+            return {...state, botC: {...state.botC, subType: payload}}
+
         case COUNT_ROYAL_FLUSH_C:
-            return {...state, botC: {...state.botC, hasRoyalFlush: payload}};
+            return {...state, botC: {...state.botC, hasRoyalFlush: payload}}
+
         case COUNT_STRAIGHT_FLUSH_C:
-            return {...state, botC: {...state.botC, hasStraightFlush: payload}};
+            return {...state, botC: {...state.botC, hasStraightFlush: payload}}
+
         case COUNT_4KIND_C:
-            return {...state, botC: {...state.botC, has4Kind: payload}};
+            return {...state, botC: {...state.botC, has4Kind: payload}}
+
         case COUNT_FULL_HOUSE_C:
-            return {...state, botC: {...state.botC, hasFullHouse: payload}};
+            return {...state, botC: {...state.botC, hasFullHouse: payload}}
+
         case COUNT_FLUSH_C:
-            return {...state, botC: {...state.botC, hasFlush: payload}};
+            return {...state, botC: {...state.botC, hasFlush: payload}}
+
         case COUNT_STRAIGHT_C:
-            return {...state, botC: {...state.botC, hasStraight: payload}};
+            return {...state, botC: {...state.botC, hasStraight: payload}}
+
         case COUNT_3KIND_C:
-            return {...state, botC: {...state.botC, has3Kind: payload}};
+            return {...state, botC: {...state.botC, has3Kind: payload}}
+
         case COUNT_2PAIR_C:
-            return {...state, botC: {...state.botC, has2Pair: payload}};
+            return {...state, botC: {...state.botC, has2Pair: payload}}
+
         case COUNT_PAIR_C:
-            return {...state, botC: {...state.botC, hasPair: payload}};
+            return {...state, botC: {...state.botC, hasPair: payload}}
+
         case COUNT_HIGH_CARD_C:
-            return {...state, botC: {...state.botC, hasHighCard: payload}};
+            return {...state, botC: {...state.botC, hasHighCard: payload}}
+
         case SET_KICKER_C:
-            return {...state, botC: {...state.botC, kicker: payload}};
+            return {...state, botC: {...state.botC, kicker: payload}}
+
         case SET_KICKER_ARR_C:
-            return {...state, botC: {...state.botC, kickerArr: payload}};
+            return {...state, botC: {...state.botC, kickerArr: payload}}
+
         case SET_HIGHEST_C:
-            return {...state, botC: {...state.botC, highestCard: payload}};
+            return {...state, botC: {...state.botC, highestCard: payload}}
+
         case SET_SCORE_C:
-            return {...state, botC: {...state.botC, score: payload}};
+            return {...state, botC: {...state.botC, score: payload}}
             
         case RESET_BEST_5_C:
             return {
-                ...state, botC: {...state.botC, 
+                ...state, 
+                botC: {...state.botC,
                     hasRoyalFlush: payload,
                     hasStraightFlush: payload,
                     has4Kind: payload,
@@ -1027,7 +1088,7 @@ export default function scoringReducer(state = initialState, action) {
                     hasPair: payload,
                     hasHighCard: payload
                 }
-            };
+            }
         
         default:
             return state;

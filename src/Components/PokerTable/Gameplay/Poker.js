@@ -1,15 +1,14 @@
-//  NPM
-import React, {useState, useEffect} from 'react'
+    //  NPM
+import React, {useState} from 'react'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import axios from 'axios'
-//  TREE
+    //  LOCAL
 import Game from './Game'
 import Status from './Status'
-//  STYLES
+    //  STYLES
 import './Poker.scss'
-import {GiFireAce} from 'react-icons/gi'
-//  ACTIONS
+    //  ACTIONS
 import {assignSm, assignBg, payEntry, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse} from '../../../ducks/pokerReducer'
 import {setChipCount, setAlive} from '../../../ducks/cashReducer'
 import {setRules} from '../../../ducks/rulesReducer'
@@ -70,10 +69,6 @@ const Poker = (props) => {
     const {cash} = props.user.player
     const [buyIn, setBuyIn] = useState(500)
 
-    // useEffect(() => {
-    //     console.log(props.game.poker.players)
-    // }, [props.game.poker.players])
-
             //  REDUX
     const launchGame = () => {
 
@@ -101,12 +96,9 @@ const Poker = (props) => {
     return (
         <div className='poker-master' >     
             {
-                props.game.status.paidEntry === false ?
-                <div className='poker-master' >
-                    <Status launchGame={launchGame} />
-                </div>
-                :
-                <Game  />
+                props.game.status.paidEntry === false 
+                ? <div className='poker-master' > <Status launchGame={launchGame} /> </div>
+                : <Game  />
             }
         </div>
     )

@@ -3,7 +3,8 @@ const initialState = {
         showAllHands: false,
         whosTurn: 0,
         potIsGood: false,
-        tableReady: false
+        tableReady: false,
+        dealerReady: false
     },
 
     cashFlow: {
@@ -16,7 +17,8 @@ const initialState = {
     }
 }
 
-    //  ACTION-HANDLES
+
+    
 const SET_CHIP_COUNT = 'SET_CHIP_COUNT'
 const SHOW_ALL_HANDS = 'SHOW_ALL_HANDS'
 const SET_POT = 'SET_POT'
@@ -27,18 +29,25 @@ const CHECK_POT = 'CHECK_POT'
 const WATCH_TOTAL = 'WATCH_TOTAL'
 const SET_ALIVE = 'SET_ALIVE'
 const START_BETTING = 'START_BETTING'
+const ALERT_DEALER = 'ALERT_DEALER'
 
-    //  ACTIONS
+
+    
 export function setAlive(players) {
-    console.log(players, 'PAYLOAD =>> isActive[...]')
     return {
         type: SET_ALIVE,
         payload: players
     }
 }
 
+export function alertDealer(boolean) {
+    return {
+        type: ALERT_DEALER,
+        payload: boolean
+    }
+}
+
 export function startBetting(boolean) {
-    console.log(boolean, 'PAYLOAD =>> startBetting')
     return {
         type: START_BETTING,
         payload: boolean
@@ -67,7 +76,6 @@ export function setPlayerStatus(boolean) {
 }
 
 export function setCurrentBet(money) {
-    console.log(money, 'PAYLOAD => CURRENT_BET')
     return {
         type: SET_CURRENT_BET,
         payload: money
@@ -75,7 +83,6 @@ export function setCurrentBet(money) {
 }
 
 export function setPlayerTurn(index) {
-    console.log(index, 'PAYLOAD =>> WHOS_TURN')
     return {
         type: SET_PLAYER_TURN,
         payload: index
@@ -108,34 +115,36 @@ export default function cashReducer(state = initialState, action) {
 
     switch(type) {
         case SET_CHIP_COUNT:
-            return {...state, cashFlow: {...state.cashFlow, chipCount: payload}};
+            return {...state, cashFlow: {...state.cashFlow, chipCount: payload}}
 
         case SHOW_ALL_HANDS:
-            return {...state, status: {...state.status, showAllHands: payload}};
+            return {...state, status: {...state.status, showAllHands: payload}}
         
         case SET_POT:
-            return {...state, cashFlow: {...state.cashFlow, pot: payload}};
+            return {...state, cashFlow: {...state.cashFlow, pot: payload}}
 
         case SET_PLAYER_TURN:
-            return {...state, status: {...state.status, whosTurn: payload}};
+            return {...state, status: {...state.status, whosTurn: payload}}
 
         case SET_CURRENT_BET:
-            return {...state, cashFlow: {...state.cashFlow, currentBet: payload}};
+            return {...state, cashFlow: {...state.cashFlow, currentBet: payload}}
+
+        case ALERT_DEALER:
+            return {...state, status: {...state.status, dealerReady: payload}}
 
         case CHECK_POT:
-            return {...state, status: {...state.status, potIsGood: payload}};
+            return {...state, status: {...state.status, potIsGood: payload}}
 
         case WATCH_TOTAL:
-            return {...state, cashFlow: {...state.cashFlow, watcher: payload}};
+            return {...state, cashFlow: {...state.cashFlow, watcher: payload}}
 
         case SET_ALIVE:
-            return {...state, cashFlow: {...state.cashFlow, isActive: payload}};
+            return {...state, cashFlow: {...state.cashFlow, isActive: payload}}
 
         case START_BETTING:
-            return {...state, status: {...state.status, tableReady: payload}};
+            return {...state, status: {...state.status, tableReady: payload}}
         
         default:
             return state;
     }
 }
-

@@ -2,7 +2,9 @@ const initialState = {
     actionReady: false,
 }
 
+
 const SET_NEXT_MOVE = 'SET_NEXT_MOVE'
+
 
 export function setNextMove(boolean) {
     return {
@@ -13,9 +15,10 @@ export function setNextMove(boolean) {
 
 export default function dealerReducer(state = initialState, action) {
     const {type, payload} = action
+
     switch(type) {
         case SET_NEXT_MOVE:
-            return {...state, actionReady: payload};
+            return {...state, actionReady: payload}
         default:
             return state;
     }

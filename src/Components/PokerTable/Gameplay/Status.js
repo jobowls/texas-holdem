@@ -1,27 +1,22 @@
-import React, {useState, useEffect} from 'react'
+    // NPM
+import React from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
+
+    // LOCAL
 import './Status.scss'
-// import FlowModal from './FlowModal'
 
 const Status = (props) => {
-    const [launched, setLaunched] = useState(false)
-
-    // useEffect(() => {
-
-    // }, [props.game.status.paid])
 
     return (
         <div className='game-loading'>
             {
-                props.game.status.paidEntry === false ?
-                <button
-                id='launch-btn'
-                onClick={props.launchGame}
-                > Buy-in </button>
-                :
-                // <FlowModal  />
-                null
+                props.game.status.paidEntry === false 
+                ? <button
+                    id='launch-btn'
+                    onClick={props.launchGame}
+                    > Buy-in </button>
+                : null
             }
         </div>
     )

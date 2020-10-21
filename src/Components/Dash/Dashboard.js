@@ -1,10 +1,13 @@
+    // NPM 
 import React, {useState, useEffect} from 'react'
+import axios from 'axios'
 import {withRouter} from 'react-router'
 import {connect} from 'react-redux'
-import './Dashboard.scss'
 import {GiFireAce} from 'react-icons/gi'
+
+    // LOCAL
 import {setPlayer, setImage} from '../../ducks/playerReducer'
-import axios from 'axios'
+import './Dashboard.scss'
 
 const Dashboard = (props) => {
     const {push} = props.history
@@ -36,7 +39,7 @@ const Dashboard = (props) => {
             .then(res => props.setImage(res.data))
             .catch(err => console.log(err))
         
-            handleToggle()
+        handleToggle()
     }
 
     const logout = () => {
@@ -52,84 +55,66 @@ const Dashboard = (props) => {
         <div className='Dashboard-master' >
             <div id='dash-header' >
                 <div className='dash-banner' >
-                        <div className='main-logo-container' >
-                    <div className='main-logo' >
+                    <div className='main-logo-container' >
+                        <div className='main-logo' >
                             <GiFireAce 
-                                id='h-logo'
-                                onClick={toDash}  />
+                                id='h-logo' 
+                                onClick={toDash} />
                             <h1 id='lighthouse'> Lighthouse </h1>
                             <p id='lighthouse' > Poker Lounge </p> 
                         </div>
                     </div>
                     <div className='btn-container' >
-                    <button
-                        id='dash-btn'
-                        onChange={(evt) => setUrl(evt.target.value)}
-                        value='game'
-                        onClick={(evt) => goBtn(evt.target)} 
-                        > Play Poker </button>
-                    <button
-                        id='dash-btn'
-                        onClick={logout}
-                        > Exit Lounge </button>                    
+                        <button
+                            id='dash-btn'
+                            onChange={(evt) => setUrl(evt.target.value)}
+                            value='game'
+                            onClick={(evt) => goBtn(evt.target)} 
+                            > Play Poker </button>
+                        <button
+                            id='dash-btn'
+                            onClick={logout}
+                            > Exit Lounge </button>                    
                     </div>       
                 </div>
                 <div id='dash-stats' >
                 {
-                        toggle === false ?
-                        <div id='img-container' >
-                            <h3> {props.user.player.username} </h3>
-                            <img
-                                id='profile-pic'
-                                src={props.user.player.profile_pic}
-                                alt=''
-                                // onMouseOver={displayTip}
-                                onClick={handleToggle}  />
-                            <p> ${props.user.player.cash} </p>
-                        </div>
-                        :
-                        <div>
-                            <input 
-                                id='pic-input'
-                                placeholder='paste img url'
-                                value={profile_pic}
-                                onChange={(evt) => setPic(evt.target.value)} />
-                            <button
-                                id='save-btn'
-                                onClick={updatePic} 
-                                > Save </button>
-                            <button
-                                id='save-btn'
-                                onClick={handleToggle} 
-                                > Cancel </button>
-                        </div>
+                        toggle === false 
+                        ?   <div id='img-container' >
+                                <h3> {props.user.player.username} </h3>
+                                <img
+                                    id='profile-pic'
+                                    src={props.user.player.profile_pic}
+                                    alt=''
+                                    // onMouseOver={displayTip}
+                                    onClick={handleToggle}  />
+                                <p> ${props.user.player.cash} </p>
+                            </div>
+
+                        :   <div>
+                                <input 
+                                    id='pic-input'
+                                    placeholder='paste img url'
+                                    value={profile_pic}
+                                    onChange={(evt) => setPic(evt.target.value)} />
+                                <button
+                                    id='save-btn'
+                                    onClick={updatePic} 
+                                    > Save </button>
+                                <button
+                                    id='save-btn'
+                                    onClick={handleToggle} 
+                                    > Cancel </button>
+                            </div>
                     }
-                    {/* <h1> {props.user.player.username} </h1> */}
                     <h3> Rank: {props.user.player.rank} </h3>
                     <h3> W/L %: {props.user.player.win_loss} </h3>
-                </div>
-                {/* <div className='btn-container' >
-                    <button
-                        id='dash-btn'
-                        onChange={(evt) => setUrl(evt.target.value)}
-                        value='game'
-                        onClick={(evt) => goBtn(evt.target)} 
-                        > Play Poker </button>
-                    <button
-                        id='dash-btn'
-                        onClick={logout}
-                        > Exit Lounge </button>                    
-                </div>                 */}
+                </div>                
             </div>
-            <div className='dash-container' >
-                
-            </div>
+            <div className='dash-container' > </div>
         </div>
     )
 }
 const mapStateToProps = (reduxState) => reduxState
 
-export default connect(mapStateToProps, {
-    setImage, 
-    setPlayer
-})(withRouter(Dashboard))
+export default connect(mapStateToProps, {setImage, setPlayer})(withRouter(Dashboard))

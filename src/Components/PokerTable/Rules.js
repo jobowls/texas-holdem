@@ -1,20 +1,24 @@
-import React, {useState, useEffect} from 'react'
-import './Rules.scss'
+    // NPM
+import React, {useEffect} from 'react'
 import axios from 'axios'
 import {connect} from 'react-redux'
 import {GiPokerHand} from 'react-icons/gi'
+
+    // LOCAL
 import {setRules} from '../../ducks/rulesReducer'
+import './Rules.scss'
 
 const Rules = (props) => {
-    
+    const {paidEntry} = props.game.status
+
     useEffect(() => {
         getRules()
-    }, [props.game.status.paidEntry])
+    }, [paidEntry])
 
     const getRules = () => {
         axios.get('/api/rules')
-        .then(res => props.setRules(res.data))
-        .catch(err => console.log(err))
+            .then(res => props.setRules(res.data))
+            .catch(err => console.log(err))
     }
 
     return (

@@ -1,10 +1,13 @@
+    // NPM
 import React from 'react'
 import {withRouter} from 'react-router-dom'
-import SubHeader from './SubHeader'
 import {GiFireAce} from 'react-icons/gi'
 import {FaFacebook, FaTwitter, FaPinterest} from 'react-icons/fa'
 import {AiFillGoogleCircle} from 'react-icons/ai'
 import {IoIosGlobe} from 'react-icons/io'
+
+    // LOCAL
+import SubHeader from './SubHeader'
 import './Main.scss'
 
 const Main = (props) => {
@@ -16,8 +19,7 @@ const Main = (props) => {
                     <GiFireAce id='main-logo' />
                     <h3> Poker </h3>
                 </div>
-                <div 
-                    className='lang-obj'>
+                <div className='lang-obj'>
                     <IoIosGlobe id='globo' />
                     <p> English </p>  
                 </div>

@@ -2,7 +2,9 @@ const initialState = {
     listOfHands: []
 }
 
+
 const SET_RULES = 'SET_RULES'
+
 
 export function setRules(arr) {
     return {
@@ -16,7 +18,7 @@ export default function rulesReducer(state = initialState, action) {
 
     switch(type) {
         case SET_RULES:
-            return {...state, listOfHands: payload};
+            return {...state, listOfHands: payload}
         
         default:
             return state;

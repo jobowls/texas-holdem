@@ -12,6 +12,7 @@ const initialState = {
     burned: []
 }
 
+
 const SET_DECK = 'SET_DECK'
 const SET_POCKET = 'SET_POCKET'
 const SET_POCKET_AI1 = 'SET_POCKET_AI1'
@@ -24,6 +25,7 @@ const SET_BURNED = 'SET_BURNED'
 const SET_COMMUNITY = 'SET_COMMUNITY'
 const SET_USED = 'SET_USED'
 const RESET = 'RESET'
+
 
 export function setDeck(cards) {
     return {
@@ -102,32 +104,35 @@ export default function cardsReducer(state = initialState, action) {
     const {type, payload} = action
 
     switch(type) {
-        //  PLAYER 1
+    //  PLAYER 1
         case SET_DECK:
-            return {...state, deck: payload};
+            return {...state, deck: payload}
         case SET_POCKET:
-            return {...state, pocket: payload};
-        //  AI PLAYERS
+            return {...state, pocket: payload}
+            
+    //  AI PLAYERS
         case SET_POCKET_AI1:
-            return {...state, pocketAi1: payload};
+            return {...state, pocketAi1: payload}
         case SET_POCKET_AI2:
-            return {...state, pocketAi2: payload};
+            return {...state, pocketAi2: payload}
         case SET_POCKET_AI3:
-            return {...state, pocketAi3: payload};
-        //  HOUSE
+            return {...state, pocketAi3: payload}
+            
+    //  HOUSE
         case SET_FLOP:
-            return {...state, flop: payload};
+            return {...state, flop: payload}
         case SET_TURN:
-            return {...state, turn: payload};
+            return {...state, turn: payload}
         case SET_RIVER:
-            return {...state, river: payload};
+            return {...state, river: payload}
         case SET_BURNED:
-            return {...state, burned: payload};
+            return {...state, burned: payload}
         case SET_COMMUNITY:
-            return {...state, community: payload};
+            return {...state, community: payload}
         case SET_USED:
-            return {...state, used: payload};
-        //  SHUFFLE => RE-DEAL
+            return {...state, used: payload}
+
+    //  SHUFFLE => RE-DEAL
         case RESET:
             return {
                 ...state,
@@ -142,7 +147,7 @@ export default function cardsReducer(state = initialState, action) {
                 community: payload,
                 used: payload,
                 burned: payload
-            };
+            }
         
         default: 
             return state;

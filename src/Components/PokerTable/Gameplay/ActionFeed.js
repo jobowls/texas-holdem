@@ -1,5 +1,8 @@
-import React, {useState, useEffect} from 'react'
+    // NPM
+import React from 'react'
 import {connect} from 'react-redux'
+
+    // LOCAL
 import ScoreHamilton from './ScoreHamilton'
 import ScoreBurr from './ScoreBurr'
 import ScoreJefferson from './ScoreJefferson'
@@ -11,29 +14,23 @@ const ActionFeed = (props) => {
     return (
         <div className='Feed-Master' >
             {
-                players[1].isFolding ?
-                <>
-                </>
-                :
-                <ScoreHamilton  />
+                players[1].isFolding 
+                ? <> </>
+                : <ScoreHamilton  />
             }
             {
-                players[2].isFolding ?
-                <>
-                </>
-                :
-                <ScoreBurr  />
+                players[2].isFolding 
+                ? <> </>
+                : <ScoreBurr  />
             }
             {
-                players[3].isFolding ?
-                <>
-                </>
-                :
-                <ScoreJefferson  />
+                players[3].isFolding 
+                ? <> </>
+                : <ScoreJefferson  />
             }
         </div>
     )
 }
 const mapStateToProps = (reduxState) => reduxState
 
-export default connect(mapStateToProps, {})(ActionFeed)
+export default connect(mapStateToProps)(ActionFeed)

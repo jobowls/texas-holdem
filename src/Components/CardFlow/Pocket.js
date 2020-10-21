@@ -1,27 +1,20 @@
-import React, {useEffect} from 'react'
-import './Community.scss'
+import React from 'react'
 import {connect} from 'react-redux'
+import './Community.scss'
 
 const Pocket = (props) => {
-
-    // useEffect(() => {
-
-    // }, [props.cards.pocket])
-
     return (
         <div className='pocket-container' >
             {
-                props.game.poker.players[0].isFolding ?
-                props.cards.pocket.map((card, i) => (
-                    <div key={i}  
-                        className='pocket-hand' 
-                        style={{opacity: '20%'}} >
-                        <img className='card-face' alt='' src={card.card_face} />
-                    </div>
+                props.game.poker.players[0].isFolding 
+                ? props.cards.pocket.map((card, i) => (
+                        <div className='pocket-hand' style={{opacity: '20%'}} key={i} >
+                            <img className='card-face' alt='' src={card.card_face} />
+                        </div>
                 ))
-                :
-                props.cards.pocket.map((card, i) => (
-                    <div key={i}  className='pocket-hand' >
+
+                : props.cards.pocket.map((card, i) => (
+                    <div className='pocket-hand' key={i} >
                         <img className='card-face' alt='' src={card.card_face} />
                     </div>
                 ))

@@ -9,7 +9,8 @@ const initialState = {
         bigBlind: 0,
         bigPosition: 0,
         buttonIndex: 0,
-        phase: 0
+        phase: 0,
+        count: 0
     },
     
     status: {
@@ -18,11 +19,12 @@ const initialState = {
         winner: '',
         gameOver: false,
         isSuited: false,
-        handIsOver: false
+        handIsOver: false,
+        lastManStanding: 0
     }
 }
 
-// const HAND_IS_OVER = 'HAND_IS_OVER'
+
 const HAND_IS_OVER = 'HAND_IS_OVER'
 const PAY_ENTRY = 'PAY_ENTRY'
 const SET_WINNER = 'SET_WINNER'
@@ -40,20 +42,36 @@ const ASSIGN_SM = 'ASSIGN_SM'
 const ASSIGN_BG = 'ASSIGN_BG'
 const BANKER = 'BANKER'
 const SET_STATUS = 'SET_STATUS'
-const CLEAR_ALL = 'CLEAR_ALL'
 const SET_BALANCE = 'SET_BALANCE'
 const MOVE_PHASE = 'MOVE_PHASE'
+const SET_COUNT = 'SET_COUNT'
+const END_HAND = 'END_HAND'
+
+
+export function endHand(index) {
+    return {
+        type: END_HAND,
+        payload: index
+    }
+}
 
 export function setStatus(index, condition, boolean) {
-console.log(`${index} = i, ${condition} = cond, ${boolean} = bool`, 'PAYLOAD-STATUS')
+
     return {
         type: SET_STATUS,
         payload: {index, condition, boolean}
     }
 }
 
+export function setCount(num) {
+    return {
+        type: SET_COUNT,
+        payload: num
+    }
+}
+
 export function movePhase(num) {
-    // console.log(money, index, 'PAYLOAD-BANKER')
+    
     return {
         type: MOVE_PHASE,
         payload: num
@@ -61,7 +79,7 @@ export function movePhase(num) {
 }
 
 export function clearAll(boolean) {
-    // console.log(money, index, 'PAYLOAD-BANKER')
+    
     return {
         type: SET_STATUS,
         payload: {boolean}
@@ -69,7 +87,6 @@ export function clearAll(boolean) {
 }
 
 export function setBalance(money, index) {
-    console.log(money, index, 'PAYLOAD-BALANCE')
     return {
         type: SET_BALANCE,
         payload: {money, index}
@@ -77,7 +94,6 @@ export function setBalance(money, index) {
 }
 
 export function banker(money, index) {
-    console.log(money, index, 'PAYLOAD-BANKER')
     return {
         type: BANKER,
         payload: {money, index}
@@ -85,7 +101,7 @@ export function banker(money, index) {
 }
 
 export function assignSm(index) {
-    // console.log(index, 'SM-INDEX')
+    
     return {
         type: ASSIGN_SM,
         payload: index
@@ -93,7 +109,7 @@ export function assignSm(index) {
 }
 
 export function assignBg(index) {
-    // console.log(index, 'BG-INDEX')
+    
     return {
         type: ASSIGN_BG,
         payload: index
@@ -128,7 +144,7 @@ export function payEntry(boolean) {
     }
 }
 export function setWinner(username) {
-    // console.log(username, 'WINNER-WINNER')
+    
     return {
         type: SET_WINNER,
         payload: username
@@ -194,68 +210,75 @@ export default function pokerReducer(state = initialState, action) {
 
     switch(type) {
         case SET_PLAYERS:
-            return {...state, poker: {...state.poker, players: payload}};
+            return {...state, poker: {...state.poker, players: payload}}
 
         case ASSIGN_BUTTON:
-            return {...state, poker: {...state.poker, buttonIndex: payload + 1}};
+            return {...state, poker: {...state.poker, buttonIndex: payload}}
         
         case IS_SHUFFLING:
-            return {...state, status: {...state.status, isShuffling: payload}};
+            return {...state, status: {...state.status, isShuffling: payload}}
 
         case GAIN_XP:
-            return {...state, poker: {...state.poker, XP: payload}};
+            return {...state, poker: {...state.poker, XP: payload}}
         
         case SET_SMALLBLIND:
-            return {...state, poker: {...state.poker, smallBlind: payload}};    
+            return {...state, poker: {...state.poker, smallBlind: payload}}    
 
         case SET_BIGBLIND:
-            return {...state, poker: {...state.poker, bigBlind: payload}};
+            return {...state, poker: {...state.poker, bigBlind: payload}}
         
         case COUNT_ROUND:
-            return {...state, poker: {...state.poker, round: payload + 1}};
+            return {...state, poker: {...state.poker, round: payload + 1}}
 
         case SET_PURSE:
-            return {...state, poker: {...state.poker, prizeMoney: payload}};
+            return {...state, poker: {...state.poker, prizeMoney: payload}}
 
         case PAY_ENTRY:
-            return {...state, status: {...state.status, paidEntry: payload}};
+            return {...state, status: {...state.status, paidEntry: payload}}
 
         case IS_SUITED:
-            return {...state, status: {...state.status, isSuited: payload}};
+            return {...state, status: {...state.status, isSuited: payload}}
             
         case HAND_IS_OVER:
-            return {...state, status: {...state.status, handIsOver: payload}};
+            return {...state, status: {...state.status, handIsOver: payload}}
  
         case ADD_CASH:
-            return {...state, poker: {...state.poker, players: payload}};
+            return {...state, poker: {...state.poker, players: payload}}
 
         case SET_WINNER:
-            return {...state, status: {...state.status, winner: payload}};
+            return {...state, status: {...state.status, winner: payload}}
 
         case ASSIGN_SM:
-            return {...state, poker: {...state.poker, smallPosition: payload + 1}};
+            return {...state, poker: {...state.poker, smallPosition: payload}}
 
         case ASSIGN_BG:
-            return {...state, poker: {...state.poker, bigPosition: payload + 1}};
+            return {...state, poker: {...state.poker, bigPosition: payload}}
 
         case BANKER:
-                let players = [...state.poker.players]
-                players[payload.index].cash = payload.money
-            return {...state, poker: {...state.poker, players}};
+            let players = [...state.poker.players]
+            players[payload.index].cash = payload.money
+            
+            return {...state, poker: {...state.poker, players}}
 
         case SET_STATUS:
-                let actives = [...state.poker.players]
-                actives[payload.index][`${payload.condition}`] = payload.boolean
-                console.log(actives)
-            return {...state, poker: {...state.poker, actives}};
+            let actives = [...state.poker.players]
+            actives[payload.index][`${payload.condition}`] = payload.boolean
+
+            return {...state, poker: {...state.poker, actives}}
 
         case SET_BALANCE:
                 let auditor = [...state.poker.players]
                 auditor[payload.index].balance = payload.money
-            return {...state, poker: {...state.poker, auditor}};
+            return {...state, poker: {...state.poker, auditor}}
 
         case MOVE_PHASE:
-            return {...state, poker: {...state.poker, phase: payload}};
+            return {...state, poker: {...state.poker, phase: payload}}
+
+        case SET_COUNT:
+            return {...state, poker: {...state.poker, count: payload}}
+
+        case END_HAND:
+            return {...state, status: {...state.status, lastManStanding: payload}}
 
         default:
             return state;

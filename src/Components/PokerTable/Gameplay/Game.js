@@ -1,10 +1,9 @@
-//  NODE
+    //  NPM
 import React, {useState, useEffect} from 'react'
-import axios from 'axios'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-
-//  LOCAL
+import axios from 'axios'
+    //  LOCAL
 import ActionModal from './ActionModal'
 import ActionFeed from './ActionFeed'
 import MyScore from '../MyScore'
@@ -14,29 +13,26 @@ import Burr from '../../CardFlow/Burr'
 import Jefferson from '../../CardFlow/Jefferson'
 import Pocket from '../../CardFlow/Pocket'
 import FeltTable from './FeltTable'
-import Button from './Button'
 import CashMeter from './CashMeter'
 import {cipher} from '../../Math/CountingCards'
-import SmStakes from './SmStakes'
 import Marquee from '../Marquee'
 import Smally from './Smally'
 import Biggy from './Biggy'
-import Winner from '../../Math/Winner'
-
-//  DUX 
-import {setDeck, setPocket, setPocketAi1, setPocketAi2, setPocketAi3, setFlop, setTurn, setRiver, setBurned, setCommunity, setUsed, reset} from '../../../ducks/cardsReducer'
-import {banker, movePhase, setStatus, assignSm, assignBg, setWinner, handIsOver, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse, isSuited, setBalance} from '../../../ducks/pokerReducer'
-import {setKickerArr, setKickerArrA, setKickerArrB, setKickerArrC, setScore, setScoreA, setScoreB, setScoreC, setHighestA, setHighestB, setHighestC, setHighest, setKicker, setKickerA, setKickerB, setKickerC, resetBest5A, resetBest5B, resetBest5C, setSubTypeA, setSubTypeB, setSubTypeC, setHandTypeA, setHandTypeB, setHandTypeC, setSubType, setHamilton, setBurr, setJefferson, chickenDinner, setMyHand, setHandType, tallyOne, tallySuits, resetBest5} from '../../../ducks/scoringReducer'
-import {setAlive, startBetting, watchTotal, checkPot, showAllHands, setPlayerTurn, setCurrentBet, setPot} from '../../../ducks/cashReducer'
-import {setNextMove} from '../../../ducks/dealerReducer'
-
-//  ESTILO
 import './Game.scss'
 import '../../CardFlow/Community.scss'
+    //  DUX 
+import {setDeck, setPocket, setPocketAi1, setPocketAi2, setPocketAi3, setFlop, setTurn, setRiver, setBurned, setCommunity, setUsed, reset} from '../../../ducks/cardsReducer'
+import {banker, movePhase, setCount, setStatus, assignSm, assignBg, setWinner, handIsOver, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse, isSuited, setBalance} from '../../../ducks/pokerReducer'
+import {setKickerArr, setKickerArrA, setKickerArrB, setKickerArrC, setScore, setScoreA, setScoreB, setScoreC, setHighestA, setHighestB, setHighestC, setHighest, setKicker, setKickerA, setKickerB, setKickerC, resetBest5A, resetBest5B, resetBest5C, setSubTypeA, setSubTypeB, setSubTypeC, setHandTypeA, setHandTypeB, setHandTypeC, setSubType, setHamilton, setBurr, setJefferson, chickenDinner, setMyHand, setHandType, tallyOne, tallySuits, resetBest5} from '../../../ducks/scoringReducer'
+import {setAlive, alertDealer, startBetting, watchTotal, checkPot, showAllHands, setPlayerTurn, setCurrentBet, setPot} from '../../../ducks/cashReducer'
+import {setNextMove} from '../../../ducks/dealerReducer'
 
 const Game = (props) => {
-    const {round, players} = props.game.poker
+    const {round, buttonIndex, players, smallPosition, bigPosition, phase} = props.game.poker
     const {poker} = props.game
+    const {winner, isShuffling} = props.game.status
+    const {finalHand} = props.score.myHand
+    const {deck, pocketAi1, pocketAi2, pocketAi3, pocket, used, burned, community} = props.cards
 
     const [toggleButton, setToggleButton] = useState(0)
     const [toggleSmallBlind, setToggleSmallBlind] = useState(1)
@@ -53,34 +49,35 @@ const Game = (props) => {
         let currentStatus = [...liveStatus]
 
     useEffect(() => {
-        if (props.game.status.winner !== '') {
+        if (winner !== '') {
             setPokerStatus('WINNER')
         } 
-    }, [props.game.status.winner])
+    }, [winner])
 
     useEffect(() => {
-        if (props.game.status.isShuffling === true) {
+        if (isShuffling === true) {
             setPokerStatus('...shuffling deck')
             setToggleRules(true)
         } else {
             setPokerStatus('')
             setToggleRules(false)
         }
-    }, [props.game.status.isShuffling])
+    }, [isShuffling])
 
     useEffect(() => {
-        setToggleButton(props.game.poker.buttonIndex)
-        setToggleSmallBlind(props.game.poker.smallPosition)
-        setToggleBigBlind(props.game.poker.bigPosition)
-    }, [props.game.poker.buttonIndex])
+        setToggleButton(buttonIndex)
+        setToggleSmallBlind(smallPosition)
+        setToggleBigBlind(bigPosition)
+    }, [buttonIndex])
 
     useEffect(() => {
-        props.game.status.winner !== ''
-        ? console.log(props.game.status.winner, 'WINNER')
-        : console.log('none')
-    }, [props.game.status.winner])
+        winner !== ''
+        ? console.log(winner, 'WINNER')
+        : console.log()
+    }, [winner])
 
     useEffect(() => {
+        console.log(phase, 'GAME.JS--PHASE')
         if (props.cash.status.potIsGood === true) {
             poker.phase === 1 ? flop()
             : poker.phase === 2 ? turn()
@@ -88,12 +85,13 @@ const Game = (props) => {
             : checkXP()
         }
         props.checkPot(false)
+        props.alertDealer(false)
+        props.setCurrentBet(0)
     }, [props.cash.status.potIsGood])
 
 
     const rulesToggler = () => {
         setToggleRules(!toggleRules)
-        // console.log(toggleRules, 'toggler')
     }
 
     const shuffle = () => {
@@ -111,15 +109,10 @@ const Game = (props) => {
     }
 
     useEffect(() => {
-        const {deck} = props.cards
         if (!deck.length) {
             shuffle()
         }
-    }, [props.cards, shuffle, props.game.status.isShuffling])
-
-    // const actionReady = () => {        
-    //     deal()
-    // }
+    }, [deck, shuffle, isShuffling])
 
     const colorLog = (message, color) => {
         color = color || "black";
@@ -148,10 +141,22 @@ const Game = (props) => {
         console.log("%c" + message, "color:" + color);
     }
 
+    const checkingStatus = () => {
+        let remainingBalance = []
+        let indexed = []
+    
+        for (let i = 0; i < currentStatus.length; i++) {
+            if (currentStatus[i] === false) {
+                indexed.push(i)
+                remainingBalance.push(0)
+            }
+        }
+        props.setAlive([...indexed])
+        props.watchTotal([...remainingBalance])             
+    }
 
     const deal = () => {
-        const {deck} = props.cards
-            colorLog('...DEALING', 'yellow')
+        colorLog('...DEALING', 'yellow')
         
     //  SELECTING CARDS @ RANDOM => (card_id: 0 < card_id >= 52)
         let rand1 = Math.ceil(Math.random() * deck.length);
@@ -214,16 +219,16 @@ const Game = (props) => {
         props.setNextMove(true)
 
         //  REDUX
-            let refreshSm = poker.smallPosition - 1;
-            let refreshBg = poker.bigPosition - 1;
+            let refreshSm = poker.smallPosition;
+            let refreshBg = poker.bigPosition;
         let smStakes =  poker.players[refreshSm].cash - poker.smallBlind;
         let bgStakes =  poker.players[refreshBg].cash - poker.bigBlind;
         let money = poker.smallBlind + poker.bigBlind
 
-            if (poker.bigPosition === 4) {
+            if (poker.bigPosition === 3) {
                 props.setPlayerTurn(0)
             } else {
-                props.setPlayerTurn(poker.bigPosition)
+                props.setPlayerTurn(poker.bigPosition + 1)
             }
 
             props.banker(smStakes, refreshSm)
@@ -232,8 +237,9 @@ const Game = (props) => {
         props.setBalance(poker.bigBlind, refreshBg)
         props.setCurrentBet(poker.bigBlind)
         props.setPot(money)
-        // props.startBetting(true)        
+        props.setCount(0)
         setWatcher()
+        checkingStatus()
     }
         const setWatcher = () => {
             let balances = [
@@ -246,9 +252,6 @@ const Game = (props) => {
         }
 
     const flop = () => {
-        const {deck, pocketAi1, pocketAi2, pocketAi3, pocket, turn, river, flop, used, burned, community} = props.cards
-        const {finalHand} = props.score.myHand
-        
         colorLog('...FLOP', 'yellow')
 
         let rand1 = Math.ceil(Math.random() * deck.length)
@@ -296,47 +299,11 @@ const Game = (props) => {
         props.setBalance(0, 1)
         props.setBalance(0, 2)
         props.setBalance(0, 3)
-        flopper()
+        checkingStatus()
     }
-        const flopper = () => {
-            let remainingBalance = []
-            let indexed = []
-        
-            for (let i = 0; i < currentStatus.length; i++) {
-                if (currentStatus[i] === false) {
-                    indexed.push(i)
-                    remainingBalance.push(0)
-                }
-            }
-            props.setAlive([...indexed])
-            props.watchTotal([...remainingBalance])
-            // props.startBetting(false)
-        }
 
-    // const checkFlop = (index, cards) => {
-    //     switch(index) {
-    //         case 0:
-    //             props.setMyHand(cards)
-    //             break;
-    //         case 1:
-    //             console.log('na')
-    //             break;
-    //         case 2:
-    //             console.log('na')
-    //             break;
-    //         case 3:
-    //             console.log('na')
-    //             break;
-    //         default:
-    //             console.log('something broke...')
-    //     }
-    //     console.log(props.score)
-    // }
-
-    const turn = () => {
-        const {deck, pocketAi1, pocketAi2, pocketAi3, pocket, turn, river, flop, used, burned, community} = props.cards
-        const {finalHand} = props.score.myHand
-            colorLog('...TURN', 'yellow')
+    const turn = () => {        
+        colorLog('...TURN', 'yellow')
 
         let rand1 = Math.ceil(Math.random() * deck.length)
         let burningOne = Math.ceil(Math.random() * deck.length)
@@ -376,12 +343,11 @@ const Game = (props) => {
         props.setBalance(0, 2)
         props.setBalance(0, 3)
         setWatcher()
+        checkingStatus()
     }
 
-    const river = () => {
-        const {deck, pocketAi1, pocketAi2, pocketAi3, pocket, turn, river, flop, used, burned, community} = props.cards
-        const {finalHand} = props.score.myHand
-            colorLog('...RIVER', 'yellow')
+    const river = () => {        
+        colorLog('...RIVER', 'yellow')
 
         let rand1 = Math.ceil(Math.random() * deck.length)
         let burningOne = Math.ceil(Math.random() * deck.length)
@@ -421,6 +387,7 @@ const Game = (props) => {
         props.setBalance(0, 2)
         props.setBalance(0, 3)
         setWatcher()
+        checkingStatus()
     }    
     
     const checkXP = () => {
@@ -435,11 +402,11 @@ const Game = (props) => {
     }
 
     const clear = () => {
+            colorLog('...SETTING TABLE', 'yellow')
         props.showAllHands(false)
         props.setSubType('')
         
         props.isShuffling(true)
-            colorLog('...SETTING TABLE', 'yellow')
     
         props.reset([])
         props.setMyHand([])
@@ -456,15 +423,6 @@ const Game = (props) => {
         props.setScoreC(0)
         props.setWinner('')
         props.movePhase(0)
-
-        // props.setStatus(0, 'isFolding', false)
-        // props.setStatus(0, 'isChecking', false)
-        // props.setStatus(1, 'isFolding', false)
-        // props.setStatus(1, 'isChecking', false)
-        // props.setStatus(2, 'isFolding', false)
-        // props.setStatus(2, 'isChecking', false)
-        // props.setStatus(3, 'isFolding', false)
-        // props.setStatus(3, 'isChecking', false)
 
         for (let i = 0; i < poker.players.length; i++) {
             props.setBalance(0, i)
@@ -507,9 +465,9 @@ const Game = (props) => {
         let bgStakes = poker.bigBlind * 2;
 
         //  REDUX
-        let refreshButton = poker.buttonIndex
-        let refreshSm = poker.smallPosition
-        let refreshBg = poker.bigPosition
+        let refreshButton = poker.buttonIndex + 1
+        let refreshSm = poker.smallPosition + 1
+        let refreshBg = poker.bigPosition + 1
         
             if (round === players.length) {
                 props.assignButton(0)
@@ -521,17 +479,18 @@ const Game = (props) => {
                 props.assignButton(refreshButton)
             }
 
-            if (poker.smallPosition === 4) {
+            if (poker.smallPosition === 3) {
                 props.assignSm(0)
             } else {
                 props.assignSm(refreshSm)
             }
 
-            if (poker.bigPosition === 4) {
+            if (poker.bigPosition === 3) {
                 props.assignBg(0)
             } else {
                 props.assignBg(refreshBg)
             }
+        props.setCount(0)
     }       
 
     return (
@@ -550,143 +509,99 @@ const Game = (props) => {
                 <div id='player-list' >
                     <div className='player-box'>
                         {/* <div className={props.cash.status.whosTurn === 0 ? 'player-status-active' : 'player-status'} > */}
-                        <div className={props.game.status.winner === 'Player1' ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 0 ? 'player-status-active' : 'player-status'} >
+                        <div className={props.game.status.winner.includes('Player1') ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 0 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[0].username} </h3>
                             <p style={{color: poker.players[0].cash > 250 ? 'silver' : poker.players[0].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[0].cash.toFixed(2)} </p>
                         </div>
                         <div className='pocket-divider' >
                             <Pocket />
                             {
-                                toggleBigBlind === 1 ?
-                                <div className='button-container' >
-                                    <Biggy  />
-                                </div>
-                                : 
-                                toggleSmallBlind === 1 ?
-                                <div className='button-container' >
-                                    <Smally  />
-                                </div>
-                                :
-                                toggleButton === 1 ? 
-                                <div className='button-container' >
-                                    {/* <Button  /> */}
-                                    <p style={{fontweight: 'bold'}} > Dealer </p>
-                                </div>
-                                :
-                                <div className='button-container' >
-                                </div>                          
+                                toggleBigBlind === 0 
+                                    ? <div className='button-container' > <Biggy  /> </div>
+                                    :  toggleSmallBlind === 0 
+                                    ? <div className='button-container' > <Smally  /> </div>
+                                    : toggleButton === 0 
+                                    ? <div className='button-container' > {/* <Button  /> */} <p style={{fontweight: 'bold'}} > Dealer </p> </div>
+                                    : <div className='button-container' > </div>                          
                             }
                         </div>
                     </div>
                     <div className='player-box'>
                         {/* <div className={props.cash.status.whosTurn === 1 ? 'player-status-active' : 'player-status'} > */}
-                        <div className={props.game.status.winner === 'Hamilton' ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 1 ? 'player-status-active' : 'player-status'} >
+                        <div className={props.game.status.winner.includes('Hamilton') ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 1 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[1].username} </h3>
                             <p style={{color: poker.players[1].cash > 250 ? 'silver' : poker.players[1].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[1].cash.toFixed(2)} </p>
                         </div>
                         <div className='pocket-divider' >
                             {
-                                props.game.status.isShuffling === true ?
-                                <div className='pocket-container' >
-                                </div>
-                                :
-                                <Hamilton  />
+                                props.game.status.isShuffling === true 
+                                    ? <div className='pocket-container' > </div>                                
+                                    : <Hamilton  />
                             }
                             
                             {
-                                toggleBigBlind === 2 ?
-                                <div className='button-container' >
-                                    <Biggy  />
-                                </div>
-                                : 
-                                toggleSmallBlind === 2 ?
-                                <div className='button-container' >
-                                    <Smally  />
-                                </div>
-                                :
-                                toggleButton === 2 ? 
-                                <div className='button-container' >
-                                    {/* <Button  /> */}
-                                    <p style={{fontweight: 'bold'}} > Dealer </p>
-                                </div>
-                                :
-                                <div className='button-container' >
-                                </div>                          
+                                toggleBigBlind === 1 
+                                    ? <div className='button-container' > <Biggy  /> </div>
+                                    :  toggleSmallBlind === 1 
+                                    ? <div className='button-container' > <Smally  /> </div>
+                                    : toggleButton === 1 
+                                    ? <div className='button-container' > {/* <Button  /> */} <p style={{fontweight: 'bold'}} > Dealer </p> </div>
+                                    : <div className='button-container' > </div>                          
                             }
                         </div>
                     </div>
                     <div className='player-box'>
                         {/* <div className={props.cash.status.whosTurn === 2 ? 'player-status-active' : 'player-status'} > */}
-                        <div className={props.game.status.winner === 'Burr' ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 2 ? 'player-status-active' : 'player-status'} >
+                        <div className={props.game.status.winner.includes('Burr') ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 2 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[2].username} </h3>
                             <p style={{color: poker.players[2].cash > 250 ? 'silver' : poker.players[2].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[2].cash.toFixed(2)} </p>
                         </div>
                         
                         <div className='pocket-divider' >
                             {
-                                props.game.status.isShuffling === true ?
-                                <div className='pocket-container' >
-                                </div>
-                                :                                
-                                <Burr/>
+                                props.game.status.isShuffling === true 
+                                    ? <div className='pocket-container' > </div> 
+                                    : <Burr/>
                             }
                             
                             {
-                                toggleBigBlind === 3 ?
-                                <div className='button-container' >
-                                    <Biggy  />
-                                </div>
-                                : 
-                                toggleSmallBlind === 3 ?
-                                <div className='button-container' >
-                                    <Smally  />
-                                </div>
-                                :
-                                toggleButton === 3 ? 
-                                <div className='button-container' >
-                                    {/* <Button  /> */}
-                                    <p style={{fontweight: 'bold'}} > Dealer </p>
-                                </div>
-                                :
-                                <div className='button-container' >
-                                </div>                          
+                                toggleBigBlind === 2 
+                                    ?   <div className='button-container' > 
+                                            <Biggy  /> 
+                                        </div>
+                                    :  toggleSmallBlind === 2 
+                                    ?   <div className='button-container' > 
+                                            <Smally  /> 
+                                        </div>
+                                    : toggleButton === 2 
+                                    ?   <div className='button-container' > 
+                                            <p style={{fontweight: 'bold'}} > Dealer </p> 
+                                        </div>
+                                    : <div className='button-container' > </div>
                             }
                         </div>
                     </div>
                     <div className='player-box'>
                         {/* <div className={props.cash.status.whosTurn === 3 ? 'player-status-active' : 'player-status'} > */}
-                        <div className={props.game.status.winner === 'Jefferson' ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 3 ? 'player-status-active' : 'player-status'} >
+                        <div className={props.game.status.winner.includes('Jefferson') ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 3 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[3].username} </h3>
                             <p style={{color: poker.players[3].cash > 250 ? 'silver' : poker.players[3].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[3].cash.toFixed(2)} </p>
                         </div>
                         <div className='pocket-divider' >
                             {
-                                props.game.status.isShuffling === true ?
-                                    <div className='pocket-container' >
-                                    </div>
-                                :
-                                    <Jefferson/>
+                                props.game.status.isShuffling === true 
+                                    ? <div className='pocket-container' > </div>
+                                    : <Jefferson/>
                             }
                             
                             {
-                                toggleBigBlind === 4 ?
-                                <div className='button-container' >
-                                    <Biggy  />
-                                </div>
-                                : 
-                                toggleSmallBlind === 4 ?
-                                <div className='button-container' >
-                                    <Smally  />
-                                </div>
-                                :
-                                toggleButton === 4 ? 
-                                <div className='button-container' >
-                                    {/* <Button  /> */}
-                                    <p style={{fontweight: 'bold'}} > Dealer </p>
-                                </div>
-                                :
-                                <div className='button-container' >
-                                </div>                          
+                                toggleBigBlind === 3 
+                                    ? <div className='button-container' > <Biggy  /> </div>
+                                    :  toggleSmallBlind === 3 
+                                    ? <div className='button-container' > <Smally  /> </div>
+                                    : toggleButton === 3 
+                                    ? <div className='button-container' > {/* <Button  /> */} <p style={{fontweight: 'bold'}} > Dealer </p> </div>
+                                    : <div className='button-container' > </div>                          
                             }
                         </div>
                     </div>
@@ -694,34 +609,21 @@ const Game = (props) => {
                 <div className='slider-table' >
                     <div className='meter-box' >
                         {
-                            props.game.status.isShuffling ?
-                            <p style={{fontSize: '16px', color: 'silver'}} > {pokerStatus} </p>
-                            :                            
-                            // props.game.status.handIsOver ?
-                            // <div>
-                            //     <p style={{fontSize: '16px', color: 'silver', fontWeight: 'bold'}} > {pokerStatus} </p>
-                            //     <Winner  />
-                            // </div>
-                            // :
-                            props.cash.status.showAllHands ?
-                            <ActionFeed />
-                            :
-                            <CashMeter />
+                            props.game.status.isShuffling 
+                                ? <p style={{fontSize: '16px', color: 'silver'}} > {pokerStatus} </p>
+                                : props.cash.status.showAllHands 
+                                ? <ActionFeed />
+                                : <CashMeter />
                         }
                     </div>
-                    <div className='felt-table' >
-                        <FeltTable  />
-                    </div>
+                    <div className='felt-table' > <FeltTable  /> </div>
                 </div>
                 <div className='hierarchy-tree' >
-                    <div>
-                        <MyScore  />
-                    </div>
+                    <div> <MyScore  /> </div>
                     {
-                        toggleRules === true ?
-                        <Rules />
-                        :
-                        <Marquee  />
+                        toggleRules === true
+                            ? <Rules />
+                            : <Marquee  />
                     }
                 </div>
             </section>
@@ -804,5 +706,7 @@ export default connect(
         setPot,
         startBetting,
         watchTotal,
-        setAlive
+        setAlive,
+        setCount,
+        alertDealer
     })(withRouter(Game))

@@ -1,26 +1,22 @@
+    // NPM
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {setBigBlind, setSmallBlind} from '../../../ducks/pokerReducer'
 import {setHandType, setSubType} from '../../../ducks/scoringReducer'
 import {handIsOver, isShuffling, isSuited,} from '../../../ducks/pokerReducer'
-import {GiPokerHand, GiPerpendicularRings, GiSpades, GiHearts, GiClubs, GiDiamonds, GiHolosphere, GiPaperLantern, GiRingedPlanet, GiPerspectiveDiceThree, GiPlanetCore, Gi3DStairs, GiBottomRight3DArrow, GiAbstract019, GiConvergenceTarget, GiBanana, GiBandit} from 'react-icons/gi'
+
+    // LOCAL
 import './ActionModal.scss'
-import TheSlot from '../../Math/TheSlot'
-import Winner from '../../Math/Winner'
-import ScoreHamilton from './ScoreHamilton'
-import ScoreBurr from './ScoreBurr'
-import ScoreJefferson from './ScoreJefferson'
 
 const ActionModal = (props) => {
+    const {game, user} = props
     const {push} = props.history
-    const {handType, kicker, finalHand, subType, highestCard} = props.score.myHand
-    const {myHand} = props.score
+    const {isShuffling, winner} = props.game.status    
     
     const [setUrl] = useState('')
     const [pokerStatus, setPokerStatus] = useState('')
     const [pocketStatus, setPocketStatus] = useState('')
-
     
     const goBtn = ({value}) => {
         push(`/${value}`)
@@ -30,48 +26,17 @@ const ActionModal = (props) => {
         push('/dashboard')
     }
 
-    useEffect(() => {
-        if (props.game.status.winner !== '') {
+    useEffect(() => {        
+        if (winner !== '') {
             setPokerStatus('WINNER')
-        } 
-    }, [props.game.status.winner])
-
-
-    // useEffect(() => {
-    //     console.log(props.score.myHand)
-    // }, [props.score.myHand])
-
+        }
+    }, [winner])
 
     useEffect(() => {
-        if (props.game.status.isShuffling === true) {
-            setPokerStatus('...shuffling deck')
-        } else {
-            setPokerStatus('')
-        }
-    }, [props.game.status.isShuffling])
-
-
-    const colorLog = (message, color) => {
-        color = color || "black";
-
-        switch (color) {
-            case "success":  
-                 color = "black"; 
-                 break;
-            case "info":     
-                 color = "DodgerBlue";  
-                 break;
-            case "white":
-                color = "white";
-                break;
-            case "teal":
-                color = "teal";
-                break;
-            default: 
-                 color = 'color';
-        }
-        // console.log("%c" + message, "color:" + color);
-    }
+        isShuffling
+            ? setPokerStatus('...shuffling deck')
+            : setPokerStatus('')
+    }, [isShuffling])
 
     const findWinner = () => {
         props.handIsOver(true)
@@ -81,21 +46,17 @@ const ActionModal = (props) => {
         props.cards.pocket.map((card, i) => (
             <div key={i} >
                 <p> {card.card_rank} </p>
-                <p> {card.card_suit} </p>
-                {/* {colorLog(`${card.card_rank}, ${card.card_suit}`, 'teal')} */}
+                <p> {card.card_suit} </p>                
             </div>
         ))
     }
 
     const hasPocketPair = () => {
         let playerPocket = props.cards.pocket.map(element => element.card_suit) 
-            
-        if (playerPocket[0] === playerPocket[1]) {
-            props.isSuited(true)
-            setPocketStatus('SUITED')
-        } else {
-            setPocketStatus('')
-        }
+
+        playerPocket[0] === playerPocket[1]
+            ? props.isSuited(true) && setPocketStatus('SUITED')
+            : setPocketStatus('')
     }
 
     let pocketShow = props.cards.pocket.map((element, i) => (
@@ -104,15 +65,10 @@ const ActionModal = (props) => {
             </div>
     ))
     
-    const {buttonIndex} = props.game.poker
-    const {game, user} = props
-    const {pocket} = props.cards
-
-    
     return (
         <div className='action-modal-master' >
 
-              <div className='profile-menu' >
+            <div className='profile-menu' >
                 <img 
                     id='action-pic' 
                     alt='' 
@@ -136,7 +92,7 @@ const ActionModal = (props) => {
                     onClick={props.deal}
                     className='action-btns'
                     > Deal </button>
-                {/* <button
+                <button
                     onClick={props.flop}
                     className='action-btns'
                     > Flop </button>
@@ -147,12 +103,11 @@ const ActionModal = (props) => {
                 <button
                     onClick={props.river}
                     className='action-btns'
-                    > River </button> */}
-                
-                {/* <button 
+                    > River </button>                
+                <button 
                     onClick={props.checkXP} 
                     className='action-btns' 
-                    > Show'em </button> */}
+                    > Show'em </button>
                 <button 
                     onClick={findWinner} 
                     className='action-btns' 

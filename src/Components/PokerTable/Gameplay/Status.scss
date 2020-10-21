@@ -1,8 +1,14 @@
 @import '../../../sass/styles.scss';
 
 launch-btn {
-    
+    width: 100px;
+    height: 50px;
+    background-color: $CHARCOAL;
+    color: $LIGHTHOUSE;
+    font-weight: bold;
+    font-size: xx-large;    
 }
+
 launch-btn:hover {
     cursor: pointer;
 }

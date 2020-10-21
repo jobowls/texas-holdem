@@ -20,7 +20,6 @@
     align-items: center;
     border-radius: 50px;
     border: 3px dotted rgb(95, 95, 95);
-    // box-shadow: inset 0px 0px 7px 1px rgb(100, 100, 100);
 }
 
 .show-stopper {
@@ -29,7 +28,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    // margin-top: 20px;
 }
 
 .theatre {
@@ -47,9 +45,7 @@
 
 #marquee {
     width: 100%;
-    height: 5%;
-    // flex-direction: column;
-    // line-height: 1em;
+    height: 5%;        
     text-align: center;
 }
 
@@ -63,9 +59,7 @@
 
 #marquee-name {
     height: 10%;
-    color: rgb(146, 46, 52);
-    // color: silver;
+    color: rgb(146, 46, 52);    
     text-align: center;
-    font-weight: bold;
-    // margin-bottom: 5px;
+    font-weight: bold;    
 }

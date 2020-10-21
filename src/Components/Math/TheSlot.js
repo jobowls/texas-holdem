@@ -1,9 +1,9 @@
+    // NPM
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import axios from 'axios'
 
 const TheSlot = (props) => {
-    
     const [state, setState] = useState('')
     const [rules, setRules] = useState([])
 
@@ -13,8 +13,8 @@ const TheSlot = (props) => {
 
     const getRules = () => {
         axios.get('/api/rules')
-        .then(res => setRules(res.data))
-        .catch(err => console.log(err))
+            .then(res => setRules(res.data))
+            .catch(err => console.log(err))
     }
     
     return (

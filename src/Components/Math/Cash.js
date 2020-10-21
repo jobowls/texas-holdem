@@ -1,5 +1,8 @@
+    // NPM
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
+
+    // LOCAL
 import {setPot} from '../../ducks/cashReducer'
 import './Cash.scss'
 
@@ -18,16 +21,13 @@ const Cash = (props) => {
     }, [props.game.poker.smallBlind, props.game.poker.bigBlind, setSmBlind, setBgBlind])
 
     useEffect(() => {
-        if (props.cards.pocket.length) {
-            props.setPot(smBlind + bgBlind)
-        } else {
-            props.setPot(0)
-        }
+        props.cards.pocket.length
+        ? props.setPot(smBlind + bgBlind)
+        : props.setPot(0)
     }, [props.cards.pocket])
 
     return (
-        <div className='Cash-master' >
-            {/* <p > Pot </p> */}
+        <div className='Cash-master' >            
             <p id='money-pool'> ${moneyPool} </p>
         </div>
     )

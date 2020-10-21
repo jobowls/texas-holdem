@@ -1,8 +1,11 @@
+    // NPM
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {setScoreC, setKickerArrC, setHighestC, setKickerC, setJefferson, setHandTypeC, setSubTypeC, resetBest5C, countRoyalFlushC, countStraightFlushC, count4KindC, countFullHouseC, countFlushC, countStraightC, count3KindC, count2PairC, countPairC, countHighCardC} from '../../../ducks/scoringReducer'
+import {cipher, cipherSuits} from '../../Math/CountingCards'
+
+    // LOCAL
 import '../../CardFlow/Community.scss'
-import {cipher, cipherFlush, cipherSuits} from '../../Math/CountingCards'
 
 const ScoreJefferson = (props) => {
     const {finalHand} = props.score.botC
@@ -29,41 +32,6 @@ const ScoreJefferson = (props) => {
     useEffect(() => {
         runScore()
     }, [props.score.botC.finalHand])
-
-    // useEffect(() => {
-    //     console.log(props.score.botC.score, 'HIT-SCORE-JEFFERSON')
-        
-    // }, [props.score.botC.score])
-
-    const colorLog = (message, color) => {
-        color = color || "Black";
-        switch (color) {
-            case "red":  
-                 color = "red"; 
-                 break;
-            case "blue":     
-                    color = "DodgerBlue";  
-                 break;
-            case "focus":   
-                 color = "black"; 
-                 break;
-            case "purple":   
-                 color = "purple";     
-                 break;
-            case "orange":  
-                 color = "Orange";   
-                 break;
-            case "yellow":  
-                 color = "Yellow";   
-                 break;
-            case "green":  
-                 color = "green";   
-                 break;
-            default: 
-                 color = 'color';
-        }
-        console.log("%c" + message, "color:" + color);
-    }
 
     useEffect(() => {
         if (props.score.botC.hasRoyalFlush === true) {
@@ -157,7 +125,6 @@ const ScoreJefferson = (props) => {
             default:
                 return null;
         }
-        // console.log(jefferson, '=> SWITCH(handType)')
     }
 
         let aces = 0 ;
