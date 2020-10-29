@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
     // LOCAL
 import {cipher, eliminate} from './CountingCards'
 import {setScore, setScoreA, setScoreB, setScoreC} from '../../ducks/scoringReducer'
-import {setWinner, banker} from '../../ducks/pokerReducer'
+import {setWinner, banker, setWIndex} from '../../ducks/pokerReducer'
 import {showAllHands} from '../../ducks/cashReducer'
 import './Winner.scss'
 
@@ -45,11 +45,12 @@ const Winner = (props) => {
     useEffect(() => {
         props.setWinner(finalTable[lastManStanding])
         props.banker(money, lastManStanding)
-    }, [lastManStanding])
+    }, [lastManStanding, finalTable, pot])
 
 
     useEffect(() => {
         if (ready) {            
+            // props.setWIndex(joker + 1)
             props.setWinner(finalTable[joker])
             props.banker(money, joker)
         }
@@ -164,4 +165,5 @@ export default connect(mapStateToProps, {
     setWinner,
     showAllHands,
     banker
+    // setWIndex
 })(Winner)

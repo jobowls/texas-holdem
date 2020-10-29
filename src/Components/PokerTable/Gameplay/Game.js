@@ -32,7 +32,9 @@ const Game = (props) => {
     const {poker} = props.game
     const {winner, isShuffling} = props.game.status
     const {finalHand} = props.score.myHand
-    const {deck, pocketAi1, pocketAi2, pocketAi3, pocket, used, burned, community} = props.cards
+    const {deck} = props.cards
+    const {potIsGood} = props.cash.status
+    const {isActive} = props.cash.cashFlow
 
     const [toggleButton, setToggleButton] = useState(0)
     const [toggleSmallBlind, setToggleSmallBlind] = useState(1)
@@ -47,12 +49,6 @@ const Game = (props) => {
         players[3].isFolding
     ]
         let currentStatus = [...liveStatus]
-
-    useEffect(() => {
-        if (winner !== '') {
-            setPokerStatus('WINNER')
-        } 
-    }, [winner])
 
     useEffect(() => {
         if (isShuffling === true) {
@@ -71,14 +67,13 @@ const Game = (props) => {
     }, [buttonIndex])
 
     useEffect(() => {
-        winner !== ''
-        ? console.log(winner, 'WINNER')
-        : console.log()
+        if (winner !== '') {
+            console.log(winner, 'WINNER')
+        }
     }, [winner])
 
     useEffect(() => {
-        console.log(phase, 'GAME.JS--PHASE')
-        if (props.cash.status.potIsGood === true) {
+        if (potIsGood === true) {
             poker.phase === 1 ? flop()
             : poker.phase === 2 ? turn()
             : poker.phase === 3 ? river()
@@ -87,7 +82,7 @@ const Game = (props) => {
         props.checkPot(false)
         props.alertDealer(false)
         props.setCurrentBet(0)
-    }, [props.cash.status.potIsGood])
+    }, [potIsGood])
 
 
     const rulesToggler = () => {
@@ -141,19 +136,19 @@ const Game = (props) => {
         console.log("%c" + message, "color:" + color);
     }
 
-    const checkingStatus = () => {
-        let remainingBalance = []
-        let indexed = []
+    // const checkingStatus = () => {
+    //     let remainingBalance = []
+    //     let indexed = []
     
-        for (let i = 0; i < currentStatus.length; i++) {
-            if (currentStatus[i] === false) {
-                indexed.push(i)
-                remainingBalance.push(0)
-            }
-        }
-        props.setAlive([...indexed])
-        props.watchTotal([...remainingBalance])             
-    }
+    //     for (let i = 0; i < currentStatus.length; i++) {
+    //         if (currentStatus[i] === false) {
+    //             indexed.push(i)
+    //             remainingBalance.push(0)
+    //         }
+    //     }
+    //     props.setAlive([...indexed])
+    //     props.watchTotal([...remainingBalance])             
+    // }
 
     const deal = () => {
         colorLog('...DEALING', 'yellow')
@@ -225,10 +220,13 @@ const Game = (props) => {
         let bgStakes =  poker.players[refreshBg].cash - poker.bigBlind;
         let money = poker.smallBlind + poker.bigBlind
 
+        let findTurn = isActive.indexOf(bigPosition) + 1
+
             if (poker.bigPosition === 3) {
                 props.setPlayerTurn(0)
             } else {
-                props.setPlayerTurn(poker.bigPosition + 1)
+                props.setPlayerTurn(bigPosition + 1)
+                console.log(bigPosition + 1, 'DEALING && HIT TURN')
             }
 
             props.banker(smStakes, refreshSm)
@@ -239,7 +237,6 @@ const Game = (props) => {
         props.setPot(money)
         props.setCount(0)
         setWatcher()
-        checkingStatus()
     }
         const setWatcher = () => {
             let balances = [
@@ -252,6 +249,7 @@ const Game = (props) => {
         }
 
     const flop = () => {
+        const {pocketAi1, pocketAi2, pocketAi3, pocket, used, burned, turn, river, community} = props.cards
         colorLog('...FLOP', 'yellow')
 
         let rand1 = Math.ceil(Math.random() * deck.length)
@@ -266,19 +264,22 @@ const Game = (props) => {
                 const flop2 = deck.splice(cardIndex2, 1)
                 const flop3 = deck.splice(cardIndex3, 1)
                 const burn1 = deck.splice(burnIndex, 1)
-        
+        console.log('1')
         const house = [flop1[0], flop2[0], flop3[0]]
         const burning = [burn1[0]]
         const mine = [...house, ...finalHand]
-
+        
+        console.log('2')
         const botA = [...house, ...props.score.botA.finalHand]
         const botB = [...house, ...props.score.botB.finalHand]
         const botC = [...house, ...props.score.botC.finalHand]
         
+        console.log('3')
         //  REDUX
         props.setBurned(burning)
         props.setFlop(house)
         
+        console.log('4')
         props.setUsed([
             ...pocketAi1,
             ...pocketAi2,
@@ -289,20 +290,24 @@ const Game = (props) => {
             ...community,
             ...burning
         ]);
+        console.log('5')
         
         props.setHamilton([...botA])
         props.setBurr([...botB])
         props.setJefferson([...botC])
         props.setMyHand([...mine])
-
+        
+        console.log('6')
         props.setBalance(0, 0)
         props.setBalance(0, 1)
         props.setBalance(0, 2)
         props.setBalance(0, 3)
-        checkingStatus()
+        // checkingStatus()
+        props.setCount(0)
     }
 
-    const turn = () => {        
+    const turn = () => {
+        const {pocketAi1, pocketAi2, pocketAi3, pocket, used, burned, flop, river, community} = props.cards
         colorLog('...TURN', 'yellow')
 
         let rand1 = Math.ceil(Math.random() * deck.length)
@@ -343,10 +348,11 @@ const Game = (props) => {
         props.setBalance(0, 2)
         props.setBalance(0, 3)
         setWatcher()
-        checkingStatus()
+        props.setCount(0)
     }
 
-    const river = () => {        
+    const river = () => {
+        const {pocketAi1, pocketAi2, pocketAi3, pocket, used, burned, turn, flop, community} = props.cards
         colorLog('...RIVER', 'yellow')
 
         let rand1 = Math.ceil(Math.random() * deck.length)
@@ -387,7 +393,7 @@ const Game = (props) => {
         props.setBalance(0, 2)
         props.setBalance(0, 3)
         setWatcher()
-        checkingStatus()
+        props.setCount(0)
     }    
     
     const checkXP = () => {
@@ -491,6 +497,7 @@ const Game = (props) => {
                 props.assignBg(refreshBg)
             }
         props.setCount(0)
+        props.setAlive([0, 1, 2, 3])
     }       
 
     return (

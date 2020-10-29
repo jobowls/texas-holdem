@@ -92,7 +92,7 @@ const ActionModal = (props) => {
                     onClick={props.deal}
                     className='action-btns'
                     > Deal </button>
-                <button
+                {/* <button
                     onClick={props.flop}
                     className='action-btns'
                     > Flop </button>
@@ -107,7 +107,7 @@ const ActionModal = (props) => {
                 <button 
                     onClick={props.checkXP} 
                     className='action-btns' 
-                    > Show'em </button>
+                    > Show'em </button> */}
                 <button 
                     onClick={findWinner} 
                     className='action-btns' 

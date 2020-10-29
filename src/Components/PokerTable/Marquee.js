@@ -8,16 +8,13 @@ import Winner from '../Math/Winner'
 import ShowStopper from './ShowStopper'
 
 const Marquee = (props) => {
-    const {handIsOver} = props.game.status
+    const {handIsOver, winner} = props.game.status
+    const {username} = props.user.player
 
     return (
         <div className='Marquee-master'>
-            {
-                handIsOver 
-                    ? <p> {props.game.status.winner} </p> 
-                    : <p> {props.user.player.username} </p>
-            }
-            <div className={handIsOver ? 'marquee-header-w' : 'marquee-header'} > <ShowStopper /> </div>
+            <p> {username} </p>
+            <div className={handIsOver && winner === 'Player1' ? 'marquee-header-w' : 'marquee-header'} > <ShowStopper /> </div>
             <div id='winner-bucket' > {handIsOver ? <Winner /> : null} </div>
         </div>
     )

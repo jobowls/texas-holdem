@@ -6,18 +6,18 @@ module.exports = {
         const {email, username, password} = req.body
         const db = req.app.get('db')
         
-        let foundPlayer = await db.auth.check_player(email);
+        let foundPlayer = await db.auth.check_player(email)
         let foundGamer = await db.auth.check_username(username)
 
             if (foundPlayer[0]) {
                 console.log(400, 'email taken')
                 return res.status(400).send('Email already in use')
-            };
+            }
 
             if (foundGamer[0]) {
                 console.log(400, 'username taken')
                 return res.status(400).send('Username taken')
-            };
+            }
 
         const salt = bcrypt.genSaltSync(10)
         const hash = bcrypt.hashSync(password, salt)

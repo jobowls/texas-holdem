@@ -24,3 +24,7 @@ export function eliminate(arr, i) {
         return newArr
     }
 }
+
+export function checkSeats(arr, i) {
+    return arr.splice(i, 1)
+}

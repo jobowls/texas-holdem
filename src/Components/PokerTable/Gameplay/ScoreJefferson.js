@@ -3,13 +3,15 @@ import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {setScoreC, setKickerArrC, setHighestC, setKickerC, setJefferson, setHandTypeC, setSubTypeC, resetBest5C, countRoyalFlushC, countStraightFlushC, count4KindC, countFullHouseC, countFlushC, countStraightC, count3KindC, count2PairC, countPairC, countHighCardC} from '../../../ducks/scoringReducer'
 import {cipher, cipherSuits} from '../../Math/CountingCards'
+import {GiPokerHand} from 'react-icons/gi'
 
     // LOCAL
 import '../../CardFlow/Community.scss'
 
 const ScoreJefferson = (props) => {
-    const {finalHand} = props.score.botC
+    const {finalHand, handType, subType, kicker, highestCard} = props.score.botC
     const {listOfHands} = props.rules
+    const {winner} = props.game.status
 
     const [finalSuitsArr] = useState(['Clubs', 'Diamonds', 'Spades', 'Hearts'])
     const [finalArr] = useState(['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'])
@@ -31,7 +33,7 @@ const ScoreJefferson = (props) => {
 
     useEffect(() => {
         runScore()
-    }, [props.score.botC.finalHand])
+    }, [finalHand])
 
     useEffect(() => {
         if (props.score.botC.hasRoyalFlush === true) {
@@ -568,18 +570,28 @@ const ScoreJefferson = (props) => {
             props.setKickerArrC(dux)
         }
 
+    const show = props.rules.listOfHands
+    .filter(element => element.badge_name === handType)
+    .map((rules => (
+        <div key={rules.badge_id} className='rules-container-ai' >
+            <div className='theatre-ai' >
+                <GiPokerHand id='modal-icons-ai'/>
+            </div>
+            <p style={{color: 'silver'}} > {rules.badge_name} </p>
+        </div>
+    )))
+
     return (
         <div className='Ai1-show' >
-            <h4 id='Ai-name'> Jefferson </h4>            
-            <p> {props.score.botC.handType} </p>            
-            <p> {props.score.botC.subType} </p>            
+            <h4 id='Ai-name' style={{color: winner === 'Jefferson' ? 'gold' : 'silver'}}> Jefferson </h4>
+            {show}
+            <p> {subType} </p>
             {
-                props.score.botC.handType === 'High Card' ?
-                <p> {props.score.botC.highestCard} </p>
+                handType === 'High Card' ?
+                <p> {highestCard} </p>
                 :
-                null
-            }            
-            <p> {props.score.botC.kicker} </p>
+                <p> {kicker} </p>
+            }
         </div>
     )
 }

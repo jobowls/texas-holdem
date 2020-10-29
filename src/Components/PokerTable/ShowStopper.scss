@@ -1,5 +1,14 @@
 @import '../../sass/styles.scss';
 
+.show-stop-master {
+    width: 100%;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    // align-items: ;
+}
+
 .the-slot {
     width: 100%;
     height: 100%;
@@ -13,13 +22,14 @@
 }
 
 .rules-container {
-    width: 100%;
+    width: 90%;
     height: max-content;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-radius: 50px;
     border: 3px dotted rgb(95, 95, 95);
+    margin-top: 5px;
 }
 
 .show-stopper {
@@ -35,7 +45,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-right: 20px;
+    margin-right: 5px;
 }
 
 #xp {

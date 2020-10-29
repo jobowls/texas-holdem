@@ -1,14 +1,41 @@
 @import '../../../sass/styles.scss';
 
-launch-btn {
-    width: 100px;
+#launch-btn {
+    width: 25%;
     height: 50px;
     background-color: $CHARCOAL;
-    color: $LIGHTHOUSE;
+    color: silver;
     font-weight: bold;
     font-size: xx-large;    
+    border-radius: 50px;
+    // padding-top: 10px;
+    padding-bottom: 5px;
+    // margin-bottom: 5px;
 }
 
-launch-btn:hover {
+#launch-btn:hover {
     cursor: pointer;
+    color: white;
+    background-color: rgba(75, 75, 75, .75);
+}
+
+.table-entry {
+    width: 75%;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px 2px rgba(125, 125, 125, 0.75);
+    color: silver;
+    font-weight: bold;
+    font-size: x-large;
+    line-height: 0em;
+}
+
+#entry-pic {
+    width: 15%;
+    border-radius: 50%;
 }

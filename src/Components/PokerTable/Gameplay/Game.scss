@@ -6,11 +6,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;    
-    // background-image: radial-gradient(rgb(99, 99, 99), rgb(40, 40, 40), rgb(10, 10, 10));
-    // background-image: linear-gradient(to right, $CHARCOAL, rgb(10, 15, 15));
-    // background-image: linear-gradient(to right, $CHARCOAL, rgba(10, 10, 10, 0.75));
-    // background-image: url('../../../assets/black-paisely.jpg');
+    justify-content: space-evenly;
     background-color: rgba(5, 5, 5, 0.5);
     background-repeat: no-repeat;
     background-position: center;
@@ -28,7 +24,6 @@
     font-size: xx-large;
     background-color: $CARPET;
     border-radius: 50%;
-    // box-shadow: inset 4px -4px 20px 5px $CHARCOAL;
     box-shadow: -2px 5px 5px 10px $HAZE;
     border: 5px dotted $HAZE;
 }
@@ -96,7 +91,6 @@
     align-items: flex-start;
     justify-content: flex-end;
     color: silver;
-    // padding-bottom: 5px;
     margin-bottom: 5px;
 }
 
@@ -167,7 +161,6 @@
     padding-left: 5px;
     border-radius: 10px;
     animation: pulseOne 3s ease-out infinite;
-    // animation-iteration-count: 1;
 }
 
 .player-status-active-w {

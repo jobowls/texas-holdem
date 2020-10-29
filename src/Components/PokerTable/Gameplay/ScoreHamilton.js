@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {setScoreA, setKickerArrA, setHighestA, setKickerA, setHamilton, setHandTypeA, setSubTypeA, resetBest5A, countRoyalFlushA, countStraightFlushA, count4KindA, countFullHouseA, countFlushA, countStraightA, count3KindA, count2PairA, countPairA, countHighCardA} from '../../../ducks/scoringReducer'
-import '../../CardFlow/Community.scss'
 import {cipher, cipherFlush, cipherSuits} from '../../Math/CountingCards'
+import {GiPokerHand} from 'react-icons/gi'
+import '../../CardFlow/Community.scss'
 
 const ScoreHamilton = (props) => {
-    const {finalHand} = props.score.botA
+    const {finalHand, handType, subType, kicker, highestCard} = props.score.botA
     const {listOfHands} = props.rules
+    const {winner} = props.game.status
 
     const [finalSuitsArr] = useState(['Clubs', 'Diamonds', 'Spades', 'Hearts'])
     const [finalArr] = useState(['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'])
@@ -28,12 +30,7 @@ const ScoreHamilton = (props) => {
 
     useEffect(() => {
         runScore()
-    }, [props.score.botA.finalHand])
-
-    // useEffect(() => {
-    //     console.log(props.score.botA.score, 'HIT-SCORE-HAMILTON')
-        
-    // }, [props.score.botA.score])
+    }, [finalHand])
 
     const colorLog = (message, color) => {
         color = color || "Black";
@@ -600,18 +597,28 @@ const ScoreHamilton = (props) => {
         props.setKickerArrA(dux)
     }
 
+    const show = props.rules.listOfHands
+        .filter(element => element.badge_name === handType)
+        .map((rules => (
+            <div key={rules.badge_id} className='rules-container-ai' >
+                <div className='theatre-ai' >
+                    <GiPokerHand id='modal-icons-ai'/>
+                </div>
+                <p style={{color: 'silver'}} > {rules.badge_name} </p>
+            </div>
+    )))
+
     return (
         <div className='Ai1-show' >
-            <h4 id='Ai-name'> Hamilton </h4>            
-            <p> {props.score.botA.handType} </p>            
-            <p> {props.score.botA.subType} </p>            
+            <h4 id='Ai-name' style={{color: winner === 'Hamilton' ? 'gold' : 'silver'}}> Hamilton </h4>
+            {show}
+            <p> {subType} </p>
             {
-                props.score.botA.handType === 'High Card' ?
-                <p> {props.score.botA.highestCard} </p>
+                handType === 'High Card' ?
+                <p> {highestCard} </p>
                 :
-                null
-            }            
-            <p> {props.score.botA.kicker} </p>
+                <p> {kicker} </p>
+            }
         </div>
     )
 }

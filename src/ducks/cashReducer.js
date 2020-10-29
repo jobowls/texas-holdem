@@ -2,6 +2,7 @@ const initialState = {
     status: {        
         showAllHands: false,
         whosTurn: 0,
+        previousTurn: 0,
         potIsGood: false,
         tableReady: false,
         dealerReady: false
@@ -23,6 +24,7 @@ const SET_CHIP_COUNT = 'SET_CHIP_COUNT'
 const SHOW_ALL_HANDS = 'SHOW_ALL_HANDS'
 const SET_POT = 'SET_POT'
 const SET_PLAYER_TURN = 'SET_PLAYER_TURN'
+const SET_PREV_TURN = 'SET_PREV_TURN'
 const SET_CURRENT_BET = 'SET_CURRENT_BET'
 const SET_PLAYER_STATUS = 'SET_PLAYER_STATUS'
 const CHECK_POT = 'CHECK_POT'
@@ -33,7 +35,16 @@ const ALERT_DEALER = 'ALERT_DEALER'
 
 
     
+export function setPrevTurn(prevTurn) {
+    console.log(prevTurn, 'PAYLOAD PREVIOUS_TURN')
+    return {
+        type: SET_PREV_TURN,
+        payload: prevTurn
+    }
+}
+
 export function setAlive(players) {
+    console.log(players, 'PAYLOAD =>>>>> ALIVE')
     return {
         type: SET_ALIVE,
         payload: players
@@ -83,6 +94,7 @@ export function setCurrentBet(money) {
 }
 
 export function setPlayerTurn(index) {
+        console.log(index, 'PAYLOAD')
     return {
         type: SET_PLAYER_TURN,
         payload: index
@@ -125,6 +137,9 @@ export default function cashReducer(state = initialState, action) {
 
         case SET_PLAYER_TURN:
             return {...state, status: {...state.status, whosTurn: payload}}
+
+        case SET_PREV_TURN:
+            return {...state, status: {...state.status, previousTurn: payload}}
 
         case SET_CURRENT_BET:
             return {...state, cashFlow: {...state.cashFlow, currentBet: payload}}

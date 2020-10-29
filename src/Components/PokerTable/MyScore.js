@@ -60,7 +60,7 @@ const MyScore = (props) => {
             : best5.hasHighCard
             ? checkTypes('High Card')
             : console.log()
-    }, [props.score.best5])
+    }, [best5])
 
     const checkTypes = (player1) => {        
         let list = listOfHands.filter(el => el['badge_name'] === `${player1}`)

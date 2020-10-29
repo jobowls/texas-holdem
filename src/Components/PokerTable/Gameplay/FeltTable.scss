@@ -19,12 +19,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    // font-size: large;
-    // color: rgba(255, 255, 255, 0.4);
 }
 
 #table-letters {
-    // width: 50%;
     font-size: xx-large;
     color: $LIGHTHOUSE;
     text-align: center;
@@ -35,7 +32,3 @@
     height: 50%;
     color: $NIGHTHAWK;
 }
-
-// @keyframes spin {
-//     100% {transform: rotate(180deg);}
-// }

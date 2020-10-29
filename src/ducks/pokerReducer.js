@@ -17,6 +17,7 @@ const initialState = {
         paidEntry: false,
         isShuffling: false,
         winner: '',
+        winIndex: 0,
         gameOver: false,
         isSuited: false,
         handIsOver: false,
@@ -46,9 +47,19 @@ const SET_BALANCE = 'SET_BALANCE'
 const MOVE_PHASE = 'MOVE_PHASE'
 const SET_COUNT = 'SET_COUNT'
 const END_HAND = 'END_HAND'
+const SET_W_INDEX = 'SET_W_INDEX'
 
+
+export function setWIndex(index) {
+    console.log(index, 'PAYLOAD_LAST_MAN')
+    return {
+        type: SET_W_INDEX,
+        payload: index
+    }
+}
 
 export function endHand(index) {
+    console.log(index, 'PAYLOAD_LAST_MAN')
     return {
         type: END_HAND,
         payload: index
@@ -247,6 +258,9 @@ export default function pokerReducer(state = initialState, action) {
 
         case SET_WINNER:
             return {...state, status: {...state.status, winner: payload}}
+
+        case SET_W_INDEX:
+            return {...state, status: {...state.status, winIndex: payload}}
 
         case ASSIGN_SM:
             return {...state, poker: {...state.poker, smallPosition: payload}}

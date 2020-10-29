@@ -3,10 +3,12 @@ import {connect} from 'react-redux'
 import {setScoreB, setKickerArrB, setHighestB, setKickerB, setBurr, setHandTypeB, setSubTypeB, resetBest5B, countRoyalFlushB, countStraightFlushB, count4KindB, countFullHouseB, countFlushB, countStraightB, count3KindB, count2PairB, countPairB, countHighCardB} from '../../../ducks/scoringReducer'
 import '../../CardFlow/Community.scss'
 import {cipher, cipherFlush, cipherSuits} from '../../Math/CountingCards'
+import {GiPokerHand} from 'react-icons/gi'
 
 const ScoreBurr = (props) => {
-    const {finalHand} = props.score.botB
+    const {finalHand, handType, subType, kicker, highestCard} = props.score.botB
     const {listOfHands} = props.rules
+    const {winner} = props.game.status
 
     const [finalSuitsArr] = useState(['Clubs', 'Diamonds', 'Spades', 'Hearts'])
     const [finalArr] = useState(['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace'])
@@ -28,7 +30,7 @@ const ScoreBurr = (props) => {
 
     useEffect(() => {
         runScore()
-    }, [props.score.botB.finalHand])
+    }, [finalHand])
 
     // useEffect(() => {
     //     console.log(props.score.botB.score, 'HIT-SCORE-BURR')
@@ -600,18 +602,28 @@ const ScoreBurr = (props) => {
     props.setKickerArrB(dux)
     }
 
+    const show = props.rules.listOfHands
+        .filter(element => element.badge_name === handType)
+        .map((rules => (
+            <div key={rules.badge_id} className='rules-container-ai' >
+                <div className='theatre-ai' >
+                    <GiPokerHand id='modal-icons-ai'/>
+                </div>
+                <p style={{color: 'silver'}} > {rules.badge_name} </p>
+            </div>
+    )))
+
     return (
         <div className='Ai1-show' >
-            <h4 id='Ai-name'> Burr </h4>        
-            <p> {props.score.botB.handType} </p>        
-            <p> {props.score.botB.subType} </p>        
+            <h4 id='Ai-name' style={{color: winner === 'Burr' ? 'gold' : 'silver'}}> Burr </h4>
+            {show}
+            <p> {subType} </p>
             {
-                props.score.botB.handType === 'High Card' ?
-                <p> {props.score.botB.highestCard} </p>
+                handType === 'High Card' ?
+                <p> {highestCard} </p>
                 :
-                null
-            }        
-            <p> {props.score.botB.kicker} </p>
+                <p> {kicker} </p>
+            }
         </div>
     )
 }
