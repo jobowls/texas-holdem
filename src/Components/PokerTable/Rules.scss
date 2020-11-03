@@ -2,7 +2,7 @@
 
 .rules-master {
     width: 100%;
-    height: 50%;
+    height: max-content;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -12,12 +12,12 @@
 
 .rules-list-container {
     width: 85%;
-    height: 90%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    line-height: 1em;
+    line-height: 0em;
 }
 
 #rules-title {

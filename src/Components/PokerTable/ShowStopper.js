@@ -48,8 +48,12 @@ const ShowStopper = (props) => {
                 pocket.length
                 ?   <div id='marquee-pocket' >
                         <p style={{color: 'silver', marginRight: '10px'}} > Pocket: </p>
-                        <p> {props.cards.pocket[0].card_rank} | {props.cards.pocket[1].card_rank} </p>
-                        <p style={{color: 'silver', marginLeft: '10px'}} > Suited </p>
+                        <p> {pocket[0].card_rank} | {pocket[1].card_rank} </p>
+                        {
+                            pocket[0].card_suit === pocket[1].card_suit
+                            ? <p style={{color: 'rgb(0, 122, 175)', marginLeft: '10px'}} > Suited </p>
+                            : null
+                        }
                     </div>
                 :   null
             }
