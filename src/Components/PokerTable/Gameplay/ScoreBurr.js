@@ -32,40 +32,6 @@ const ScoreBurr = (props) => {
         runScore()
     }, [finalHand])
 
-    // useEffect(() => {
-    //     console.log(props.score.botB.score, 'HIT-SCORE-BURR')
-        
-    // }, [props.score.botB.score])
-
-    const colorLog = (message, color) => {
-        color = color || "Black";
-        switch (color) {
-            case "red":  
-                 color = "red"; 
-                 break;
-            case "blue":     
-                    color = "DodgerBlue";  
-                 break;
-            case "focus":   
-                 color = "black"; 
-                 break;
-            case "purple":   
-                 color = "purple";     
-                 break;
-            case "orange":  
-                 color = "Orange";   
-                 break;
-            case "yellow":  
-                 color = "Yellow";   
-                 break;
-            case "green":  
-                 color = "green";   
-                 break;
-            default: 
-                 color = 'color';
-        }
-        console.log("%c" + message, "color:" + color);
-    }
 
     useEffect(() => {
         if (props.score.botB.hasRoyalFlush === true) {
@@ -158,7 +124,6 @@ const ScoreBurr = (props) => {
             default:
                 return null;
         }
-        // console.log(burr, '=> SWITCH(handType)')
     }
 
         let aces = 0 ;
@@ -353,7 +318,6 @@ const ScoreBurr = (props) => {
             let echo = indexedArr[4];
 
             let foundAlpha = orderedArr.indexOf(alpha)
-                // console.log(foundAlpha)
             props.setKickerArrB([foundAlpha])
             
             let alphaRomeo = cipherSuits(finalHand, alpha);

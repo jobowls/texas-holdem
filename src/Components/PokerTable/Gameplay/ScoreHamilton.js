@@ -32,35 +32,6 @@ const ScoreHamilton = (props) => {
         runScore()
     }, [finalHand])
 
-    const colorLog = (message, color) => {
-        color = color || "Black";
-        switch (color) {
-            case "red":  
-                color = "red"; 
-                break;
-            case "blue":     
-                color = "DodgerBlue";  
-                break;
-            case "focus":   
-                color = "black"; 
-                break;
-            case "purple":   
-                color = "purple";     
-                break;
-            case "orange":  
-                color = "Orange";   
-                break;
-            case "yellow":  
-                color = "Yellow";   
-                break;
-            case "yes":  
-                color = "rgb(0, 255, 153)";
-                break;
-            default: 
-                color = 'color';
-        }
-        console.log("%c" + message, "color:" + color);
-    }
 
     useEffect(() => {
             if (props.score.botA.hasRoyalFlush === true) {
@@ -153,7 +124,6 @@ const ScoreHamilton = (props) => {
                 default:
                     return null;
             }
-            // console.log(hamilton, '=> SWITCH(handType)')
         }
 
         let aces = 0 ;
@@ -348,7 +318,6 @@ const ScoreHamilton = (props) => {
             let echo = indexedArr[4];
 
             let foundAlpha = orderedArr.indexOf(alpha)
-                // console.log(foundAlpha)
             props.setKickerArrA([foundAlpha])
             
             let alphaRomeo = cipherSuits(finalHand, alpha);

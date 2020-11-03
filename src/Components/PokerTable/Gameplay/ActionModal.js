@@ -108,10 +108,10 @@ const ActionModal = (props) => {
                     onClick={props.checkXP} 
                     className='action-btns' 
                     > Show'em </button> */}
-                <button 
+                {/* <button 
                     onClick={findWinner} 
                     className='action-btns' 
-                    > Winner Winner </button>
+                    > Winner Winner </button> */}
                 <button
                     onClick={props.clear}
                     className='action-btns'

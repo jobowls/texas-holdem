@@ -36,7 +36,6 @@ const ALERT_DEALER = 'ALERT_DEALER'
 
     
 export function setPrevTurn(prevTurn) {
-    console.log(prevTurn, 'PAYLOAD PREVIOUS_TURN')
     return {
         type: SET_PREV_TURN,
         payload: prevTurn
@@ -44,7 +43,6 @@ export function setPrevTurn(prevTurn) {
 }
 
 export function setAlive(players) {
-    console.log(players, 'PAYLOAD =>>>>> ALIVE')
     return {
         type: SET_ALIVE,
         payload: players
@@ -94,7 +92,6 @@ export function setCurrentBet(money) {
 }
 
 export function setPlayerTurn(index) {
-        console.log(index, 'PAYLOAD')
     return {
         type: SET_PLAYER_TURN,
         payload: index

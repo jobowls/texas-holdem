@@ -11,14 +11,17 @@ import './Winner.scss'
 
 const Winner = (props) => {
     const {players} = props.game.poker
-    const {lastManStanding} = props.game.status
+    const {lastManStanding, handIsOver, wReady} = props.game.status
     const {pot} = props.cash.cashFlow
+    const {showAllHands} = props.cash.status
+    // console.log(props, 'WINNER-PROPS')
 
     const [joker, setJoker] = useState(0)
         let money = players[joker].cash + pot
 
     const [key, setKey] = useState([])
     const [ready, setReady] = useState(false)
+    const [go, setGo] = useState(false)
     const [round, setRound] = useState(0)
     const [current, setCurrent] = useState([])
         let changeCurrent = [...current]
@@ -37,20 +40,28 @@ const Winner = (props) => {
         [...props.score.botC.kickerArr]
     ])
         let copyArr = [...best5]
+    
+    let liveStatus = [
+        players[0].isFolding,
+        players[1].isFolding,
+        players[2].isFolding,
+        players[3].isFolding
+    ]
 
     useEffect(() => {
-        findWinner()        
-    }, [props.game.status.handIsOver])    
+    }, [props.game.poker.phase])
 
     useEffect(() => {
-        props.setWinner(finalTable[lastManStanding])
-        props.banker(money, lastManStanding)
-    }, [lastManStanding, finalTable, pot])
+        if (wReady) {
+            findWinner()
+        } else if (lastManStanding && handIsOver) {
+            props.setWinner(finalTable[lastManStanding - 1]) && props.banker(money, lastManStanding - 1)
+        } 
+    }, [lastManStanding, wReady, handIsOver, finalTable, pot])
 
 
     useEffect(() => {
-        if (ready) {            
-            // props.setWIndex(joker + 1)
+        if (ready) {
             props.setWinner(finalTable[joker])
             props.banker(money, joker)
         }
@@ -59,7 +70,6 @@ const Winner = (props) => {
 
     useEffect(() => {
         let comparisonsArr = eliminate(changeCurrent, round - 1)
-        
         if (round) {
             if (comparisonsArr === null) {
                 evenSplit()                
@@ -84,29 +94,37 @@ const Winner = (props) => {
             props.score.botB.score,
             props.score.botC.score
         ]
-                let highScore = findHighest(allScores)
-            let tiedArr = allScores.filter(e => e === highScore)
-        let champIndex = allScores.indexOf(highScore)
+            let copyScores = [...allScores]
 
-        for (let i = 0; i < allScores.length; i++) {
-            if (allScores[i] === highScore) {
-                indexedArr.push(i)
-                tScores.push(allScores[i])
-                remainingPlayers.push(copyArr[i])
+            for (let i = 0; i < liveStatus.length; i++) {
+                if (liveStatus[i] === true) {
+                    copyScores[i] = 0
+                }
             }
-        }
+
+        let highScore = findHighest(copyScores)
+            let tiedArr = copyScores.filter(e => e === highScore)
+                let champIndex = copyScores.indexOf(highScore)
+
+            for (let i = 0; i < copyScores.length; i++) {
+                if (copyScores[i] === highScore) {
+                    indexedArr.push(i)
+                    tScores.push(copyScores[i])
+                    remainingPlayers.push(copyArr[i])
+                }
+            }
 
         if (tiedArr.length === 1) {
             setJoker(champIndex)
             setReady(true)
-        } else {                
+        } else {
             setCurrent([...remainingPlayers])
             setKey([...indexedArr])
             setRound(1)
         }
     }
 
-    const tieBreaker = (arr) => {                    
+    const tieBreaker = (arr) => {
                 let foundHighest = findHighest(arr)
             let filtered = arr.filter(e => e === foundHighest)
         let wIndex = arr.indexOf(foundHighest)
@@ -120,7 +138,7 @@ const Winner = (props) => {
             }
         }
 
-        if (filtered.length === 1) {                    
+        if (filtered.length === 1) {
             setJoker(key[wIndex])
             setReady(true)
         } else {
@@ -151,6 +169,14 @@ const Winner = (props) => {
         <div className='chicken-dinner' >
             <p> Winner: {props.game.status.winner} </p>
             <p> Pot: ${pot} </p>
+            {/* {
+                handIsOver && lastManStanding
+                ?   <div>
+                        <p> Winner: {props.game.status.winner} </p>
+                        <p> Pot: ${pot} </p>
+                    </div>
+                : 
+            } */}
         </div>
     )
 }

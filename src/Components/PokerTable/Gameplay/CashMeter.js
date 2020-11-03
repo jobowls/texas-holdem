@@ -5,7 +5,7 @@ import {FiPlusCircle} from 'react-icons/fi'
 
     // LOCAL
 import {watchTotal, startBetting, alertDealer, setAlive, setPlayerTurn, setCurrentBet, setPot, checkPot, setPrevTurn} from '../../../ducks/cashReducer'
-import {handIsOver, banker, movePhase, setCount, setBalance, setStatus, setWinner, endHand} from '../../../ducks/pokerReducer'
+import {handIsOver, wReady, banker, movePhase, setCount, setBalance, setStatus, setWinner, endHand} from '../../../ducks/pokerReducer'
 import {checkSeats} from '../../Math/CountingCards'
 import './CashMeter.scss'
 
@@ -39,7 +39,7 @@ const CashMeter = (props) => {
         : setToggleMeter(true)
     }, [props.cards.pocket])
 
-    useEffect(() => {        
+    useEffect(() => {
     }, [lastManStanding])
 
 
@@ -55,9 +55,9 @@ const CashMeter = (props) => {
     }, [whosTurn])
 
 
-    useEffect(() => {        
+    useEffect(() => {
 
-        if (sitter !== 0) {                        
+        if (sitter !== 0) {
             alertFold(sitter - 1)
             setSitter(0)
         } else if (count !== 0) {
@@ -154,9 +154,10 @@ const CashMeter = (props) => {
                 }
             } else if (headCount === 2) {
                 props.setPlayerTurn(newTurn[0])
-            } else {
-                window.alert(`${players[isActive[0]].username} Wins!!!`)
-            }
+            } 
+            // else {
+            //     window.alert(`${players[isActive[0]].username} Wins!!!`)
+            // }
     }
 
     const alertFold = (index) => {            
@@ -169,18 +170,18 @@ const CashMeter = (props) => {
                 let increment = isActive[++copyPrevious]
                 
         if (headCount > 2) {
-            if (index > end) {                
+            if (index > end) {
                 props.setPlayerTurn(start)
-            } else if (index) {                
+            } else if (index) {
                 props.setPlayerTurn(prevFolded)
-            } else if (finder === -1) {                
+            } else if (finder === -1) {
                 props.setPlayerTurn(prevFolded)
             } else if (!increment) {
                 console.lo('!increment')
                 props.setPlayerTurn(start)
-            } else if (increment === end) {                
+            } else if (increment === end) {
                 props.setPlayerTurn(start)
-            } else {                
+            } else {
                 props.setPlayerTurn(increment)
             }
         } else if (headCount === 2) {
@@ -189,9 +190,9 @@ const CashMeter = (props) => {
             } else {
                 props.setPlayerTurn(isActive[1])
             }
-        } else {            
-            window.alert(`${players[isActive[0]].username} Wins!!!`)
-            props.endHand(isActive[0])
+        } else {
+            props.endHand(isActive[0] + 1)
+            props.handIsOver(true)
         }
     }
 
@@ -208,10 +209,7 @@ const CashMeter = (props) => {
         if (active >= headCount && lvlPot) {
             props.movePhase(phase + 1)
             props.alertDealer(true)
-        }                 
-        // else {
-        //     manageTurn()
-        // }
+        }
     }
 
     const reset = () => {
@@ -228,7 +226,7 @@ const CashMeter = (props) => {
                 toggleMeter ?
                 <div className='counter-parent' >
                     <p id='whos-turn' style={{color: 'silver', fontWeight: 'bold'}}> {`${name}'s Move`} </p>
-                    <p style={{color: 'silver', fontWeight: 'bold'}} > Pay to Play: ${currentBet.toFixed(2)} </p>
+                    <p style={{color: 'silver', fontWeight: 'bold'}} > Current Bet: ${currentBet.toFixed(2)} </p>
                     <div className='modal-counter' >
                         <button
                             id='ticker-btn-increment'
@@ -309,5 +307,6 @@ export default connect(mapStateToProps, {
     setCount,
     alertDealer,
     endHand,
-    setPrevTurn
+    setPrevTurn,
+    wReady
 })(CashMeter)

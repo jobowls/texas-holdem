@@ -22,7 +22,7 @@ import './Game.scss'
 import '../../CardFlow/Community.scss'
     //  DUX 
 import {setDeck, setPocket, setPocketAi1, setPocketAi2, setPocketAi3, setFlop, setTurn, setRiver, setBurned, setCommunity, setUsed, reset} from '../../../ducks/cardsReducer'
-import {banker, movePhase, setCount, setStatus, assignSm, assignBg, setWinner, handIsOver, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse, isSuited, setBalance} from '../../../ducks/pokerReducer'
+import {banker, wReady, endHand, movePhase, setCount, setStatus, assignSm, assignBg, setWinner, handIsOver, isShuffling, assignButton, gainXP, countRound, setPlayers, setBigBlind, setSmallBlind, setPurse, isSuited, setBalance} from '../../../ducks/pokerReducer'
 import {setKickerArr, setKickerArrA, setKickerArrB, setKickerArrC, setScore, setScoreA, setScoreB, setScoreC, setHighestA, setHighestB, setHighestC, setHighest, setKicker, setKickerA, setKickerB, setKickerC, resetBest5A, resetBest5B, resetBest5C, setSubTypeA, setSubTypeB, setSubTypeC, setHandTypeA, setHandTypeB, setHandTypeC, setSubType, setHamilton, setBurr, setJefferson, chickenDinner, setMyHand, setHandType, tallyOne, tallySuits, resetBest5} from '../../../ducks/scoringReducer'
 import {setAlive, alertDealer, startBetting, watchTotal, checkPot, showAllHands, setPlayerTurn, setCurrentBet, setPot} from '../../../ducks/cashReducer'
 import {setNextMove} from '../../../ducks/dealerReducer'
@@ -30,10 +30,10 @@ import {setNextMove} from '../../../ducks/dealerReducer'
 const Game = (props) => {
     const {round, buttonIndex, players, smallPosition, bigPosition, phase} = props.game.poker
     const {poker} = props.game
-    const {winner, isShuffling} = props.game.status
+    const {winner, handIsOver, isShuffling, wReady} = props.game.status
     const {finalHand} = props.score.myHand
     const {deck} = props.cards
-    const {potIsGood} = props.cash.status
+    const {potIsGood, showAllHands} = props.cash.status
     const {isActive} = props.cash.cashFlow
 
     const [toggleButton, setToggleButton] = useState(0)
@@ -73,7 +73,25 @@ const Game = (props) => {
     }, [winner])
 
     useEffect(() => {
-        if (potIsGood === true) {
+        if (showAllHands && poker.phase === 4) {
+            props.movePhase(poker.phase + 1)
+        }
+    }, [showAllHands, poker.phase])
+
+    useEffect(() => {
+        if (poker.phase === 5) {
+            props.wReady(true)
+        }
+    }, [poker.phase])
+
+    useEffect(() => {
+        if (wReady) {
+            props.handIsOver(true)
+        }
+    }, [wReady])
+
+    useEffect(() => {
+        if (potIsGood) {
             poker.phase === 1 ? flop()
             : poker.phase === 2 ? turn()
             : poker.phase === 3 ? river()
@@ -226,7 +244,6 @@ const Game = (props) => {
                 props.setPlayerTurn(0)
             } else {
                 props.setPlayerTurn(bigPosition + 1)
-                console.log(bigPosition + 1, 'DEALING && HIT TURN')
             }
 
             props.banker(smStakes, refreshSm)
@@ -264,22 +281,17 @@ const Game = (props) => {
                 const flop2 = deck.splice(cardIndex2, 1)
                 const flop3 = deck.splice(cardIndex3, 1)
                 const burn1 = deck.splice(burnIndex, 1)
-        console.log('1')
         const house = [flop1[0], flop2[0], flop3[0]]
         const burning = [burn1[0]]
         const mine = [...house, ...finalHand]
         
-        console.log('2')
         const botA = [...house, ...props.score.botA.finalHand]
         const botB = [...house, ...props.score.botB.finalHand]
         const botC = [...house, ...props.score.botC.finalHand]
         
-        console.log('3')
-        //  REDUX
         props.setBurned(burning)
         props.setFlop(house)
         
-        console.log('4')
         props.setUsed([
             ...pocketAi1,
             ...pocketAi2,
@@ -290,14 +302,12 @@ const Game = (props) => {
             ...community,
             ...burning
         ]);
-        console.log('5')
         
         props.setHamilton([...botA])
         props.setBurr([...botB])
         props.setJefferson([...botC])
         props.setMyHand([...mine])
         
-        console.log('6')
         props.setBalance(0, 0)
         props.setBalance(0, 1)
         props.setBalance(0, 2)
@@ -397,9 +407,7 @@ const Game = (props) => {
     }    
     
     const checkXP = () => {
-        // console.log(props.score.myHand.kickerArr, 'PLAYER1')
         props.showAllHands(true)
-        // console.log(props.score.myHand.kickerArr, 'PLAYER1')
         
         // const flipCard = document.querySelector('.pocket-container')
         // flipCard.addEventListener('click', function() {
@@ -411,6 +419,8 @@ const Game = (props) => {
             colorLog('...SETTING TABLE', 'yellow')
         props.showAllHands(false)
         props.setSubType('')
+        props.endHand(0)
+        props.wReady(false)
         
         props.isShuffling(true)
     
@@ -516,7 +526,7 @@ const Game = (props) => {
                 <div id='player-list' >
                     <div className='player-box'>
                         {/* <div className={props.cash.status.whosTurn === 0 ? 'player-status-active' : 'player-status'} > */}
-                        <div className={props.game.status.winner.includes('Player1') ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 0 ? 'player-status-active' : 'player-status'} >
+                        <div className={winner.includes('Player1') ? 'player-status-active-w' : showAllHands ? 'player-status' : props.cash.status.whosTurn === 0 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[0].username} </h3>
                             <p style={{color: poker.players[0].cash > 250 ? 'silver' : poker.players[0].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[0].cash.toFixed(2)} </p>
                         </div>
@@ -535,7 +545,7 @@ const Game = (props) => {
                     </div>
                     <div className='player-box'>
                         {/* <div className={props.cash.status.whosTurn === 1 ? 'player-status-active' : 'player-status'} > */}
-                        <div className={props.game.status.winner.includes('Hamilton') ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 1 ? 'player-status-active' : 'player-status'} >
+                        <div className={winner.includes('Hamilton') ? 'player-status-active-w' : showAllHands ? 'player-status' : props.cash.status.whosTurn === 1 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[1].username} </h3>
                             <p style={{color: poker.players[1].cash > 250 ? 'silver' : poker.players[1].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[1].cash.toFixed(2)} </p>
                         </div>
@@ -559,7 +569,7 @@ const Game = (props) => {
                     </div>
                     <div className='player-box'>
                         {/* <div className={props.cash.status.whosTurn === 2 ? 'player-status-active' : 'player-status'} > */}
-                        <div className={props.game.status.winner.includes('Burr') ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 2 ? 'player-status-active' : 'player-status'} >
+                        <div className={winner.includes('Burr') ? 'player-status-active-w' : showAllHands ? 'player-status' : props.cash.status.whosTurn === 2 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[2].username} </h3>
                             <p style={{color: poker.players[2].cash > 250 ? 'silver' : poker.players[2].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[2].cash.toFixed(2)} </p>
                         </div>
@@ -590,7 +600,7 @@ const Game = (props) => {
                     </div>
                     <div className='player-box'>
                         {/* <div className={props.cash.status.whosTurn === 3 ? 'player-status-active' : 'player-status'} > */}
-                        <div className={props.game.status.winner.includes('Jefferson') ? 'player-status-active-w' : props.cash.status.showAllHands ? 'player-status' : props.cash.status.whosTurn === 3 ? 'player-status-active' : 'player-status'} >
+                        <div className={winner.includes('Jefferson') ? 'player-status-active-w' : showAllHands ? 'player-status' : props.cash.status.whosTurn === 3 ? 'player-status-active' : 'player-status'} >
                             <h3 id='player-box-name' > {poker.players[3].username} </h3>
                             <p style={{color: poker.players[3].cash > 250 ? 'silver' : poker.players[3].cash > 0 ? 'yellow' : 'red'}} > ${poker.players[3].cash.toFixed(2)} </p>
                         </div>
@@ -715,5 +725,7 @@ export default connect(
         watchTotal,
         setAlive,
         setCount,
-        alertDealer
+        alertDealer,
+        endHand,
+        wReady
     })(withRouter(Game))

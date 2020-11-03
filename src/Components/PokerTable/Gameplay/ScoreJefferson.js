@@ -321,7 +321,6 @@ const ScoreJefferson = (props) => {
                 let echo = indexedArr[4];
 
                 let foundAlpha = orderedArr.indexOf(alpha)
-                    // console.log(foundAlpha)
                 props.setKickerArrC([foundAlpha])
                 
                 let alphaRomeo = cipherSuits(finalHand, alpha);
