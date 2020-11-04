@@ -32,6 +32,11 @@
     border-radius: 50px;
 }
 
+#ticker-btn-increment:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
 #ticker {
     border-radius: 50%;
     width: 30px;
@@ -39,6 +44,11 @@
     background-color: $HAZE;
     color: $ROYALFLUSH;
     box-shadow: 1px 1px 15px 0px rgba(30, 30, 30, 0.75);
+}
+
+#ticker:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 #ticker:hover {
@@ -57,6 +67,11 @@
     padding: 3px 10px 3px 10px;
 }
 
+#ticker-btn-reset:focus {
+    outline: none;
+    box-shadow: none;
+}
+
 #ticker-btn {
     line-height: 1em;
     position: relative;
@@ -64,9 +79,15 @@
     box-shadow: 1px 1px 15px 0px rgba(30, 30, 30, 0.75);
     color: silver;
     border-radius: 50px;
-    width: 20%;
+    width: max-content;
+    min-width: 20%;
     height: 30px;
     padding: 3px 10px 3px 10px;
+}
+
+#ticker-btn:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 #ticker-btn-reset:hover {

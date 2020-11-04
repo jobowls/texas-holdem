@@ -12,58 +12,10 @@ import './ActionModal.scss'
 const ActionModal = (props) => {
     const {game, user} = props
     const {push} = props.history
-    const {isShuffling, winner} = props.game.status    
-    
-    const [setUrl] = useState('')
-    const [pokerStatus, setPokerStatus] = useState('')
-    const [pocketStatus, setPocketStatus] = useState('')
-    
-    const goBtn = ({value}) => {
-        push(`/${value}`)
-    }
 
     const toDash = () => {
         push('/dashboard')
     }
-
-    useEffect(() => {        
-        if (winner !== '') {
-            setPokerStatus('WINNER')
-        }
-    }, [winner])
-
-    useEffect(() => {
-        isShuffling
-            ? setPokerStatus('...shuffling deck')
-            : setPokerStatus('')
-    }, [isShuffling])
-
-    const findWinner = () => {
-        props.handIsOver(true)
-    }
-
-    const pocketMapper = () => {
-        props.cards.pocket.map((card, i) => (
-            <div key={i} >
-                <p> {card.card_rank} </p>
-                <p> {card.card_suit} </p>                
-            </div>
-        ))
-    }
-
-    const hasPocketPair = () => {
-        let playerPocket = props.cards.pocket.map(element => element.card_suit) 
-
-        playerPocket[0] === playerPocket[1]
-            ? props.isSuited(true) && setPocketStatus('SUITED')
-            : setPocketStatus('')
-    }
-
-    let pocketShow = props.cards.pocket.map((element, i) => (
-            <div key={i} id='show-pocket' >
-                {element.card_rank}
-            </div>
-    ))
     
     return (
         <div className='action-modal-master' >
@@ -88,11 +40,11 @@ const ActionModal = (props) => {
             </div>
 
             <div className='btn-menu' >
-                <button
+                {/* <button
                     onClick={props.deal}
                     className='action-btns'
                     > Deal </button>
-                {/* <button
+                <button
                     onClick={props.flop}
                     className='action-btns'
                     > Flop </button>
@@ -107,23 +59,28 @@ const ActionModal = (props) => {
                 <button 
                     onClick={props.checkXP} 
                     className='action-btns' 
-                    > Show'em </button> */}
-                {/* <button 
+                    > Show'em </button>
+                <button 
                     onClick={findWinner} 
                     className='action-btns' 
-                    > Winner Winner </button> */}
+                    > Winner Winner </button>
                 <button
                     onClick={props.clear}
                     className='action-btns'
                     > Reset </button>
-                {/* <button 
+                <button 
                     onClick={() => console.log(props.game.poker.players)} 
                     className='action-btns' 
-                    > Show'em </button> */}
-                {/* <button
+                    > Show'em </button>
+                <button
                     onClick={props.toggler}
                     className='action-btns'
                     > Menu </button> */}
+                    {
+                        props.clock
+                        ? <h1 style={{color: 'silver'}} >{props.timer}</h1>
+                        : null
+                    }
             </div>
         </div>
     )

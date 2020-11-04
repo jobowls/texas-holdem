@@ -19,8 +19,10 @@ const Status = (props) => {
     return (
         <div className='game-loading'>
             <div className='table-entry' >
-                <img id='entry-pic' alt='' src={profile_pic}  />
-                <h2> {username} </h2>
+                {/* <div id='entry-header'> */}
+                    <img id='entry-pic' alt='' src={profile_pic}  />
+                    <h2> {username} </h2>
+                {/* </div> */}
                 <p> Bankroll: ${cash} </p>
                 <p> Table Buy-in: ${cost.toFixed(2)} </p>
                 <button

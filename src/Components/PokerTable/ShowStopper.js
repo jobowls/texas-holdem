@@ -1,5 +1,5 @@
     // NPM
-import React from 'react'
+import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {GiPokerHand} from 'react-icons/gi'
 
@@ -9,6 +9,10 @@ import './ShowStopper.scss'
 const ShowStopper = (props) => {
     const {pocket} = props.cards
     const {finalHand, handType, highestCard, subType, kicker} = props.score.myHand
+
+    // useEffect(() => {
+    //     console.log(props)
+    // }, [pocket])
 
     const show = props.rules.listOfHands
         .filter(element => element.badge_name === handType)

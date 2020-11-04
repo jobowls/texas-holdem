@@ -20,6 +20,11 @@
     color: rgb(0, 122, 175);
 }
 
+.sub-btns:focus {
+    outline: none;
+    box-shadow: none;
+}
+
 #nav-links {
     width: 45%;
     display: flex;

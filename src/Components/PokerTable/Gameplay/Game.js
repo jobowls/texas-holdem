@@ -41,6 +41,8 @@ const Game = (props) => {
     const [toggleBigBlind, setToggleBigBlind] = useState(2)
     const [toggleRules, setToggleRules] = useState(false)
     const [pokerStatus, setPokerStatus] = useState('')
+    const [countDown, setCountDown] = useState(6)
+    const [showClock, setShowClock] = useState(false)
 
     let liveStatus = [
         players[0].isFolding,
@@ -90,6 +92,7 @@ const Game = (props) => {
         }
     }, [wReady])
 
+
     useEffect(() => {
         if (potIsGood) {
             poker.phase === 1 ? flop()
@@ -101,6 +104,11 @@ const Game = (props) => {
         props.alertDealer(false)
         props.setCurrentBet(0)
     }, [potIsGood])
+
+
+    useEffect(() => {
+        console.log(countDown)
+    }, [countDown])
 
 
     const rulesToggler = () => {
@@ -125,7 +133,8 @@ const Game = (props) => {
         if (!deck.length) {
             shuffle()
         }
-    }, [deck, shuffle, isShuffling])
+        // console.log(deck.length)
+    }, [deck, shuffle])
 
     const colorLog = (message, color) => {
         color = color || "black";
@@ -154,19 +163,6 @@ const Game = (props) => {
         console.log("%c" + message, "color:" + color);
     }
 
-    // const checkingStatus = () => {
-    //     let remainingBalance = []
-    //     let indexed = []
-    
-    //     for (let i = 0; i < currentStatus.length; i++) {
-    //         if (currentStatus[i] === false) {
-    //             indexed.push(i)
-    //             remainingBalance.push(0)
-    //         }
-    //     }
-    //     props.setAlive([...indexed])
-    //     props.watchTotal([...remainingBalance])             
-    // }
 
     const deal = () => {
         colorLog('...DEALING', 'yellow')
@@ -176,7 +172,7 @@ const Game = (props) => {
         let rand2 = Math.ceil(Math.random() * deck.length);
             let cardIndex1 = deck.findIndex(element => element.card_id === rand1);
             let cardIndex2 = deck.findIndex(element => element.card_id === rand2);
-
+        // console.log(deck)
     //  PURPOSELY SPLICING ORIGINAL ARRAY IN ORDER TO AVOID DUPLICATE CARDS BEING DEALT
                 const card1 = deck.splice(cardIndex1, 1);
                 const card2 = deck.splice(cardIndex2, 1);
@@ -216,7 +212,7 @@ const Game = (props) => {
         props.setBurr([...pocketB]);            
         props.setPocketAi3([...pocketC]);
         props.setJefferson([...pocketC]);
-
+        // console.log(props.cards)
         props.setUsed([
             ...pocketArr,
             ...pocketA,
@@ -227,8 +223,6 @@ const Game = (props) => {
             ...props.cards.turn,
             ...props.cards.river
         ]);
-
-        props.isShuffling(false)
         props.setNextMove(true)
 
         //  REDUX
@@ -238,7 +232,7 @@ const Game = (props) => {
         let bgStakes =  poker.players[refreshBg].cash - poker.bigBlind;
         let money = poker.smallBlind + poker.bigBlind
 
-        let findTurn = isActive.indexOf(bigPosition) + 1
+        // let findTurn = isActive.indexOf(bigPosition) + 1
 
             if (poker.bigPosition === 3) {
                 props.setPlayerTurn(0)
@@ -254,6 +248,9 @@ const Game = (props) => {
         props.setPot(money)
         props.setCount(0)
         setWatcher()
+        // console.log('hit-1')
+        props.isShuffling(false)
+        // console.log('hit-2')
     }
         const setWatcher = () => {
             let balances = [
@@ -264,6 +261,18 @@ const Game = (props) => {
             ]
             props.watchTotal([...balances])
         }
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            console.log('timer')
+            if (isShuffling && deck.length) {
+                console.log('timer-again')
+                deal()
+            }
+        }, 100);
+        return () => clearTimeout(timer);
+    }, [deck, isShuffling])
+
 
     const flop = () => {
         const {pocketAi1, pocketAi2, pocketAi3, pocket, used, burned, turn, river, community} = props.cards
@@ -416,6 +425,7 @@ const Game = (props) => {
     }
 
     const clear = () => {
+        setShowClock(false)
             colorLog('...SETTING TABLE', 'yellow')
         props.showAllHands(false)
         props.setSubType('')
@@ -508,7 +518,28 @@ const Game = (props) => {
             }
         props.setCount(0)
         props.setAlive([0, 1, 2, 3])
-    }       
+    }
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (winner) {
+                clear()
+            }
+        }, 7000);
+        return () => clearTimeout(timer);
+    }, [winner])
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (winner) {
+                setShowClock(true)
+                setCountDown(countDown => countDown - 1);
+            } else {
+                setCountDown(6)
+            }
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [winner]);
 
     return (
         <div className='game-master' >
@@ -520,7 +551,9 @@ const Game = (props) => {
                     river={river}
                     toggler={rulesToggler}
                     checkXP={checkXP}
-                    clear={clear} />
+                    clear={clear}
+                    timer={countDown}
+                    clock={showClock} />
             </div>
             <section id='game-divider' >
                 <div id='player-list' >
@@ -552,7 +585,7 @@ const Game = (props) => {
                         <div className='pocket-divider' >
                             {
                                 props.game.status.isShuffling === true 
-                                    ? <div className='pocket-container' > </div>                                
+                                    ? <div className='pocket-container' > </div>
                                     : <Hamilton  />
                             }
                             

@@ -2,6 +2,7 @@
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {FiPlusCircle} from 'react-icons/fi'
+import Badge from 'react-bootstrap/Badge'
 
     // LOCAL
 import {watchTotal, startBetting, alertDealer, setAlive, setPlayerTurn, setCurrentBet, setPot, checkPot, setPrevTurn} from '../../../ducks/cashReducer'
@@ -47,7 +48,7 @@ const CashMeter = (props) => {
         let newMin = findMinimum(copyBalance)
 
         props.setCurrentBet(newMin)
-        setBet(currentBet)                                                            
+        // setBet(currentBet)
 
         if (active !== 0) {
             runningTotal(newMin)
@@ -108,6 +109,7 @@ const CashMeter = (props) => {
             props.banker(pay, whosTurn)
             props.setPrevTurn(whosTurn)
             props.setCount(count + 1)
+            reset(0)
         }
         const setCheck = () => {
             setActive(active + 1)
@@ -126,6 +128,7 @@ const CashMeter = (props) => {
             props.banker(pay, whosTurn)
             props.setPrevTurn(isActive.indexOf(whosTurn))
             props.setCount(count + 1)
+            reset(0)
         }
         const setCall = () => {
             let community = currentBet - activeBalance
@@ -138,6 +141,7 @@ const CashMeter = (props) => {
             props.banker(pay, whosTurn)
             props.setPrevTurn(isActive.indexOf(whosTurn))
             props.setCount(count + 1)
+            reset(0)
         }
     
     const manageTurn = () => {
@@ -243,6 +247,7 @@ const CashMeter = (props) => {
                         {
                             activeBalance < currentBet ?
                             <>
+                                {/* <Badge as='button' variant="primary">{`${currentBet - activeBalance}`}</Badge> */}
                                 <button
                                     id="ticker-btn"
                                     onClick={setCall} >
@@ -251,10 +256,10 @@ const CashMeter = (props) => {
                                     id="ticker-btn"
                                     onClick={setRaise} >
                                     Raise </button>
-                                <button
+                                {/* <button
                                     id="ticker-btn"
                                     onClick={goAllIn} >
-                                    All-in </button>
+                                    All-in </button> */}
                                 <button
                                     id="ticker-btn"
                                     onClick={setFold} >
@@ -274,10 +279,10 @@ const CashMeter = (props) => {
                                     id="ticker-btn"
                                     onClick={placeBet} >
                                     Fold </button>
-                                <button
+                                {/* <button
                                     id="ticker-btn"
                                     onClick={goAllIn} >
-                                    All-in </button>
+                                    All-in </button> */}
                             </>
                         }                       
                     </div>

@@ -519,24 +519,28 @@ const MyScore = (props) => {
     const snakeEyes = () => {
         let index = cipher(ranksArr, 2)
         let foundPair = index + 2
-
-        foundPair === 14
-            ? foundPair = 'Ace' && props.setSubType('Aces')
-            : foundPair === 13
-            ? foundPair = 'King' && props.setSubType('Kings')
-            : foundPair === 12
-            ? foundPair = 'Queen' && props.setSubType('Queens')
-            : foundPair === 11
-            ? foundPair = 'Jack' && props.setSubType('Jacks')
-            : props.setSubType(`${foundPair}'s`)
-
+                            
+        if (foundPair === 14) {
+            foundPair = 'Ace'
+            props.setSubType('Aces')
+        } else if (foundPair === 13) {
+            foundPair = 'King'
+            props.setSubType('Kings')
+        } else if (foundPair === 12) {
+            foundPair = 'Queen'
+            props.setSubType('Queens')
+        } else if (foundPair === 11) {
+            foundPair = 'Jack'
+            props.setSubType('Jacks')
+        } else {
+            props.setSubType(`${foundPair}'s`)
+        }
         findingKicker(`${foundPair}`, index)
     }
 
         const findingKicker = (rank1, index) => {
             let filteredHand = finalHand.filter(el => el['card_rank'] !== rank1)
             let mapper = filteredHand.map(e => e.card_rank)
-
             let card1 = cipher(orderedArr, mapper[0])
             let card2 = cipher(orderedArr, mapper[1])
             let card3 = cipher(orderedArr, mapper[2])
